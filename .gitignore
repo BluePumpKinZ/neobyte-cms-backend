@@ -134,3 +134,6 @@ _NCrunch*
 
 # Jetbrains Rider
 .idea/
+
+# Visual Studio
+.vs/
