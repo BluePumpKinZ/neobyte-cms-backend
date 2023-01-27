@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Neobyte.Cms.Backend.Api\Neobyte.Cms.Backend.Api.csproj" />
     <ProjectReference Include="..\Neobyte.Cms.Backend.Monitoring\Neobyte.Cms.Backend.Monitoring.csproj" />
     <ProjectReference Include="..\Neobyte.Cms.Backend.Persistence\Neobyte.Cms.Backend.Persistence.csproj" />
