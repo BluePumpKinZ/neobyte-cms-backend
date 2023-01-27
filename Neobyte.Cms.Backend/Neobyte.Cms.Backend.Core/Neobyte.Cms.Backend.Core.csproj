@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Neobyte.Cms.Backend.Domain\Neobyte.Cms.Backend.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Ports\Persistence\Repositories\" />
+  </ItemGroup>
+
 </Project>
