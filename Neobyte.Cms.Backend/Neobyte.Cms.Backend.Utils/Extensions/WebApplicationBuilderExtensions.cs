@@ -4,7 +4,7 @@ namespace Neobyte.Cms.Backend.Utils.Extensions;
 
 public static class WebApplicationBuilderExtensions {
 
-    public static WebApplicationBuilder AddUtils (WebApplicationBuilder builder) {
+    public static WebApplicationBuilder AddUtils (this WebApplicationBuilder builder) {
         return builder;
     }
 

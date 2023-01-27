@@ -10,4 +10,12 @@
     <ProjectReference Include="..\Neobyte.Cms.Backend.Utils\Neobyte.Cms.Backend.Utils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Accounts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StronglyTypedId" Version="1.0.0-beta06" />
+  </ItemGroup>
+
 </Project>

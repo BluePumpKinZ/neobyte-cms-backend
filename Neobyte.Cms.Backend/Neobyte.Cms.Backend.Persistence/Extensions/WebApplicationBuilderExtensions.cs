@@ -1,10 +1,32 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
+using Neobyte.Cms.Backend.Persistence.Adapters.Repositories;
+using Neobyte.Cms.Backend.Persistence.Configuration;
+using Neobyte.Cms.Backend.Persistence.EF;
+using Neobyte.Cms.Backend.Persistence.EF.Initializer;
+using System;
 
-namespace Neobyte.Cms.Backend.Persistence.Extensions; 
+namespace Neobyte.Cms.Backend.Persistence.Extensions;
 
 public static class WebApplicationBuilderExtensions {
 
     public static WebApplicationBuilder AddPersistence (this WebApplicationBuilder builder) {
+
+        builder.Services.AddScoped<IReadOnlyAccountRepository, ReadOnlyAccountRepository>();
+		builder.Services.AddScoped<IWriteOnlyAccountRepository, WriteOnlyAccountRepository>();
+
+		// database configuration
+		var dbConfig = new DatabaseConfig();
+		builder.Configuration.GetSection("Database").Bind(dbConfig);
+		builder.Services.AddDbContext<DbContext, EFDbContext>(opt => {
+			opt.UseSqlServer(dbConfig.ConnectionString ?? throw new ArgumentNullException(nameof(dbConfig.ConnectionString)));
+		});
+
+		builder.Services.AddScoped<DbContextInitializer>();
+		builder.Services.AddSingleton<DbContextInitializerData>();
         return builder;
     }
 
