@@ -69,6 +69,10 @@ internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider 
 				Result = IdentityLoginResponseModel.LoginResult.LockedOut
 			};
 
+			if (signInResult.IsNotAllowed) return new IdentityLoginResponseModel {
+				Result = IdentityLoginResponseModel.LoginResult.NotAllowed
+			};
+
 			return new IdentityLoginResponseModel {
 				Result = IdentityLoginResponseModel.LoginResult.BadCredentials
 			};

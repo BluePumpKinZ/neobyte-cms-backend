@@ -9,6 +9,7 @@ public class IdentityLoginResponseModel {
 		BadCredentials,
 		LockedOut,
 		RequiresTwoFactor,
+		NotAllowed,
 		Unknown
 	}
 
