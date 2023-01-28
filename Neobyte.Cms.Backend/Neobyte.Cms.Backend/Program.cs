@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Neobyte.Cms.Backend.Api.Extensions;
+using Neobyte.Cms.Backend.Identity.Extensions;
 using Neobyte.Cms.Backend.Monitoring.Extensions;
 using Neobyte.Cms.Backend.Persistence.Extensions;
 using Neobyte.Cms.Backend.Utils.Extensions;
@@ -9,6 +10,7 @@ using Neobyte.Cms.Backend.Utils.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApi();
+builder.AddIdentity();
 builder.AddMonitoring();
 builder.AddPersistence();
 builder.AddUtils();
@@ -18,6 +20,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseIdentity();
 app.UsePersistence();
 
 if (app.Environment.IsDevelopment()) {
