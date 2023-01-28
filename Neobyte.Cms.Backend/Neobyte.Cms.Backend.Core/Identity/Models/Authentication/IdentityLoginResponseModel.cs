@@ -6,6 +6,7 @@ public class IdentityLoginResponseModel {
 
 	public enum LoginResult {
 		Success,
+		BadCredentials,
 		LockedOut,
 		RequiresTwoFactor,
 		Unknown
