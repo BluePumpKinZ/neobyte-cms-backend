@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Neobyte.Cms.Backend.Api.Extensions;
+using Neobyte.Cms.Backend.Core.Extensions;
 using Neobyte.Cms.Backend.Identity.Extensions;
 using Neobyte.Cms.Backend.Monitoring.Extensions;
 using Neobyte.Cms.Backend.Persistence.Extensions;
@@ -10,6 +11,7 @@ using Neobyte.Cms.Backend.Utils.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApi();
+builder.AddCore();
 builder.AddIdentity(opt => {
 	opt.Password.RequireDigit = true;
 	opt.Password.RequireLowercase = true;
@@ -29,8 +31,10 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseApi();
 app.UsePersistence();
 await app.UseIdentity();
+
 
 if (app.Environment.IsDevelopment()) {
 	app.UseSwagger();

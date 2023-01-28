@@ -22,11 +22,11 @@ internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider 
 	private readonly IUserEmailStore<AccountIdentityUser> _emailStore;
 	private readonly ILogger<IdentityAuthenticationProvider> _logger;
 
-	public IdentityAuthenticationProvider (UserManager<AccountIdentityUser> userManager, SignInManager<AccountIdentityUser> signInManager, IUserStore<AccountIdentityUser> userStore, IUserEmailStore<AccountIdentityUser> emailStore, ILogger<IdentityAuthenticationProvider> logger) {
+	public IdentityAuthenticationProvider (UserManager<AccountIdentityUser> userManager, SignInManager<AccountIdentityUser> signInManager, IUserStore<AccountIdentityUser> userStore, ILogger<IdentityAuthenticationProvider> logger) {
 		_userManager = userManager;
 		_signInManager = signInManager;
 		_userStore = userStore;
-		_emailStore = emailStore;
+		_emailStore = (IUserEmailStore<AccountIdentityUser>)userStore;
 		_logger = logger;
 	}
 
@@ -68,13 +68,18 @@ internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider 
 			if (signInResult.IsLockedOut) return new IdentityLoginResponseModel {
 				Result = IdentityLoginResponseModel.LoginResult.LockedOut
 			};
+
+			if (signInResult.IsNotAllowed) return new IdentityLoginResponseModel {
+				Result = IdentityLoginResponseModel.LoginResult.NotAllowed
+			};
+
+			return new IdentityLoginResponseModel {
+				Result = IdentityLoginResponseModel.LoginResult.BadCredentials
+			};
 		} catch (Exception e) {
 			_logger.LogError("Error while logging in {error}", e);
 			throw new IdentityLoginException("Error while logging in", e);
 		}
-		return new IdentityLoginResponseModel {
-			Result = IdentityLoginResponseModel.LoginResult.Unknown
-		};
 	}
 
 	public async Task Logout () {
