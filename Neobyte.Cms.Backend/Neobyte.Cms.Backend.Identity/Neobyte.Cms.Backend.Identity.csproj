@@ -8,10 +8,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Neobyte.Cms.Backend.Core\Neobyte.Cms.Backend.Core.csproj" />
+    <ProjectReference Include="..\Neobyte.Cms.Backend.Persistence\Neobyte.Cms.Backend.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Adapters\" />
     <Folder Include="Extensions\" />
   </ItemGroup>
 

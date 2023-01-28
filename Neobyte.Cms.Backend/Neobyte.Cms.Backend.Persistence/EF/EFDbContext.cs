@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Neobyte.Cms.Backend.Domain.Accounts;
 
-namespace Neobyte.Cms.Backend.Persistence.EF; 
+namespace Neobyte.Cms.Backend.Persistence.EF;
 
-internal class EFDbContext : DbContext {
+public class EFDbContext : IdentityDbContext<AccountIdentityUser> {
 
-	public DbSet<Account> Accounts { get; private protected set; } = null!;
+	public DbSet<Account> Accounts { get; set; } = null!;
 
 	public EFDbContext (DbContextOptions<EFDbContext> options) : base(options) { }
 

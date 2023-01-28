@@ -22,6 +22,7 @@ internal class DbContextInitializer {
 		if (_dbContext.Database.EnsureCreated()) {
 			_logger.LogInformation("Database created");
 		}
+		_dbContext.Database.Migrate();
 		_data.Initialized = true;
 	}
 

@@ -10,7 +10,16 @@ using Neobyte.Cms.Backend.Utils.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApi();
-builder.AddIdentity();
+builder.AddIdentity(opt => {
+	opt.Password.RequireDigit = true;
+	opt.Password.RequireLowercase = true;
+	opt.Password.RequireUppercase = true;
+	opt.Password.RequireNonAlphanumeric = true;
+	opt.Password.RequiredLength = 8;
+
+	opt.User.RequireUniqueEmail = true;
+	opt.SignIn.RequireConfirmedEmail = true;
+});
 builder.AddMonitoring();
 builder.AddPersistence();
 builder.AddUtils();
@@ -20,8 +29,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseIdentity();
 app.UsePersistence();
+await app.UseIdentity();
 
 if (app.Environment.IsDevelopment()) {
 	app.UseSwagger();

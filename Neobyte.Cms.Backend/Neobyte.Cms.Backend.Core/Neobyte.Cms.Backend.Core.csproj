@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Identity\Models\Authorization\" />
+    <Folder Include="Identity\Models\Roles\" />
     <Folder Include="Ports\Persistence\Repositories\" />
   </ItemGroup>
 
