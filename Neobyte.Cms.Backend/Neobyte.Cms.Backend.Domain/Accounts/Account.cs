@@ -1,8 +1,4 @@
-﻿using StronglyTypedIds;
-using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace Neobyte.Cms.Backend.Domain.Accounts;
+﻿namespace Neobyte.Cms.Backend.Domain.Accounts;
 
 [StronglyTypedId(converters: StronglyTypedIdConverter.SystemTextJson)]
 public partial struct AccountId {}
