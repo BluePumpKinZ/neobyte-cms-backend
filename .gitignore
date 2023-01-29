@@ -137,3 +137,6 @@ _NCrunch*
 
 # Visual Studio
 .vs/
+
+# Environment file
+.env
