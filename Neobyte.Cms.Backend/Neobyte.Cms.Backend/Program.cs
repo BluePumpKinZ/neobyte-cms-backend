@@ -34,6 +34,7 @@ var app = builder.Build();
 app.UseApi();
 app.UsePersistence();
 await app.UseIdentity();
+app.UseMonitoring();
 
 
 if (app.Environment.IsDevelopment()) {
