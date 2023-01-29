@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Neobyte.Cms.Backend.Api.Extensions;
 using Neobyte.Cms.Backend.Core.Extensions;
 using Neobyte.Cms.Backend.Identity.Extensions;
+using Neobyte.Cms.Backend.Mailing.Extensions;
 using Neobyte.Cms.Backend.Monitoring.Extensions;
 using Neobyte.Cms.Backend.Persistence.Extensions;
 using Neobyte.Cms.Backend.Utils.Extensions;
@@ -12,16 +13,8 @@ builder.Configuration.AddJsonFile(".env", true);
 
 builder.AddApi();
 builder.AddCore();
-builder.AddIdentity(opt => {
-	opt.Password.RequireDigit = true;
-	opt.Password.RequireLowercase = true;
-	opt.Password.RequireUppercase = true;
-	opt.Password.RequireNonAlphanumeric = true;
-	opt.Password.RequiredLength = 8;
-
-	opt.User.RequireUniqueEmail = true;
-	opt.SignIn.RequireConfirmedEmail = true;
-});
+builder.AddIdentity();
+builder.AddMailing();
 builder.AddMonitoring();
 builder.AddPersistence();
 builder.AddUtils();
