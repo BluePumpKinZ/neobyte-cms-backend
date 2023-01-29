@@ -7,9 +7,12 @@ using Neobyte.Cms.Backend.Mailing.Extensions;
 using Neobyte.Cms.Backend.Monitoring.Extensions;
 using Neobyte.Cms.Backend.Persistence.Extensions;
 using Neobyte.Cms.Backend.Utils.Extensions;
+using System;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddJsonFile(".env", true);
+Console.WriteLine(Directory.GetCurrentDirectory());
+builder.Configuration.AddJsonFile("env.json", false);
 
 builder.AddApi();
 builder.AddCore();

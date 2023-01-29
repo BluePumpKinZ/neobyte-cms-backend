@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Neobyte.Cms.Backend.Api.Endpoints;
 using Neobyte.Cms.Backend.Api.Endpoints.Identity;
 using Neobyte.Cms.Backend.Api.Endpoints.Loader;

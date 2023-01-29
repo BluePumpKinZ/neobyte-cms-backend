@@ -1,13 +1,9 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Http;
 using Neobyte.Cms.Backend.Core.Identity.Managers;
 using Neobyte.Cms.Backend.Core.Identity.Models.Authentication;
+using System.Diagnostics;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.Identity;
-
 
 public class IdentityAuthenticationEndpoints : IApiEndpoints {
 
