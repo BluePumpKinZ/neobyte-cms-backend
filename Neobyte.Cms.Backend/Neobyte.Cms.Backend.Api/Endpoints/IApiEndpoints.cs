@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
-
-namespace Neobyte.Cms.Backend.Api.Endpoints; 
+﻿namespace Neobyte.Cms.Backend.Api.Endpoints; 
 
 internal interface IApiEndpoints {
 	
