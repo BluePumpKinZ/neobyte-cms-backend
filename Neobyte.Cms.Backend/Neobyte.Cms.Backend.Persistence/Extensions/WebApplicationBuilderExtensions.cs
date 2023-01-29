@@ -22,7 +22,7 @@ public static class WebApplicationBuilderExtensions {
 		var dbConfig = new DatabaseConfig();
 		builder.Configuration.GetSection("Database").Bind(dbConfig);
 		builder.Services.AddDbContext<DbContext, EFDbContext>(opt => {
-			opt.UseSqlServer(dbConfig.ConnectionString ?? throw new ArgumentNullException(nameof(dbConfig.ConnectionString)));
+			opt.UseSqlServer(dbConfig.ConnectionString ?? throw new NullReferenceException(nameof(dbConfig.ConnectionString)));
 		});
 
 		builder.Services.AddScoped<DbContextInitializer>();

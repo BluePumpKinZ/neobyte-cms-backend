@@ -10,10 +10,15 @@ public static class WebApplicationBuilderExtensions {
 
     public static WebApplicationBuilder AddApi (this WebApplicationBuilder builder) {
 
+        // endpoints
         builder.Services.AddSingleton<ApiEndpointLoader>();
         builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
 
-        return builder;
+        // swagger
+		builder.Services.AddEndpointsApiExplorer();
+		builder.Services.AddSwaggerGen();
+
+		return builder;
     }
 
 }

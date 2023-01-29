@@ -13,7 +13,7 @@ namespace Neobyte.Cms.Backend.Identity.Extensions;
 
 public static class WebApplicationBuilderExtensions {
 
-	public static WebApplicationBuilder AddIdentity (this WebApplicationBuilder builder, Action<IdentityOptions> options) {
+	public static WebApplicationBuilder AddIdentity (this WebApplicationBuilder builder) {
 
 		builder.Services.AddScoped<IIdentityAuthenticationProvider, IdentityAuthenticationProvider>();
 		builder.Services.AddScoped<IIdentityAuthorizationProvider, IdentityAuthorizationProvider>();
@@ -23,7 +23,7 @@ public static class WebApplicationBuilderExtensions {
 			.AddEntityFrameworkStores<EFDbContext>()
 			.AddDefaultTokenProviders();
 
-		builder.Services.Configure(options);
+		builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection("Identity"));
 
 		builder.Services.ConfigureApplicationCookie(opt => {
 			opt.LoginPath = "/login";

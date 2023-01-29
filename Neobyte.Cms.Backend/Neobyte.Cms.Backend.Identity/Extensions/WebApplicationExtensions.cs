@@ -2,24 +2,23 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Neobyte.Cms.Backend.Identity.Policies;
-using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Identity.Extensions;
 
 public static class WebApplicationExtensions {
 
-	public static async Task<WebApplication> UseIdentity (this WebApplication app) {
+	public static WebApplication UseIdentity (this WebApplication app) {
 
 		using var scope = app.Services.CreateScope();
 
 		var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 		
 		foreach (UserRole userRole in UserRole.Values) {
-			if (await roleManager.RoleExistsAsync(userRole))
+			if (roleManager.RoleExistsAsync(userRole).Result)
 				continue;
 
 			IdentityRole role = new(userRole);
-			await roleManager.CreateAsync(role);
+			roleManager.CreateAsync(role).Wait();
 		}
 
 		app.UseAuthentication();
