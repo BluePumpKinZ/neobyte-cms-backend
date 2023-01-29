@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neobyte.Cms.Backend.Api", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neobyte.Cms.Backend.Monitoring", "Neobyte.Cms.Backend.Monitoring\Neobyte.Cms.Backend.Monitoring.csproj", "{FE519E6F-03B3-4A6C-A5ED-A91B3642E044}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neobyte.Cms.Backend.Identity", "Neobyte.Cms.Backend.Identity\Neobyte.Cms.Backend.Identity.csproj", "{44FE82F9-319F-4E59-9DF1-0E894A0AA5DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neobyte.Cms.Backend.Identity", "Neobyte.Cms.Backend.Identity\Neobyte.Cms.Backend.Identity.csproj", "{44FE82F9-319F-4E59-9DF1-0E894A0AA5DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neobyte.Cms.Backend.Mailing", "Neobyte.Cms.Backend.Mailing\Neobyte.Cms.Backend.Mailing.csproj", "{887D4813-ED5B-40E0-B3C1-53DCE679D3D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{44FE82F9-319F-4E59-9DF1-0E894A0AA5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44FE82F9-319F-4E59-9DF1-0E894A0AA5DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44FE82F9-319F-4E59-9DF1-0E894A0AA5DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{887D4813-ED5B-40E0-B3C1-53DCE679D3D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{887D4813-ED5B-40E0-B3C1-53DCE679D3D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{887D4813-ED5B-40E0-B3C1-53DCE679D3D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{887D4813-ED5B-40E0-B3C1-53DCE679D3D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
