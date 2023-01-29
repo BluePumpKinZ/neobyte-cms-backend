@@ -7,6 +7,7 @@ namespace Neobyte.Cms.Backend.Api.Endpoints.Identity;
 
 public class IdentityAuthenticationEndpoints : IApiEndpoints {
 
+	public string GroupName => "Authentication";
 	public string Path => "/api/v1/identity/authentication";
 
 	public void RegisterApis (RouteGroupBuilder routes) {
