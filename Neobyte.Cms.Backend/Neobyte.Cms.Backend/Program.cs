@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Neobyte.Cms.Backend.Api.Extensions;
 using Neobyte.Cms.Backend.Core.Extensions;
 using Neobyte.Cms.Backend.Identity.Extensions;
@@ -29,9 +28,7 @@ var app = builder.Build();
 
 app.UseApi();
 app.UsePersistence();
-await app.UseIdentity();
+app.UseIdentity();
 app.UseMonitoring();
-
-app.MapGet("/", () => "Hello World!");
 
 app.Run();
