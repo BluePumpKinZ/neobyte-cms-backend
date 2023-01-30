@@ -2,6 +2,7 @@
 using Neobyte.Cms.Backend.Api.Endpoints;
 using Neobyte.Cms.Backend.Api.Endpoints.Identity;
 using Neobyte.Cms.Backend.Api.Endpoints.Loader;
+using Neobyte.Cms.Backend.Api.Endpoints.Mailing;
 
 namespace Neobyte.Cms.Backend.Api.Extensions; 
 
@@ -12,6 +13,7 @@ public static class WebApplicationBuilderExtensions {
         // endpoints
         builder.Services.AddSingleton<ApiEndpointLoader>();
         builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
+        builder.Services.AddSingleton<IApiEndpoints, MailingEndpoints>();
 
         // swagger
 		builder.Services.AddEndpointsApiExplorer();

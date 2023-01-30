@@ -12,7 +12,7 @@ public class IdentityAuthenticationEndpoints : IApiEndpoints {
 	public string Path => "/api/v1/identity/authentication";
 
 	public void RegisterApis (RouteGroupBuilder routes) {
-
+		
 		routes.MapPost("register", async ([FromServices] IdentityAuthenticationManager manager,
 			[FromBody] IdentityRegisterRequestModel request) => {
 				var response = await manager.Register(request);
