@@ -19,11 +19,9 @@ internal class DbContextInitializer {
 	public void Initialize () {
 		if (_data.Initialized)
 			throw new DbContextAlreadyInitializedException();
-		if (_dbContext.Database.EnsureCreated()) {
-			_logger.LogInformation("Database created");
-		} else {
-			_dbContext.Database.Migrate();
-		}
+		
+		_dbContext.Database.Migrate();
+			
 		_data.Initialized = true;
 	}
 
