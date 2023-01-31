@@ -6,6 +6,7 @@ public class IdentityRegisterResponseModel {
 
 	public RegisterResult Result { get; set; }
 	public IEnumerable<string>? Errors { get; }
+	public string? JwtToken { get; set; }
 
 	public IdentityRegisterResponseModel (RegisterResult result, IEnumerable<string>? errors = null) {
 		Result = result;

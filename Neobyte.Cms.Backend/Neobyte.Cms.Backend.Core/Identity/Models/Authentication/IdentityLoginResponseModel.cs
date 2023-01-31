@@ -3,12 +3,11 @@
 public class IdentityLoginResponseModel {
 
 	public LoginResult Result { get; set; } = LoginResult.Unknown;
+	public string? JwtToken { get; set; }
 
 	public enum LoginResult {
 		Success,
-		BadCredentials,
-		LockedOut,
-		RequiresTwoFactor,
+		InvalidCredentials,
 		NotAllowed,
 		Unknown
 	}

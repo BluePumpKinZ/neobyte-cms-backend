@@ -8,11 +8,14 @@
 
 	<ItemGroup>
     <ProjectReference Include="..\Neobyte.Cms.Backend.Core\Neobyte.Cms.Backend.Core.csproj" />
-    <ProjectReference Include="..\Neobyte.Cms.Backend.Persistence\Neobyte.Cms.Backend.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Extensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
   </ItemGroup>
 
 </Project>

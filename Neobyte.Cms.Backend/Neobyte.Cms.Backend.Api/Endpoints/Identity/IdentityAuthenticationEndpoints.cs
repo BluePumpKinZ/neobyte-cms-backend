@@ -28,19 +28,13 @@ public class IdentityAuthenticationEndpoints : IApiEndpoints {
 			[FromBody] IdentityLoginRequestModel request) => {
 				var response = await manager.Login(request);
 				return response.Result switch {
-					IdentityLoginResponseModel.LoginResult.Success => Results.Ok(),
-					IdentityLoginResponseModel.LoginResult.RequiresTwoFactor => Results.Redirect("login/2fa"),
-					IdentityLoginResponseModel.LoginResult.LockedOut => Results.BadRequest("Locked out"),
-					IdentityLoginResponseModel.LoginResult.BadCredentials => Results.BadRequest("Bad credentials"),
-					IdentityLoginResponseModel.LoginResult.NotAllowed => Results.Unauthorized(),
-					IdentityLoginResponseModel.LoginResult.Unknown => Results.BadRequest(),
+					IdentityLoginResponseModel.LoginResult.Success => Results.Ok("Succesfull login"),
+					IdentityLoginResponseModel.LoginResult.InvalidCredentials => Results.BadRequest("Bad credentials"),
+					IdentityLoginResponseModel.LoginResult.NotAllowed => Results.BadRequest("Not allowed"),
+					IdentityLoginResponseModel.LoginResult.Unknown => Results.BadRequest("Something went wrong"),
 					_ => throw new UnreachableException()
 				};
 			}).ValidateBody<IdentityLoginRequestModel>();
-
-		routes.MapDelete("logout", async ([FromServices] IdentityAuthenticationManager manager) => {
-			await manager.Logout();
-		});
 	}
 
 }
