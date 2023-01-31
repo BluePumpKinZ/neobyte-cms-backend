@@ -28,8 +28,8 @@ public class JwtManager<TUser, TId, TPrincipal> where TPrincipal : IPrincipal<TI
 
 		var tokenDescriptor = new SecurityTokenDescriptor {
 			Subject = new ClaimsIdentity(new Claim[] {
-				new Claim("id", principal.Id!.ToString()!),
-				new Claim("roles", string.Join (':', principal.Roles))
+				new Claim(ClaimTypes.UserData, principal.Id!.ToString()!),
+				new Claim(ClaimTypes.Role, string.Join (':', principal.Roles))
 			}),
 			Issuer = _options.Issuer,
 			Audience = _options.Audience,
@@ -41,7 +41,7 @@ public class JwtManager<TUser, TId, TPrincipal> where TPrincipal : IPrincipal<TI
 		return _tokenHandler.WriteToken(token);
 	}
 
-	public async Task<(bool valid, TPrincipal? principal)> ValidateToken(string token) {
+	public async Task<(bool valid, TPrincipal? principal)> ValidateTokenAsync(string token) {
 
 		var validationResult = await _tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters {
 			ValidateIssuerSigningKey = true,

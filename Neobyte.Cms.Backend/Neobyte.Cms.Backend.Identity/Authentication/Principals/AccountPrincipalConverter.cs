@@ -2,6 +2,7 @@
 using Neobyte.Cms.Backend.Domain.Accounts;
 using System;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Neobyte.Cms.Backend.Identity.Authentication.Principals;
 
@@ -19,8 +20,8 @@ internal class AccountPrincipalConverter : IPrincipalConverter<Account, AccountI
 			return (false, null);
 
 
-		var userId = (string)tokenValidationResult.Claims.First(c => c.Key == "id").Value;
-		var roles = ((string)tokenValidationResult.Claims.First(c => c.Key == "roles").Value).Split(':');
+		var userId = (string)tokenValidationResult.Claims.First(c => c.Key == ClaimTypes.UserData).Value;
+		var roles = ((string)tokenValidationResult.Claims.First(c => c.Key == ClaimTypes.Role).Value).Split(':');
 
 		return (true, new AccountPrincipal {
 			Id = new AccountId(Guid.Parse(userId)),

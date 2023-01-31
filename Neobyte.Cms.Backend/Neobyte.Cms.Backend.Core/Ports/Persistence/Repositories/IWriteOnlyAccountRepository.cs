@@ -5,8 +5,8 @@ namespace Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 
 public interface IWriteOnlyAccountRepository {
 
-	public Account UpdateAccount (Account account);
-
 	public Task<Account> CreateAccountAsync (Account account);
+
+	public Account UpdateAccount (Account account);
 
 }
