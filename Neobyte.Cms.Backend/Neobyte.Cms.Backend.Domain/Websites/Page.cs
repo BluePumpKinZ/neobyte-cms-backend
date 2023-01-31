@@ -14,4 +14,16 @@ public class Page {
 	[Required]
 	public Website? Website { get; set; }
 
+	public Page (string name, string path) {
+		Id = PageId.New();
+		Name = name;
+		Path = path;
+	}
+
+	public Page (PageId id, string name, string path) {
+		Id = id;
+		Name = name;
+		Path = path;
+	}
+
 }

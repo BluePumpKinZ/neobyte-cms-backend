@@ -7,8 +7,23 @@ public class Snippet {
 
 	[Key]
 	public SnippetId Id { get; set; }
+	[Required]
 	public string Name { get; set; }
+	[Required]
 	public string Description { get; set; }
+	[Required]
 	public Template? Template { get; set; }
+
+	public Snippet (string name, string description) {
+		Id = SnippetId.New();
+		Name = name;
+		Description = description;
+	}
+
+	public Snippet (SnippetId id, string name, string description) {
+		Id = id;
+		Name = name;
+		Description = description;
+	}
 
 }
