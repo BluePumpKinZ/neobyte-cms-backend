@@ -4,6 +4,7 @@ using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Identity.Adapters;
 using Neobyte.Cms.Backend.Identity.Authentication;
+using Neobyte.Cms.Backend.Identity.Authentication.Passwords;
 using Neobyte.Cms.Backend.Identity.Authentication.Principals;
 using Neobyte.Cms.Backend.Identity.Configuration;
 using System.IdentityModel.Tokens.Jwt;
@@ -26,6 +27,13 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton<JwtManager<Account, AccountId, AccountPrincipal>>();
 		builder.Services.AddSingleton<IPrincipalConverter<Account, AccountId, AccountPrincipal>, AccountPrincipalConverter>();
 		builder.Services.AddSingleton<PasswordHasher>();
+		builder.Services.AddSingleton<PasswordValidator>();
+
+		builder.Services.AddSingleton<IPasswordRule, RequireDigitPasswordRule>();
+		builder.Services.AddSingleton<IPasswordRule, RequireLengthPasswordRule>();
+		builder.Services.AddSingleton<IPasswordRule, RequireLowercasePasswordRule>();
+		builder.Services.AddSingleton<IPasswordRule, RequireNonAlphaNumericPasswordRule>();
+		builder.Services.AddSingleton<IPasswordRule, RequireUppercasePasswordRule>();
 
 		return builder;
 	}

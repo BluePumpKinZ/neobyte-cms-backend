@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Identity.Authentication.Principals;
 using Neobyte.Cms.Backend.Identity.Configuration;
 using System;
@@ -18,10 +17,10 @@ public class JwtManager<TUser, TId, TPrincipal> where TPrincipal : IPrincipal<TI
 	private readonly SymmetricSecurityKey _key;
 	private readonly IPrincipalConverter<TUser, TId, TPrincipal> _principalConverter;
 
-	public JwtManager (JwtSecurityTokenHandler tokenHandler, IOptions<IdentityOptions> options, IPrincipalConverter<TUser, TId, TPrincipal> principalConverter) {
+	public JwtManager (JwtSecurityTokenHandler tokenHandler, IOptions<JwtOptions> options, IPrincipalConverter<TUser, TId, TPrincipal> principalConverter) {
 		_tokenHandler = tokenHandler;
 		_principalConverter = principalConverter;
-		_options = options.Value.Jwt;
+		_options = options.Value;
 		_key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_options.Secret));
 	}
 

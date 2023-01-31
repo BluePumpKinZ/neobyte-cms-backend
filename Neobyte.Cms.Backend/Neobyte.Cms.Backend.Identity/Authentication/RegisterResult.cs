@@ -2,6 +2,8 @@
 
 public enum RegisterResult {
 
-	
+	Success,
+	EmailAlreadyExists,
+	InvalidPassword
 
 }
