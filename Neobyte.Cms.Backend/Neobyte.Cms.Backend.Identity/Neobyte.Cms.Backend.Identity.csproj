@@ -19,7 +19,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="Neobyte.Cms.Backend.Identity.Tests "/>
+		<InternalsVisibleTo Include="Neobyte.Cms.Backend.Identity.Tests " />
 	</ItemGroup>
 
 </Project>
