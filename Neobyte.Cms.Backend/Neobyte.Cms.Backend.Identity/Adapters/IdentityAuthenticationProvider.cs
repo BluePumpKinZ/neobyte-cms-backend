@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Neobyte.Cms.Backend.Core.Identity.Models.Authentication;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
-using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Identity.Authentication;
 using Neobyte.Cms.Backend.Identity.Authentication.Principals;
@@ -43,6 +42,24 @@ internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider 
 
 	public string GenerateTokenForAccount (Account accountWithRoles, bool rememberMe) {
 		return GenerateTokenForAccount(accountWithRoles, rememberMe ? _jwtOptions.ExpirationLong : _jwtOptions.ExpirationShort);
+	}
+
+	public async Task<IdentityAuthenticateResponseModel> Authenticate (HttpContext httpContext) {
+		var authHeaders = httpContext.Request.Headers["Authorization"];
+		if (authHeaders.Count != 1)
+			return IdentityAuthenticateResponseModel.Unauthenticated();
+
+		var authHeader = authHeaders[0];
+		if (!authHeader?.StartsWith("Bearer ") ?? true)
+			return IdentityAuthenticateResponseModel.Unauthenticated();
+
+		var token = authHeader!["Bearer ".Length..];
+		var validationResult = await _jwtManager.ValidateTokenAsync(token);
+		if (!validationResult.valid)
+			return IdentityAuthenticateResponseModel.Unauthenticated();
+
+		var principal = validationResult.principal!;
+		return IdentityAuthenticateResponseModel.Authenticated(principal.Id, principal.Roles, true);
 	}
 
 	public string GenerateTokenForAccount (Account accountWithRoles, long expirationMilliseconds) {

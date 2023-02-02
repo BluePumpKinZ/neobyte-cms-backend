@@ -6,13 +6,20 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Identity\Models\Authorization\**" />
+    <Compile Remove="Identity\Models\Roles\**" />
+    <EmbeddedResource Remove="Identity\Models\Authorization\**" />
+    <EmbeddedResource Remove="Identity\Models\Roles\**" />
+    <None Remove="Identity\Models\Authorization\**" />
+    <None Remove="Identity\Models\Roles\**" />
+  </ItemGroup>
+
 	<ItemGroup>
     <ProjectReference Include="..\Neobyte.Cms.Backend.Domain\Neobyte.Cms.Backend.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Identity\Models\Authorization\" />
-    <Folder Include="Identity\Models\Roles\" />
     <Folder Include="Mailing\Managers\" />
     <Folder Include="Mailing\Models\" />
     <Folder Include="Ports\Mailing\" />

@@ -11,7 +11,6 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddScoped<IdentityAuthenticationManager>();
 		builder.Services.AddScoped<IdentityAuthorizationManager>();
-		builder.Services.AddScoped<IdentityRoleManager>();
 
 		builder.Services.AddScoped<MailingManager>();
 

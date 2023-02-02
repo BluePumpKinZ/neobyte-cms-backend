@@ -2,6 +2,6 @@
 
 public interface IIdentityAuthorizationProvider {
 
-	
+	public bool IsAuthorized (string policyName, string[] roles);
 
 }
