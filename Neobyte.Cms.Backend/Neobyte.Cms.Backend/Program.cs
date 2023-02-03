@@ -23,6 +23,7 @@ var app = builder.Build();
 
 app.UseApi();
 app.UsePersistence();
+app.UseCore();
 app.UseIdentity();
 app.UseMonitoring();
 

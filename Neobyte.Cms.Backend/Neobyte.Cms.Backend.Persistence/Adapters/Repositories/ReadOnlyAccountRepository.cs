@@ -23,4 +23,8 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 			.ThenInclude(ar => ar.Role).SingleOrDefaultAsync(a => a.Email == email);
 	}
 
+	public async Task<Account> CreateAccountAsync (Account account) {
+		return (await _ctx.Accounts.AddAsync(account)).Entity;
+	}
+
 }

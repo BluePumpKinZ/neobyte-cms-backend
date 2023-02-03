@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Accounts\Models\" />
     <Folder Include="Mailing\Managers\" />
     <Folder Include="Mailing\Models\" />
     <Folder Include="Ports\Mailing\" />

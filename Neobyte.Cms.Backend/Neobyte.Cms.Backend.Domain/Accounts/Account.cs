@@ -22,12 +22,12 @@ public class Account {
 	public DateTime CreationDate { get; set; }
 	public ICollection<AccountRole>? AccountRoles { get; set; }
 
-	public Account (string email, string firstname, string lastname, string encodedPassword) {
+	public Account (string email, string firstname, string lastname) {
 		Id = AccountId.New();
 		Email = email;
 		Firstname = firstname;
 		Lastname = lastname;
-		EncodedPassword = encodedPassword;
+		EncodedPassword = string.Empty;
 		Enabled = true;
 		EmailConfirmed = false;
 		CreationDate = DateTime.UtcNow;

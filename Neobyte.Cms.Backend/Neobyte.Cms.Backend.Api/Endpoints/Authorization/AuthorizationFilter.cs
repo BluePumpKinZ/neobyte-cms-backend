@@ -6,7 +6,7 @@ namespace Neobyte.Cms.Backend.Api.Endpoints.Authorization;
 
 internal class AuthorizationFilter : IEndpointFilter {
 
-	public static string MetadataKey => "authorization-metadata";
+	public const string MetadataKey = "authorization-metadata";
 
 	private readonly IdentityAuthenticationManager _authenticationManager;
 	private readonly IdentityAuthorizationManager _authorizationManager;
@@ -24,7 +24,7 @@ internal class AuthorizationFilter : IEndpointFilter {
 			throw new TaskCanceledException("Canceled request at {} because authorization metadata was null");
 
 		var authorizationMetadata = nullableAuthorizationMetadata.Value;
-		var authenticationResult = await _authenticationManager.Authenticate(context.HttpContext);
+		var authenticationResult = await _authenticationManager.AuthenticateAsync(context.HttpContext);
 
 		if (!authenticationResult.IsAuthenticated)
 			return Results.Unauthorized();

@@ -9,4 +9,6 @@ public interface IReadOnlyAccountRepository {
 
 	public Task<Account?> ReadAccountByEmailWithRolesAsync (string email);
 
+	public Task<Account> CreateAccountAsync (Account account);
+
 }

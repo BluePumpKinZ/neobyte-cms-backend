@@ -6,8 +6,6 @@ using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Identity.Authentication;
 using Neobyte.Cms.Backend.Identity.Authentication.Principals;
 using Neobyte.Cms.Backend.Identity.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Identity.Adapters;
@@ -26,10 +24,6 @@ internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider 
 		_jwtOptions = options.Value.Jwt;
 	}
 
-	public async Task<(IdentityRegisterResponseModel.RegisterResult result, IEnumerable<string> errors)> RegisterAsync (IdentityRegisterRequestModel request) {
-		throw new NotImplementedException();
-	}
-
 	public async Task<IdentityLoginResponseModel.LoginResult> LoginAsync (IdentityLoginRequestModel request) {
 		var result = await _authenticationManager.LoginAsync(request);
 		return result switch {
@@ -44,7 +38,7 @@ internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider 
 		return GenerateTokenForAccount(accountWithRoles, rememberMe ? _jwtOptions.ExpirationLong : _jwtOptions.ExpirationShort);
 	}
 
-	public async Task<IdentityAuthenticateResponseModel> Authenticate (HttpContext httpContext) {
+	public async Task<IdentityAuthenticateResponseModel> AuthenticateAsync (HttpContext httpContext) {
 		var authHeaders = httpContext.Request.Headers["Authorization"];
 		if (authHeaders.Count != 1)
 			return IdentityAuthenticateResponseModel.Unauthenticated();
@@ -60,6 +54,10 @@ internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider 
 
 		var principal = validationResult.principal!;
 		return IdentityAuthenticateResponseModel.Authenticated(principal.Id, principal.Roles, true);
+	}
+
+	public async Task UpdateAccountPasswordAsync (Account account, string newPassword) {
+		await _authenticationManager.EncodePasswordAsync(account, newPassword);
 	}
 
 	public string GenerateTokenForAccount (Account accountWithRoles, long expirationMilliseconds) {

@@ -34,10 +34,10 @@ public class AuthenticationManager {
 		if (!passwordValidationResult.valid)
 			return (RegisterResult.InvalidPassword, passwordValidationResult.errors);
 
-		var encodedPassword = _passwordHasher.HashPassword(null!, request.Password);
-		var account = new Account(request.Email, request.FirstName, request.LastName, encodedPassword);
-
+		var account = new Account(request.Email, request.FirstName, request.LastName);
+		await EncodePasswordAsync(account, request.Password);
 		await _writeOnlyAccountRepository.CreateAccountAsync(account);
+
 		return (RegisterResult.Success, null);
 	}
 
@@ -51,7 +51,7 @@ public class AuthenticationManager {
 
 		var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(account, account.EncodedPassword, request.Password);
 		if (passwordVerificationResult == Microsoft.AspNetCore.Identity.PasswordVerificationResult.SuccessRehashNeeded)
-			EncodePassword(account, request.Password);
+			await EncodePasswordAsync(account, request.Password, true);
 
 		if (passwordVerificationResult != Microsoft.AspNetCore.Identity.PasswordVerificationResult.Success)
 			return LoginResult.InvalidCredentials;
@@ -69,10 +69,17 @@ public class AuthenticationManager {
 		return true;
 	}
 
-	public Account EncodePassword (Account account, string password) {
+	public async Task<bool> EncodePasswordAsync (Account account, string password, bool update = false) {
+
+		var validationResult = _passwordValidator.Validate(password);
+		if (!validationResult.valid)
+			return false;
+
 		var hashedPassword = _passwordHasher.HashPassword(account, password);
 		account.EncodedPassword = hashedPassword;
-		return _writeOnlyAccountRepository.UpdateAccount(account);
+		if (update)
+			await _writeOnlyAccountRepository.UpdateAccountAsync(account);
+		return true;
 	}
 
 	

@@ -7,6 +7,6 @@ public interface IWriteOnlyAccountRepository {
 
 	public Task<Account> CreateAccountAsync (Account account);
 
-	public Account UpdateAccount (Account account);
+	public Task<Account> UpdateAccountAsync (Account account);
 
 }

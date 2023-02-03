@@ -22,7 +22,7 @@ public class IdentityAuthorizationManager {
 	}
 
 	public async Task<Role> AddRole (Role role) {
-		return await _writeOnlyRoleRepository.CreateRole(role);
+		return await _writeOnlyRoleRepository.CreateRoleAsync(role);
 	}
 
 	public bool IsAuthorized (string policyName, string[] roles) {

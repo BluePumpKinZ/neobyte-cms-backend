@@ -17,8 +17,10 @@ public class WriteOnlyAccountRepository : IWriteOnlyAccountRepository {
 		return (await _ctx.Accounts.AddAsync(account)).Entity;
 	}
 
-	public Account UpdateAccount (Account account) {
-		return _ctx.Accounts.Update(account).Entity;
+	public async Task<Account> UpdateAccountAsync (Account account) {
+		var entity = _ctx.Accounts.Update(account).Entity;
+		await _ctx.SaveChangesAsync();
+		return entity;
 	}
 
 }

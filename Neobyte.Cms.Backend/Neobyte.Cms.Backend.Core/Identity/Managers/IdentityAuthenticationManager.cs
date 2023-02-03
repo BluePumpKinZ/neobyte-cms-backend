@@ -2,7 +2,6 @@
 using Neobyte.Cms.Backend.Core.Identity.Models.Authentication;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
-using System;
 using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Core.Identity.Managers;
@@ -15,12 +14,6 @@ public class IdentityAuthenticationManager {
 	public IdentityAuthenticationManager (IIdentityAuthenticationProvider identityAuthenticationProvider, IReadOnlyAccountRepository readOnlyAccountRepository) {
 		_identityAuthenticationProvider = identityAuthenticationProvider;
 		_readOnlyAccountRepository = readOnlyAccountRepository;
-	}
-
-	public async Task<IdentityRegisterResponseModel> Register (IdentityRegisterRequestModel request) {
-		var result = await _identityAuthenticationProvider.RegisterAsync(request);
-		var response = new IdentityRegisterResponseModel(result.result, result.errors);
-		throw new NotImplementedException();
 	}
 
 	public async Task<IdentityLoginResponseModel> Login (IdentityLoginRequestModel request) {
@@ -39,8 +32,8 @@ public class IdentityAuthenticationManager {
 		};
 	}
 
-	public async Task<IdentityAuthenticateResponseModel> Authenticate (HttpContext httpContext) {
-		return await _identityAuthenticationProvider.Authenticate(httpContext);
+	public async Task<IdentityAuthenticateResponseModel> AuthenticateAsync (HttpContext httpContext) {
+		return await _identityAuthenticationProvider.AuthenticateAsync(httpContext);
 	}
 
 }

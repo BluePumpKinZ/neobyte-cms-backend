@@ -13,17 +13,6 @@ public class IdentityAuthenticationEndpoints : IApiEndpoints {
 
 	public void RegisterApis (RouteGroupBuilder routes) {
 
-		routes.MapPost("register", async ([FromServices] IdentityAuthenticationManager manager,
-			[FromBody] IdentityRegisterRequestModel request) => {
-				var response = await manager.Register(request);
-				return response.Result switch {
-					IdentityRegisterResponseModel.RegisterResult.Success => Results.Ok("Account created"),
-					IdentityRegisterResponseModel.RegisterResult.Failed => Results.BadRequest(response.Errors),
-					IdentityRegisterResponseModel.RegisterResult.RequiresConfirmation => Results.Redirect("register/confirm"),
-					_ => throw new UnreachableException()
-				};
-			}).ValidateBody<IdentityRegisterRequestModel>();
-
 		routes.MapPost("login", async ([FromServices] IdentityAuthenticationManager manager,
 			[FromBody] IdentityLoginRequestModel request) => {
 				var response = await manager.Login(request);

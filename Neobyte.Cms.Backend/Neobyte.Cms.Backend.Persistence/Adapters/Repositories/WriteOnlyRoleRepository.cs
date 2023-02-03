@@ -13,7 +13,7 @@ public class WriteOnlyRoleRepository : IWriteOnlyRoleRepository {
 		_ctx = ctx;
 	}
 
-	public async Task<Role> CreateRole (Role role) {
+	public async Task<Role> CreateRoleAsync (Role role) {
 		return (await _ctx.Roles.AddAsync(role)).Entity;
 	}
 
