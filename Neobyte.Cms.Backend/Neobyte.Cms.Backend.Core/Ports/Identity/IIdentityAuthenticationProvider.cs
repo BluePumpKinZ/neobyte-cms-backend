@@ -13,6 +13,6 @@ public interface IIdentityAuthenticationProvider {
 
 	public Task<IdentityAuthenticateResponseModel> AuthenticateAsync (HttpContext httpContext);
 
-	public Task UpdateAccountPasswordAsync (Account account, string newPassword);
+	public Task<(bool valid, string[]? errors)> UpdateAccountPasswordAsync (Account account, string newPassword);
 
 }

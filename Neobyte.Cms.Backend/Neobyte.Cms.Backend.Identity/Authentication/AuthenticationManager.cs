@@ -69,17 +69,16 @@ public class AuthenticationManager {
 		return true;
 	}
 
-	public async Task<bool> EncodePasswordAsync (Account account, string password, bool update = false) {
-
-		var validationResult = _passwordValidator.Validate(password);
-		if (!validationResult.valid)
-			return false;
+	public async Task<(bool success, string[]? errors)> EncodePasswordAsync (Account account, string password, bool update = false) {
+		(bool valid, string[]? errors) = _passwordValidator.Validate(password);
+		if (!valid)
+			return (false, errors);
 
 		var hashedPassword = _passwordHasher.HashPassword(account, password);
 		account.EncodedPassword = hashedPassword;
 		if (update)
 			await _writeOnlyAccountRepository.UpdateAccountAsync(account);
-		return true;
+		return (true, null);
 	}
 
 	

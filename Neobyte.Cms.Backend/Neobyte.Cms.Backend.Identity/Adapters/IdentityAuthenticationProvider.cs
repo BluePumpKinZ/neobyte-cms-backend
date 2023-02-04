@@ -56,13 +56,12 @@ internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider 
 		return IdentityAuthenticateResponseModel.Authenticated(principal.Id, principal.Roles, true);
 	}
 
-	public async Task UpdateAccountPasswordAsync (Account account, string newPassword) {
-		await _authenticationManager.EncodePasswordAsync(account, newPassword);
+	public async Task<(bool valid, string[]? errors)> UpdateAccountPasswordAsync (Account account, string newPassword) {
+		return await _authenticationManager.EncodePasswordAsync(account, newPassword);
 	}
 
 	public string GenerateTokenForAccount (Account accountWithRoles, long expirationMilliseconds) {
 		var principal = _principalConverter.FromUser(accountWithRoles);
 		return _jwtManager.GenerateToken(principal, expirationMilliseconds);
 	}
-
 }

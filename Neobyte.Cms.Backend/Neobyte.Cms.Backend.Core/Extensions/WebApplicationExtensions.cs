@@ -8,7 +8,7 @@ public static class WebApplicationExtensions {
 
 	public static WebApplication UseCore(this WebApplication app) {
 
-		var defaultAccountCreator = app.Services.GetRequiredService<DefaultAccountCreator>();
+		var defaultAccountCreator = app.Services.CreateScope().ServiceProvider.GetRequiredService<DefaultAccountCreator>();
 		defaultAccountCreator.CreateDefaultAccount();
 		
 		return app;
