@@ -15,6 +15,7 @@
 		<Folder Include="Extensions\" />
 		<Folder Include="Adapters\" />
 		<Folder Include="Configuration\" />
+		<Folder Include="Initializers\" />
 	</ItemGroup>
 
 	<ItemGroup>

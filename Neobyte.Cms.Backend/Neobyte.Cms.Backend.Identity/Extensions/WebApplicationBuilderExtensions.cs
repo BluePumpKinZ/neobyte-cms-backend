@@ -8,8 +8,8 @@ using Neobyte.Cms.Backend.Core.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Identity.Adapters;
-using Neobyte.Cms.Backend.Identity.Authorization;
 using Neobyte.Cms.Backend.Identity.Configuration;
+using Neobyte.Cms.Backend.Identity.Initializers;
 using Neobyte.Cms.Backend.Persistence.EF;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -25,7 +25,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddScoped<IIdentityAuthenticationProvider, IdentityAuthenticationProvider>();
 		builder.Services.AddScoped<IIdentityAuthorizationProvider, IdentityAuthorizationProvider>();
 
-		builder.Services.AddScoped<AuthorizationManager>();
+		builder.Services.AddScoped<RoleInitializer>();
 
 		builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection("Identity"));
 
