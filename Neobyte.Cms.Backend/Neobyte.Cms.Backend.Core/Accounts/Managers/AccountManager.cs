@@ -16,4 +16,8 @@ public class AccountManager {
 		return await _readOnlyAccountRepository.CreateAccountAsync(account);
 	}
 
+	public async Task<IdentityAccount> GetIdentityAccountWithAccountByEmail (string normalizedEmail) {
+		return await _readOnlyAccountRepository.ReadIdentityAccountWithAccountByEmail(normalizedEmail);
+	}
+
 }

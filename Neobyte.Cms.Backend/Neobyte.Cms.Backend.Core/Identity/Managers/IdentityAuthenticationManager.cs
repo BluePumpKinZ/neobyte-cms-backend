@@ -1,39 +1,29 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Neobyte.Cms.Backend.Core.Accounts.Managers;
 using Neobyte.Cms.Backend.Core.Identity.Models.Authentication;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
-using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using System.Threading.Tasks;
 
-namespace Neobyte.Cms.Backend.Core.Identity.Managers;
+namespace Neobyte.Cms.Backend.Core.Identity.Managers; 
 
 public class IdentityAuthenticationManager {
 
-	private readonly IIdentityAuthenticationProvider _identityAuthenticationProvider;
-	private readonly IReadOnlyAccountRepository _readOnlyAccountRepository;
+	private readonly AccountManager _accountManager;
+	private readonly IIdentityAuthenticationProvider _authenticationProvider;
 
-	public IdentityAuthenticationManager (IIdentityAuthenticationProvider identityAuthenticationProvider, IReadOnlyAccountRepository readOnlyAccountRepository) {
-		_identityAuthenticationProvider = identityAuthenticationProvider;
-		_readOnlyAccountRepository = readOnlyAccountRepository;
+	public IdentityAuthenticationManager (AccountManager accountManager, IIdentityAuthenticationProvider authenticationProvider) {
+		_accountManager = accountManager;
+		_authenticationProvider = authenticationProvider;
 	}
 
-	public async Task<IdentityLoginResponseModel> Login (IdentityLoginRequestModel request) {
-		var result = await _identityAuthenticationProvider.LoginAsync(request);
-		if (result != IdentityLoginResponseModel.LoginResult.Success) {
-			return new IdentityLoginResponseModel {
-				Result = result
-			};
-		}
+	public async Task<IdentityLoginResponseModel> LoginAsync (IdentityLoginRequestModel request) {
+		var validLogin = await _authenticationProvider.LoginAsync(request.Email, request.Password);
+		if (!validLogin)
+			return new IdentityLoginResponseModel (false, null);
 
-		var account = await _readOnlyAccountRepository.ReadAccountByEmailWithRolesAsync(request.Email);
-		var jwtToken = _identityAuthenticationProvider.GenerateTokenForAccount(account!, request.RememberMe);
-		return new IdentityLoginResponseModel {
-			Result = IdentityLoginResponseModel.LoginResult.Success,
-			JwtToken = jwtToken
-		};
-	}
-
-	public async Task<IdentityAuthenticateResponseModel> AuthenticateAsync (HttpContext httpContext) {
-		return await _identityAuthenticationProvider.AuthenticateAsync(httpContext);
+		var normalizedEmail = _authenticationProvider.NormalizeEmail(request.Email);
+		var identityAccount = await _accountManager.GetIdentityAccountWithAccountByEmail(normalizedEmail);
+		var jwtToken = await _authenticationProvider.GenerateJwtTokenAsync(identityAccount, request.RememberMe);
+		return new IdentityLoginResponseModel(true, jwtToken);
 	}
 
 }

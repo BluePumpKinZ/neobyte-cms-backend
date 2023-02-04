@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Neobyte.Cms.Backend.Core.Identity.Models.Authentication;
+﻿namespace Neobyte.Cms.Backend.Core.Identity.Models.Authentication; 
 
 public class IdentityLoginRequestModel {
 

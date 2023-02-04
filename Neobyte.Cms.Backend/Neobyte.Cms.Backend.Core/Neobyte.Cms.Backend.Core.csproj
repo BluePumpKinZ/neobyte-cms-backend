@@ -7,24 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Identity\Models\Authorization\**" />
-    <Compile Remove="Identity\Models\Roles\**" />
-    <EmbeddedResource Remove="Identity\Models\Authorization\**" />
-    <EmbeddedResource Remove="Identity\Models\Roles\**" />
-    <None Remove="Identity\Models\Authorization\**" />
-    <None Remove="Identity\Models\Roles\**" />
-  </ItemGroup>
-
-	<ItemGroup>
     <ProjectReference Include="..\Neobyte.Cms.Backend.Domain\Neobyte.Cms.Backend.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Accounts\Models\" />
-    <Folder Include="Mailing\Managers\" />
-    <Folder Include="Mailing\Models\" />
-    <Folder Include="Ports\Mailing\" />
-    <Folder Include="Ports\Persistence\Repositories\" />
+    <Folder Include="Identity\Models\Authentication\" />
+    <Folder Include="Identity\Managers\" />
   </ItemGroup>
+
 
 </Project>

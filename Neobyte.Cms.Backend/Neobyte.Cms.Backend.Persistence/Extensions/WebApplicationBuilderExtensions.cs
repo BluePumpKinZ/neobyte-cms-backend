@@ -17,8 +17,6 @@ public static class WebApplicationBuilderExtensions {
 
         builder.Services.AddScoped<IReadOnlyAccountRepository, ReadOnlyAccountRepository>();
 		builder.Services.AddScoped<IWriteOnlyAccountRepository, WriteOnlyAccountRepository>();
-		builder.Services.AddScoped<IReadOnlyRoleRepository, ReadOnlyRoleRepository>();
-		builder.Services.AddScoped<IWriteOnlyRoleRepository, WriteOnlyRoleRepository>();
 
 		// database configuration
 		var dbConfig = new DatabaseConfig();

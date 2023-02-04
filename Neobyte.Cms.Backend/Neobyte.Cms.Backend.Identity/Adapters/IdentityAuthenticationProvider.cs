@@ -1,67 +1,64 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Neobyte.Cms.Backend.Core.Identity.Models.Authentication;
+using Microsoft.IdentityModel.Tokens;
+using MoreCSharp.Extensions.System.Collections.Generic;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Domain.Accounts;
-using Neobyte.Cms.Backend.Identity.Authentication;
-using Neobyte.Cms.Backend.Identity.Authentication.Principals;
 using Neobyte.Cms.Backend.Identity.Configuration;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Neobyte.Cms.Backend.Identity.Adapters;
+namespace Neobyte.Cms.Backend.Identity.Adapters; 
 
-internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
+public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 
-	private readonly AuthenticationManager _authenticationManager;
-	private readonly JwtManager<Account, AccountId, AccountPrincipal> _jwtManager;
+	private readonly SignInManager<IdentityAccount> _signInManager;
+	private readonly UserManager<IdentityAccount> _userManager;
+	private readonly SigningCredentials _credentials;
 	private readonly JwtOptions _jwtOptions;
-	private readonly IPrincipalConverter<Account, AccountId, AccountPrincipal> _principalConverter;
+	private readonly JwtSecurityTokenHandler _tokenHandler;
 
-	public IdentityAuthenticationProvider (AuthenticationManager authenticationManager, JwtManager<Account, AccountId, AccountPrincipal> jwtManager, IPrincipalConverter<Account, AccountId, AccountPrincipal> principalConverter, IOptions<IdentityOptions> options) {
-		_authenticationManager = authenticationManager;
-		_jwtManager = jwtManager;
-		_principalConverter = principalConverter;
-		_jwtOptions = options.Value.Jwt;
+	public IdentityAuthenticationProvider (SignInManager<IdentityAccount> signInManager, IOptions<JwtOptions> jwtOptions, SigningCredentials credentials, UserManager<IdentityAccount> userManager, JwtSecurityTokenHandler tokenHandler) {
+		_signInManager = signInManager;
+		_jwtOptions = jwtOptions.Value;
+		_credentials = credentials;
+		_userManager = userManager;
+		_tokenHandler = tokenHandler;
 	}
 
-	public async Task<IdentityLoginResponseModel.LoginResult> LoginAsync (IdentityLoginRequestModel request) {
-		var result = await _authenticationManager.LoginAsync(request);
-		return result switch {
-				LoginResult.Success => IdentityLoginResponseModel.LoginResult.Success,
-				LoginResult.InvalidCredentials => IdentityLoginResponseModel.LoginResult.InvalidCredentials,
-				LoginResult.NotAllowed => IdentityLoginResponseModel.LoginResult.NotAllowed,
-				_ => IdentityLoginResponseModel.LoginResult.NotAllowed
-			};
+	public async Task<bool> LoginAsync (string email, string password) {
+		var signInResult = await _signInManager.PasswordSignInAsync(email, password, false, false);
+		return signInResult.Succeeded;
 	}
 
-	public string GenerateTokenForAccount (Account accountWithRoles, bool rememberMe) {
-		return GenerateTokenForAccount(accountWithRoles, rememberMe ? _jwtOptions.ExpirationLong : _jwtOptions.ExpirationShort);
+	public async Task<string> GenerateJwtTokenAsync (IdentityAccount identityAccount, bool rememberMe) {
+
+		long expirationMilliseconds = rememberMe ? _jwtOptions.ExpirationLong : _jwtOptions.ExpirationShort;
+		var roles = await _userManager.GetRolesAsync(identityAccount);
+
+		var claims = new List<Claim>();
+		roles.ForEach(r => claims.Add(new Claim(ClaimTypes.Role, r)));
+		claims.Add(new Claim(ClaimTypes.PrimarySid, identityAccount.Account!.Id.ToString()));
+		claims.Add(new Claim(ClaimTypes.UserData, identityAccount.Id.ToString()));
+		
+		var tokenDescriptor = new SecurityTokenDescriptor {
+			Subject = new ClaimsIdentity (claims.ToArray()),
+			Issuer = _jwtOptions.Issuer,
+			Audience = _jwtOptions.Audience,
+			Expires = DateTime.UtcNow.AddMilliseconds(expirationMilliseconds),
+			SigningCredentials = _credentials
+		};
+
+		var token = _tokenHandler.CreateToken(tokenDescriptor);
+		return _tokenHandler.WriteToken(token);
 	}
 
-	public async Task<IdentityAuthenticateResponseModel> AuthenticateAsync (HttpContext httpContext) {
-		var authHeaders = httpContext.Request.Headers["Authorization"];
-		if (authHeaders.Count != 1)
-			return IdentityAuthenticateResponseModel.Unauthenticated();
-
-		var authHeader = authHeaders[0];
-		if (!authHeader?.StartsWith("Bearer ") ?? true)
-			return IdentityAuthenticateResponseModel.Unauthenticated();
-
-		var token = authHeader!["Bearer ".Length..];
-		var validationResult = await _jwtManager.ValidateTokenAsync(token);
-		if (!validationResult.valid)
-			return IdentityAuthenticateResponseModel.Unauthenticated();
-
-		var principal = validationResult.principal!;
-		return IdentityAuthenticateResponseModel.Authenticated(principal.Id, principal.Roles, true);
+	public string NormalizeEmail (string email) {
+		return _userManager.NormalizeEmail(email);
 	}
 
-	public async Task<(bool valid, string[]? errors)> UpdateAccountPasswordAsync (Account account, string newPassword) {
-		return await _authenticationManager.EncodePasswordAsync(account, newPassword);
-	}
-
-	public string GenerateTokenForAccount (Account accountWithRoles, long expirationMilliseconds) {
-		var principal = _principalConverter.FromUser(accountWithRoles);
-		return _jwtManager.GenerateToken(principal, expirationMilliseconds);
-	}
 }

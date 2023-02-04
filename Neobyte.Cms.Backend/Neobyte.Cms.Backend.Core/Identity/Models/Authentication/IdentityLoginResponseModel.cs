@@ -2,14 +2,12 @@
 
 public class IdentityLoginResponseModel {
 
-	public LoginResult Result { get; set; } = LoginResult.Unknown;
-	public string? JwtToken { get; set; }
+	public bool Authenticated { get; }
+	public string? Token { get; }
 
-	public enum LoginResult {
-		Success,
-		InvalidCredentials,
-		NotAllowed,
-		Unknown
+	public IdentityLoginResponseModel (bool authenticated, string? token) {
+		Authenticated = authenticated;
+		Token = token;
 	}
 
 }
