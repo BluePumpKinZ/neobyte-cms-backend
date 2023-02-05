@@ -1,6 +1,6 @@
 ﻿namespace Neobyte.Cms.Backend.Core.Accounts.Models; 
 
-public class AccountsClientCreateRequestModel {
+public class AccountsCreateRequestModel {
 
 	public string FirstName { get; set; } = string.Empty;
 	public string LastName { get; set; } = string.Empty;

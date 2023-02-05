@@ -10,7 +10,7 @@ public static class WebApplicationExtensions {
 
 		using var scope = app.Services.CreateScope();
 		var defaultAccountCreator = scope.ServiceProvider.GetRequiredService<DefaultAccountCreator>();
-		defaultAccountCreator.CreateDefaultAccount();
+		defaultAccountCreator.CreateDefaultAccount().Wait();
 		
 		return app;
 	}

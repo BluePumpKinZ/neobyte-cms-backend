@@ -2,6 +2,7 @@
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Persistence.EF;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,15 +16,28 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 		_ctx = ctx;
 	}
 
-	public async Task<Account> CreateAccountAsync (Account account) {
-		return (await _ctx.Accounts.AddAsync(account)).Entity;
-	}
-
 	public async Task<IdentityAccount> ReadIdentityAccountWithAccountByEmail (string normalizedEmail) {
 		return await _ctx.Users
 			.Include(u => u.Account)
 			.Where(u => u.NormalizedEmail == normalizedEmail.ToUpper())
 			.SingleAsync();
+	}
+
+	public async Task<bool> ReadOwnerAccountExistsAsync () {
+		Guid ownerRoleId = (await _ctx.Roles.SingleAsync(r => r.Name == "Owner")).Id;
+		return await _ctx.Users
+			.Where(u => u.Account != null)
+			.AnyAsync(u => _ctx.UserRoles
+				.Where(ur => ur.UserId == u.Id)
+				.Any(ur => ur.RoleId == ownerRoleId));
+	}
+
+	public async Task<IdentityAccount> ReadByIdentityAccountIdAsync (Guid identityAccountId) {
+		return await _ctx.Users.SingleAsync(u => u.Id == identityAccountId);
+	}
+
+	public async Task<IdentityAccount?> ReadIdentityAccountByEmailAsync (string normalizedEmail) {
+		return await _ctx.Users.SingleOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail);
 	}
 
 }

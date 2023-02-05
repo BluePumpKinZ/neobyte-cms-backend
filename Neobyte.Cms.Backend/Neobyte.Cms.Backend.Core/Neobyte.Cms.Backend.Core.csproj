@@ -15,5 +15,9 @@
     <Folder Include="Identity\Managers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MoreCSharp.Extensions.System.Collections.Generic" Version="1.2.0" />
+  </ItemGroup>
+
 
 </Project>

@@ -24,6 +24,7 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddScoped<IIdentityAuthenticationProvider, IdentityAuthenticationProvider>();
 		builder.Services.AddScoped<IIdentityAuthorizationProvider, IdentityAuthorizationProvider>();
+		builder.Services.AddScoped<IIdentityRoleProvider, IdentityRoleProvider>();
 
 		builder.Services.AddScoped<RoleInitializer>();
 

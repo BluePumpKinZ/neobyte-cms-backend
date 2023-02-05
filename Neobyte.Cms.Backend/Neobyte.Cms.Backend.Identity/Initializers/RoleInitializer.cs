@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Neobyte.Cms.Backend.Core.Identity;
-using Neobyte.Cms.Backend.Core.Identity.Managers;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Identity.Initializers;

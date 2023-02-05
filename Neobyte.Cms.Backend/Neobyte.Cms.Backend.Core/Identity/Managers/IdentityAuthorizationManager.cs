@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Neobyte.Cms.Backend.Core.Ports.Identity;
-using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Neobyte.Cms.Backend.Core.Ports.Identity;
 
 namespace Neobyte.Cms.Backend.Core.Identity.Managers; 
 
