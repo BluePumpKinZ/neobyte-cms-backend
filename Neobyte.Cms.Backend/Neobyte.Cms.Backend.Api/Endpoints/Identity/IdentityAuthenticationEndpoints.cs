@@ -15,7 +15,7 @@ public class IdentityAuthenticationEndpoints : IApiEndpoints {
 			[FromServices] IdentityAuthenticationManager manager) => {
 				var response = await manager.LoginAsync(request);
 				if (response.Authenticated)
-					return Results.Ok(response.Token);
+					return Results.Ok(new { response.Token, response.Expires });
 
 				return Results.Unauthorized();
 			}).ValidateBody<IdentityLoginRequestModel>()

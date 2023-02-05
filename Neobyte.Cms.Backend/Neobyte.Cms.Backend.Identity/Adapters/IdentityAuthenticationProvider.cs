@@ -62,7 +62,7 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 
 	}
 
-	public async Task<string> GenerateJwtTokenAsync (IdentityAccount identityAccount, bool rememberMe) {
+	public async Task<(string token, long expires)> GenerateJwtTokenAsync (IdentityAccount identityAccount, bool rememberMe) {
 
 		long expirationMilliseconds = rememberMe ? _jwtOptions.ExpirationLong : _jwtOptions.ExpirationShort;
 		var roles = await _userManager.GetRolesAsync(identityAccount);
@@ -81,7 +81,7 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 		};
 
 		var token = _tokenHandler.CreateToken(tokenDescriptor);
-		return _tokenHandler.WriteToken(token);
+		return (_tokenHandler.WriteToken(token), expirationMilliseconds);
 	}
 
 	public string NormalizeEmail (string email) {

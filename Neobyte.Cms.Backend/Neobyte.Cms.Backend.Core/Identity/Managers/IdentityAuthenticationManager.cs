@@ -18,12 +18,12 @@ public class IdentityAuthenticationManager {
 	public async Task<IdentityLoginResponseModel> LoginAsync (IdentityLoginRequestModel request) {
 		var validLogin = await _authenticationProvider.LoginAsync(request.Email, request.Password);
 		if (!validLogin)
-			return new IdentityLoginResponseModel (false, null);
+			return new IdentityLoginResponseModel (false, null, null);
 
 		var normalizedEmail = _authenticationProvider.NormalizeEmail(request.Email);
 		var identityAccount = await _accountManager.GetIdentityAccountWithAccountByEmail(normalizedEmail);
 		var jwtToken = await _authenticationProvider.GenerateJwtTokenAsync(identityAccount, request.RememberMe);
-		return new IdentityLoginResponseModel(true, jwtToken);
+		return new IdentityLoginResponseModel(true, jwtToken.token, jwtToken.expires);
 	}
 
 }

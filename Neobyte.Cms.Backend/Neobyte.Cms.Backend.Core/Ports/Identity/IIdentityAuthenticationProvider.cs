@@ -10,7 +10,7 @@ public interface IIdentityAuthenticationProvider {
 
 	public Task<bool> LoginAsync (string email, string password);
 
-	public Task<string> GenerateJwtTokenAsync (IdentityAccount identityAccount, bool rememberMe);
+	public Task<(string token, long expires)> GenerateJwtTokenAsync (IdentityAccount identityAccount, bool rememberMe);
 
 	public string NormalizeEmail (string email);
 
