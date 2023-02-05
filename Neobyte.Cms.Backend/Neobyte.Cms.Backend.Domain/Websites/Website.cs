@@ -13,6 +13,19 @@ public class Website {
 	[Required]
 	[StringLength(50)]
 	public string Domain { get; set; }
-	public ICollection<Page> Pages { get; set; }
+	public ICollection<Page>? Pages { get; set; }
+
+	public Website (string name, string domain) {
+		Id = WebsiteId.New();
+		Name = name;
+		Domain = domain;
+		Pages = new List<Page>();
+	}
+
+	public Website (WebsiteId id, string name, string domain) {
+		Id = id;
+		Name = name;
+		Domain = domain;
+	}
 
 }

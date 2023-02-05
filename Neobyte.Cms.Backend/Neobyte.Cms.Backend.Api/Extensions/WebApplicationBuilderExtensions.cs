@@ -11,9 +11,9 @@ public static class WebApplicationBuilderExtensions {
 
         // endpoints
         builder.Services.AddSingleton<ApiEndpointLoader>();
-        builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
 
-        // swagger
+		// swagger
 		builder.Services.AddEndpointsApiExplorer();
 		builder.Services.AddSwaggerGen();
 

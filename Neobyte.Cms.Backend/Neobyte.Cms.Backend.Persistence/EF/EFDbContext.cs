@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Neobyte.Cms.Backend.Domain.Accounts;
+using System;
 
 namespace Neobyte.Cms.Backend.Persistence.EF;
 
-public class EFDbContext : IdentityDbContext<AccountIdentityUser> {
+public class EFDbContext : IdentityDbContext<IdentityAccount, IdentityRole<Guid>, Guid> {
 
 	public DbSet<Account> Accounts { get; set; } = null!;
 
