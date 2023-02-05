@@ -49,7 +49,7 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 		if (!result.Succeeded)
 			return new AccountsCreateResponseModel(false) { Errors = result.Errors.Select(e => e.Description).ToArray() };
 
-		return new AccountsCreateResponseModel(true) { AccountId = account.Id };
+		return new AccountsCreateResponseModel(true) { AccountId = account.Id, IdentityAccountId = identityAccount.Id };
 	}
 
 	public async Task<bool> LoginAsync (string email, string password) {
@@ -59,6 +59,7 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 			return false;
 		var signInResult = await _signInManager.PasswordSignInAsync(identityAccount, password, false, false);
 		return signInResult.Succeeded;
+
 	}
 
 	public async Task<string> GenerateJwtTokenAsync (IdentityAccount identityAccount, bool rememberMe) {

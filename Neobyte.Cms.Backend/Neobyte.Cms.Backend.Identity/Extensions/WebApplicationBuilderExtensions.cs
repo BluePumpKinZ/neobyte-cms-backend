@@ -43,18 +43,21 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton(credentials);
 		builder.Services.AddSingleton<JwtSecurityTokenHandler>();
 
-		builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-			.AddJwtBearer(options => {
-				options.TokenValidationParameters = new TokenValidationParameters {
-					ValidateIssuer = true,
-					ValidateAudience = true,
-					ValidateLifetime = true,
-					ValidateIssuerSigningKey = true,
-					ValidIssuer = jwtOptions.Issuer,
-					ValidAudience = jwtOptions.Audience,
-					IssuerSigningKey = key
-				};
-			});
+		builder.Services.AddAuthentication(options => {
+			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+		}).AddJwtBearer(options => {
+			options.TokenValidationParameters = new TokenValidationParameters {
+				ValidateIssuer = true,
+				ValidateAudience = true,
+				ValidateLifetime = true,
+				ValidateIssuerSigningKey = true,
+				ValidIssuer = jwtOptions.Issuer,
+				ValidAudience = jwtOptions.Audience,
+				IssuerSigningKey = key
+			};
+		});
 
 		builder.Services.AddAuthorization(options => {
 			foreach (UserPolicy userPolicy in UserPolicy.All) {
