@@ -1,6 +1,4 @@
-﻿using Neobyte.Cms.Backend.Core.Identity;
-
-namespace Neobyte.Cms.Backend.Api.Authorization.Extensions;
+﻿namespace Neobyte.Cms.Backend.Api.Authorization.Extensions;
 
 public static class RouteHanlderBuilderExtensions {
 

@@ -27,6 +27,10 @@ public class AccountManager {
 		return response;
 	}
 
+	public async Task<Account> GetAccountDetails (AccountId accountId) {
+		return await _readOnlyAccountRepository.ReadAccountDetailsById(accountId);
+	}
+
 	public async Task<IdentityAccount> GetIdentityAccountWithAccountByEmail (string normalizedEmail) {
 		return await _readOnlyAccountRepository.ReadIdentityAccountWithAccountByEmail(normalizedEmail);
 	}

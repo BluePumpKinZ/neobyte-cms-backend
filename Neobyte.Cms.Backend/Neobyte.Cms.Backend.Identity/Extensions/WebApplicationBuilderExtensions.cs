@@ -40,6 +40,7 @@ public static class WebApplicationBuilderExtensions {
 
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret));
 		var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+		builder.Services.AddSingleton(key);
 		builder.Services.AddSingleton(credentials);
 		builder.Services.AddSingleton<JwtSecurityTokenHandler>();
 
@@ -55,7 +56,8 @@ public static class WebApplicationBuilderExtensions {
 				ValidateIssuerSigningKey = true,
 				ValidIssuer = jwtOptions.Issuer,
 				ValidAudience = jwtOptions.Audience,
-				IssuerSigningKey = key
+				IssuerSigningKey = key,
+				ClockSkew = TimeSpan.Zero
 			};
 		});
 

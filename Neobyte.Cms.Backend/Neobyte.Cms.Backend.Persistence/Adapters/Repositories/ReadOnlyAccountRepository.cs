@@ -3,6 +3,7 @@ using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Persistence.EF;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,6 +39,14 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 
 	public async Task<IdentityAccount?> ReadIdentityAccountByEmailAsync (string normalizedEmail) {
 		return await _ctx.Users.SingleOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail);
+	}
+
+	public async Task<IEnumerable<Account>> ReadAllAccountsAsync () {
+		return await _ctx.Accounts.ToListAsync();
+	}
+
+	public async Task<Account> ReadAccountDetailsById (AccountId accountId) {
+		return await _ctx.Accounts.SingleAsync(a => a.Id == accountId);
 	}
 
 }
