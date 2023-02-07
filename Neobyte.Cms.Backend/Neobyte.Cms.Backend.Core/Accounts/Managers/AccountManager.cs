@@ -39,4 +39,8 @@ public class AccountManager {
 		return await _readOnlyAccountRepository.ReadOwnerAccountExistsAsync();
 	}
 
+	public async Task<bool> ChangePasswordAsync (AccountChangePasswordRequestModel request) {
+		return await _identityAuthenticationProvider.ChangePasswordAsync(request);
+	}
+
 }

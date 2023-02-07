@@ -14,4 +14,6 @@ public interface IIdentityAuthenticationProvider {
 
 	public string NormalizeEmail (string email);
 
+	Task<bool> ChangePasswordAsync (AccountChangePasswordRequestModel request);
+
 }
