@@ -10,8 +10,7 @@ public class HtmlContent {
 	public string Html { get; set; }
 
 	public HtmlContent (string html)
-		: this(HtmlContentId.New(), html) {
-	}
+		: this(HtmlContentId.New(), html) { }
 
 	public HtmlContent (HtmlContentId id, string html) {
 		Id = id;

@@ -1,6 +1,4 @@
-﻿using Neobyte.Cms.Backend.Domain.Websites.Templates;
-
-namespace Neobyte.Cms.Backend.Domain.Websites;
+﻿namespace Neobyte.Cms.Backend.Domain.Websites;
 
 [StronglyTypedId(converters: StronglyTypedIdConverter.SystemTextJson)]
 public partial struct WebsiteId { }
