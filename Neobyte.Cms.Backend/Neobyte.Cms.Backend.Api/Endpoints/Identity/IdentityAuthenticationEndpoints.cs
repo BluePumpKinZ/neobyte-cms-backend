@@ -1,5 +1,4 @@
-﻿using Neobyte.Cms.Backend.Core.Identity;
-using Neobyte.Cms.Backend.Core.Identity.Managers;
+﻿using Neobyte.Cms.Backend.Core.Identity.Managers;
 using Neobyte.Cms.Backend.Core.Identity.Models.Authentication;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.Identity;

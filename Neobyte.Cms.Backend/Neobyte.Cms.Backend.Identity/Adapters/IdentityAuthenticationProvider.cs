@@ -88,4 +88,20 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 		return _userManager.NormalizeEmail(email);
 	}
 
+	public async Task<(bool valid, string[]? errors)> ChangePasswordAsync (Guid identityAccountId, string currentPassword, string newPassword) {
+		var user = await _userStore.FindByIdAsync(identityAccountId.ToString(), CancellationToken.None);
+		var result = await _userManager.ChangePasswordAsync(user!, currentPassword, newPassword);
+		
+		if (!result.Succeeded)
+			return (false, new string[] { "Incorrect Password" });
+		
+		return (true, result.Errors.Select(e => e.Description).ToArray());
+	}
+
+	public async Task<bool> ChangeEmailAsync (Guid identityAccountId, string email) {
+		var user = await _userStore.FindByIdAsync(identityAccountId.ToString(), CancellationToken.None);
+		var result = await _userManager.SetEmailAsync(user!, email);
+		return result.Succeeded;
+	}
+
 }
