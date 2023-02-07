@@ -21,11 +21,14 @@ public class AccountsMeEndpoints : IApiEndpoints {
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.ClientPrivilege);
 
-		routes.MapPost("change-password", async (
+		routes.MapPut("change-password", async (
 			[FromServices] AccountManager manager,
 			[FromServices] Principal principal,
 			[FromBody] AccountChangePasswordRequestModel request) => {
-				bool success = await manager.ChangePasswordAsync(request);
+				var response = await manager.ChangePasswordAsync(request, principal.IdentityAccountId);
+				return response.Success
+					? Results.Ok(new { Message = "Password updated" })
+					: Results.BadRequest(new { response.Errors });
 			}).Authorize(UserPolicy.ClientPrivilege)
 			.ValidateBody<AccountChangePasswordRequestModel>();
 

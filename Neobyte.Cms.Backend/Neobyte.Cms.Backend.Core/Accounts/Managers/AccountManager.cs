@@ -3,6 +3,7 @@ using Neobyte.Cms.Backend.Core.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
+using System;
 using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Core.Accounts.Managers;
@@ -39,8 +40,9 @@ public class AccountManager {
 		return await _readOnlyAccountRepository.ReadOwnerAccountExistsAsync();
 	}
 
-	public async Task<bool> ChangePasswordAsync (AccountChangePasswordRequestModel request) {
-		return await _identityAuthenticationProvider.ChangePasswordAsync(request);
+	public async Task<AccountChangePasswordResponseModel> ChangePasswordAsync (AccountChangePasswordRequestModel request, Guid identityAccountId) {
+		var result = await _identityAuthenticationProvider.ChangePasswordAsync(identityAccountId, request.OldPassword, request.NewPassword);
+		return new AccountChangePasswordResponseModel(result.valid, result.errors);
 	}
 
 }
