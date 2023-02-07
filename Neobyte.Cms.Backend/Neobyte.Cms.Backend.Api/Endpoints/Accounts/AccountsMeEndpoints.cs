@@ -32,6 +32,22 @@ public class AccountsMeEndpoints : IApiEndpoints {
 			}).Authorize(UserPolicy.ClientPrivilege)
 			.ValidateBody<AccountChangePasswordRequestModel>();
 
+		routes.MapPut("change-details", async (
+			[FromServices] AccountManager manager,
+			[FromServices] Principal principal,
+			[FromBody] AccountChangeDetailsRequestModel request) => {
+				await manager.ChangeDetailsAsync(request, principal.AccountId);
+				return Results.Ok(new { Message = "Details updated" });
+			}).Authorize(UserPolicy.ClientPrivilege)
+			.ValidateBody<AccountChangeDetailsRequestModel>();
+
+		routes.MapPut("change-email", async (
+			[FromServices] AccountManager manager,
+			[FromServices] Principal principal,
+			[FromQuery] string email) => {
+				bool success = await manager.ChangeEmailAsync(email, principal.IdentityAccountId);
+				return success ? Results.Ok(new { Message = "Email updated" }) : Results.BadRequest(new { Message = "Email already in use" });
+			}).Authorize(UserPolicy.ClientPrivilege);
 	}
 
 }

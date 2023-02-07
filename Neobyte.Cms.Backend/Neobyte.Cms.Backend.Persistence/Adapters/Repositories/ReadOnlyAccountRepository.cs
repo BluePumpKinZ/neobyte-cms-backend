@@ -45,7 +45,7 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 		return await _ctx.Accounts.ToListAsync();
 	}
 
-	public async Task<Account> ReadAccountDetailsById (AccountId accountId) {
+	public async Task<Account> ReadAccountById (AccountId accountId) {
 		return await _ctx.Accounts.SingleAsync(a => a.Id == accountId);
 	}
 

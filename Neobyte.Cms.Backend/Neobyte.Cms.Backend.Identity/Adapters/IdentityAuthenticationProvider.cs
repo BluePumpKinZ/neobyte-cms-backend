@@ -98,4 +98,10 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 		return (true, result.Errors.Select(e => e.Description).ToArray());
 	}
 
+	public async Task<bool> ChangeEmailAsync (Guid identityAccountId, string email) {
+		var user = await _userStore.FindByIdAsync(identityAccountId.ToString(), CancellationToken.None);
+		var result = await _userManager.SetEmailAsync(user!, email);
+		return result.Succeeded;
+	}
+
 }

@@ -17,4 +17,6 @@ public interface IIdentityAuthenticationProvider {
 
 	public Task<(bool valid, string[]? errors)> ChangePasswordAsync (Guid identityAccountId, string oldPassword, string newPassword);
 
+	public Task<bool> ChangeEmailAsync (Guid identityAccountId, string email);
+
 }
