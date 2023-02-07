@@ -11,8 +11,9 @@ public class Snippet {
 	public string Name { get; set; }
 	[Required]
 	public string Description { get; set; }
-	[Required]
 	public Template? Template { get; set; }
+	[Required]
+	public HtmlContent? Content { get; set; }
 
 	public Snippet (string name, string description) {
 		Id = SnippetId.New();

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Neobyte.Cms.Backend.Core\Neobyte.Cms.Backend.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore">
+      <HintPath>..\..\..\..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.2\Microsoft.AspNetCore.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
