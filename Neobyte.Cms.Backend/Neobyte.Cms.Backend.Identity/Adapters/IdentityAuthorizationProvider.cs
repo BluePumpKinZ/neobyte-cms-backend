@@ -2,7 +2,7 @@
 
 namespace Neobyte.Cms.Backend.Identity.Adapters; 
 
-internal class IdentityAuthorizationProvider : IIdentityAuthorizationProvider{
+public class IdentityAuthorizationProvider : IIdentityAuthorizationProvider {
 
 	
 

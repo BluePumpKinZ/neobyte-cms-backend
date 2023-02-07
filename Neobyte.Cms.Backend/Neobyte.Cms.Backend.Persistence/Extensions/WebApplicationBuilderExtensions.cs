@@ -13,9 +13,9 @@ namespace Neobyte.Cms.Backend.Persistence.Extensions;
 
 public static class WebApplicationBuilderExtensions {
 
-    public static WebApplicationBuilder AddPersistence (this WebApplicationBuilder builder) {
+	public static WebApplicationBuilder AddPersistence (this WebApplicationBuilder builder) {
 
-        builder.Services.AddScoped<IReadOnlyAccountRepository, ReadOnlyAccountRepository>();
+		builder.Services.AddScoped<IReadOnlyAccountRepository, ReadOnlyAccountRepository>();
 		builder.Services.AddScoped<IWriteOnlyAccountRepository, WriteOnlyAccountRepository>();
 
 		// database configuration
@@ -27,7 +27,7 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddScoped<DbContextInitializer>();
 		builder.Services.AddSingleton<DbContextInitializerData>();
-        return builder;
-    }
+		return builder;
+	}
 
 }

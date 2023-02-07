@@ -1,14 +1,17 @@
-﻿using Neobyte.Cms.Backend.Core.Identity.Models.Authentication;
+﻿using Neobyte.Cms.Backend.Core.Accounts.Models;
+using Neobyte.Cms.Backend.Domain.Accounts;
 using System.Threading.Tasks;
 
-namespace Neobyte.Cms.Backend.Core.Ports.Identity; 
+namespace Neobyte.Cms.Backend.Core.Ports.Identity;
 
 public interface IIdentityAuthenticationProvider {
 
-	public Task<IdentityRegisterResponseModel> Register (IdentityRegisterRequestModel request);
+	public Task<AccountsCreateResponseModel> CreateIdentityAccountAsync (Account account, string email, string password);
 
-	public Task<IdentityLoginResponseModel> Login (IdentityLoginRequestModel request);
+	public Task<bool> LoginAsync (string email, string password);
 
-	public Task Logout ();
+	public Task<(string token, long expires)> GenerateJwtTokenAsync (IdentityAccount identityAccount, bool rememberMe);
+
+	public string NormalizeEmail (string email);
 
 }

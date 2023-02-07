@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neobyte.Cms.Backend.Monitor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neobyte.Cms.Backend.Identity", "Neobyte.Cms.Backend.Identity\Neobyte.Cms.Backend.Identity.csproj", "{44FE82F9-319F-4E59-9DF1-0E894A0AA5DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neobyte.Cms.Backend.Mailing", "Neobyte.Cms.Backend.Mailing\Neobyte.Cms.Backend.Mailing.csproj", "{887D4813-ED5B-40E0-B3C1-53DCE679D3D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neobyte.Cms.Backend.Mailing", "Neobyte.Cms.Backend.Mailing\Neobyte.Cms.Backend.Mailing.csproj", "{887D4813-ED5B-40E0-B3C1-53DCE679D3D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

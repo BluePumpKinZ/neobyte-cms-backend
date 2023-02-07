@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Neobyte.Cms.Backend.Identity.Policies;
+using Neobyte.Cms.Backend.Identity.Initializers;
 
 namespace Neobyte.Cms.Backend.Identity.Extensions;
 
@@ -9,21 +8,14 @@ public static class WebApplicationExtensions {
 
 	public static WebApplication UseIdentity (this WebApplication app) {
 
-		using var scope = app.Services.CreateScope();
-
-		var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-		
-		foreach (UserRole userRole in UserRole.Values) {
-			if (roleManager.RoleExistsAsync(userRole).Result)
-				continue;
-
-			IdentityRole role = new(userRole);
-			roleManager.CreateAsync(role).Wait();
-		}
-
 		app.UseAuthentication();
 		app.UseAuthorization();
 
+		using var scope = app.Services.CreateScope();
+		var services = scope.ServiceProvider;
+		var roleInitializer = services.GetRequiredService<RoleInitializer>();
+		roleInitializer.InitializeRoles().Wait();
+		
 		return app;
 	}
 

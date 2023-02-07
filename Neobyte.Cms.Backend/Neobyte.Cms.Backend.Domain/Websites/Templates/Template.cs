@@ -13,6 +13,19 @@ public class Template {
 	[Required]
 	[StringLength(500)]
 	public string Description { get; set; }
-	public ICollection<Snippet> Snippets { get; set; }
+	public ICollection<Snippet>? Snippets { get; set; }
+
+	public Template (string name, string description) {
+		Id = TemplateId.New();
+		Name = name;
+		Description = description;
+		Snippets = new List<Snippet>();
+	}
+
+	public Template (TemplateId id, string name, string description) {
+		Id = id;
+		Name = name;
+		Description = description;
+	}
 
 }

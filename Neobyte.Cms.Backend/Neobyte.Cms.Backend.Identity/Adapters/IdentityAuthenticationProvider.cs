@@ -1,89 +1,91 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using MoreCSharp.Extensions.System.Collections.Generic;
+using Neobyte.Cms.Backend.Core.Accounts.Models;
+using Neobyte.Cms.Backend.Core.Ports.Identity;
+using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
+using Neobyte.Cms.Backend.Domain.Accounts;
+using Neobyte.Cms.Backend.Identity.Configuration;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Text;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using Neobyte.Cms.Backend.Core.Exceptions.Identity;
-using Neobyte.Cms.Backend.Core.Identity.Models.Authentication;
-using Neobyte.Cms.Backend.Core.Ports.Identity;
-using Neobyte.Cms.Backend.Domain.Accounts;
 
 namespace Neobyte.Cms.Backend.Identity.Adapters;
 
-internal class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
+public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 
-	private readonly UserManager<AccountIdentityUser> _userManager;
-	private readonly SignInManager<AccountIdentityUser> _signInManager;
-	private readonly IUserStore<AccountIdentityUser> _userStore;
-	private readonly IUserEmailStore<AccountIdentityUser> _emailStore;
-	private readonly ILogger<IdentityAuthenticationProvider> _logger;
+	private readonly SignInManager<IdentityAccount> _signInManager;
+	private readonly UserManager<IdentityAccount> _userManager;
+	private readonly SigningCredentials _credentials;
+	private readonly JwtOptions _jwtOptions;
+	private readonly JwtSecurityTokenHandler _tokenHandler;
+	private readonly IUserStore<IdentityAccount> _userStore;
+	private readonly IUserEmailStore<IdentityAccount> _emailStore;
+	private readonly IReadOnlyAccountRepository _readOnlyAccountRepository;
 
-	public IdentityAuthenticationProvider (UserManager<AccountIdentityUser> userManager, SignInManager<AccountIdentityUser> signInManager, IUserStore<AccountIdentityUser> userStore, ILogger<IdentityAuthenticationProvider> logger) {
-		_userManager = userManager;
+	public IdentityAuthenticationProvider (SignInManager<IdentityAccount> signInManager, IOptions<JwtOptions> jwtOptions, SigningCredentials credentials, UserManager<IdentityAccount> userManager, JwtSecurityTokenHandler tokenHandler, IUserStore<IdentityAccount> userStore, IReadOnlyAccountRepository readOnlyAccountRepository) {
 		_signInManager = signInManager;
+		_jwtOptions = jwtOptions.Value;
+		_credentials = credentials;
+		_userManager = userManager;
+		_tokenHandler = tokenHandler;
 		_userStore = userStore;
-		_emailStore = (IUserEmailStore<AccountIdentityUser>)userStore;
-		_logger = logger;
+		_readOnlyAccountRepository = readOnlyAccountRepository;
+		_emailStore = (IUserEmailStore<IdentityAccount>)userStore;
 	}
 
-	public async Task<IdentityRegisterResponseModel> Register (IdentityRegisterRequestModel request) {
-		var user = new AccountIdentityUser {
-			Account = new Account(request.FirstName, request.LastName),
+	public async Task<AccountsCreateResponseModel> CreateIdentityAccountAsync (Account account, string email, string password) {
+		var identityAccount = new IdentityAccount { Account = account };
+
+		await _userStore.SetUserNameAsync(identityAccount, identityAccount.Id.ToString(), CancellationToken.None);
+		await _emailStore.SetEmailAsync(identityAccount, email, CancellationToken.None);
+
+		var result = await _userManager.CreateAsync(identityAccount, password);
+		if (!result.Succeeded)
+			return new AccountsCreateResponseModel(false) { Errors = result.Errors.Select(e => e.Description).ToArray() };
+
+		return new AccountsCreateResponseModel(true) { AccountId = account.Id, IdentityAccountId = identityAccount.Id };
+	}
+
+	public async Task<bool> LoginAsync (string email, string password) {
+		string normalizedEmail = NormalizeEmail(email);
+		var identityAccount = await _readOnlyAccountRepository.ReadIdentityAccountByEmailAsync(normalizedEmail);
+		if (identityAccount is null)
+			return false;
+		var signInResult = await _signInManager.PasswordSignInAsync(identityAccount, password, false, false);
+		return signInResult.Succeeded;
+
+	}
+
+	public async Task<(string token, long expires)> GenerateJwtTokenAsync (IdentityAccount identityAccount, bool rememberMe) {
+
+		long expirationMilliseconds = rememberMe ? _jwtOptions.ExpirationLong : _jwtOptions.ExpirationShort;
+		var roles = await _userManager.GetRolesAsync(identityAccount);
+
+		var claims = new List<Claim>();
+		roles.ForEach(r => claims.Add(new Claim(ClaimTypes.Role, r)));
+		claims.Add(new Claim(ClaimTypes.PrimarySid, identityAccount.Account!.Id.ToString()));
+		claims.Add(new Claim(ClaimTypes.UserData, identityAccount.Id.ToString()));
+
+		var tokenDescriptor = new SecurityTokenDescriptor {
+			Subject = new ClaimsIdentity(claims.ToArray()),
+			Issuer = _jwtOptions.Issuer,
+			Audience = _jwtOptions.Audience,
+			Expires = DateTime.UtcNow.AddMilliseconds(expirationMilliseconds),
+			SigningCredentials = _credentials
 		};
 
-		await _userStore.SetUserNameAsync(user, request.Email, CancellationToken.None);
-		await _emailStore.SetEmailAsync(user, request.Email, CancellationToken.None);
-
-		var registerResult = await _userManager.CreateAsync(user, request.Password);
-		if (!registerResult.Succeeded)
-			return new IdentityRegisterResponseModel(
-				IdentityRegisterResponseModel.RegisterResult.Failed,
-				registerResult.Errors.Select(e => e.Description)
-			);
-
-		string userId = await _userManager.GetUserIdAsync(user);
-		string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-		code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-		// TODO: send email to confirm account
-
-		return new IdentityRegisterResponseModel(IdentityRegisterResponseModel.RegisterResult.Success);
+		var token = _tokenHandler.CreateToken(tokenDescriptor);
+		return (_tokenHandler.WriteToken(token), expirationMilliseconds);
 	}
 
-	public async Task<IdentityLoginResponseModel> Login (IdentityLoginRequestModel request) {
-		try {
-			var signInResult = await _signInManager.PasswordSignInAsync(request.Email, request.Password, request.RememberMe, false);
-			if (signInResult.Succeeded) return new IdentityLoginResponseModel {
-				Result = IdentityLoginResponseModel.LoginResult.Success
-			};
-
-			if (signInResult.RequiresTwoFactor) return new IdentityLoginResponseModel {
-				Result = IdentityLoginResponseModel.LoginResult.RequiresTwoFactor
-			};
-
-			if (signInResult.IsLockedOut) return new IdentityLoginResponseModel {
-				Result = IdentityLoginResponseModel.LoginResult.LockedOut
-			};
-
-			if (signInResult.IsNotAllowed) return new IdentityLoginResponseModel {
-				Result = IdentityLoginResponseModel.LoginResult.NotAllowed
-			};
-
-			return new IdentityLoginResponseModel {
-				Result = IdentityLoginResponseModel.LoginResult.BadCredentials
-			};
-		} catch (Exception e) {
-			_logger.LogError("Error while logging in {error}", e);
-			throw new IdentityLoginException("Error while logging in", e);
-		}
+	public string NormalizeEmail (string email) {
+		return _userManager.NormalizeEmail(email);
 	}
-
-	public async Task Logout () {
-		await _signInManager.SignOutAsync();
-	}
-
 
 }
