@@ -40,6 +40,7 @@ public static class WebApplicationBuilderExtensions {
 				.AddConsoleExporter()
 				.AddAspNetCoreInstrumentation()
 				.AddSqlClientInstrumentation(opt => opt.SetDbStatementForText = true)
+				.AddHttpClientInstrumentation()
 				.AddSource(serviceName)
 				).WithMetrics(mbuilder => mbuilder
 				.AddPrometheusExporter()
