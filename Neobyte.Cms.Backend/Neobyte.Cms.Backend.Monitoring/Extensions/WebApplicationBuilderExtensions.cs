@@ -6,15 +6,14 @@ using Serilog.Core;
 using System;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-namespace Neobyte.Cms.Backend.Monitoring.Extensions; 
+namespace Neobyte.Cms.Backend.Monitoring.Extensions;
 
 public static class WebApplicationBuilderExtensions {
-
-    public static WebApplicationBuilder AddMonitoring (this WebApplicationBuilder builder) {
-
+	public static WebApplicationBuilder AddMonitoring (this WebApplicationBuilder builder) {
 		// Add logging
 		var logLevel = builder.Configuration.GetValue<LogEventLevel>("Logging:LogLevel:Default");
 		var logLevels = builder.Configuration.GetSection("Logging:LogLevel").GetChildren();
@@ -33,22 +32,20 @@ public static class WebApplicationBuilderExtensions {
 		builder.Logging.ClearProviders();
 		builder.Logging.AddSerilog(logger);
 
+		var serviceName = "Neobyte.Cms.Backend";
+		
+		builder.Services.AddOpenTelemetry()
+			.WithTracing(config => config
+				.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName))
+				.AddConsoleExporter()
+				.AddAspNetCoreInstrumentation()
+				.AddSqlClientInstrumentation(opt => opt.SetDbStatementForText = true)
+				.AddSource(serviceName)
+				).WithMetrics(mbuilder => mbuilder
+				.AddPrometheusExporter()
+			);
 
-
-		builder.Services.AddOpenTelemetry().WithTracing(config => config
-			.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Website"))
-			.AddJaegerExporter(c => {
-				c.AgentHost = "localhost";
-				c.AgentPort = 6789;
-			})
-			.AddConsoleExporter()
-			.AddSqlClientInstrumentation(opt => opt.SetDbStatementForText = true)
-			.AddSource("NServiceBus.*")
-		);
-			
-			
 
 		return builder;
-    }
-
+	}
 }
