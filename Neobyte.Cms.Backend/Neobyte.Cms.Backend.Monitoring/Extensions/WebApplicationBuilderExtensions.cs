@@ -5,6 +5,9 @@ using Serilog.Events;
 using Serilog.Core;
 using System;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace Neobyte.Cms.Backend.Monitoring.Extensions; 
 
@@ -29,10 +32,21 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Logging.ClearProviders();
 		builder.Logging.AddSerilog(logger);
-		
 
-		// Add tracing
-		// Have fun arne
+
+
+		builder.Services.AddOpenTelemetry().WithTracing(config => config
+			.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Website"))
+			.AddJaegerExporter(c => {
+				c.AgentHost = "localhost";
+				c.AgentPort = 6789;
+			})
+			.AddConsoleExporter()
+			.AddSqlClientInstrumentation(opt => opt.SetDbStatementForText = true)
+			.AddSource("NServiceBus.*")
+		);
+			
+			
 
 		return builder;
     }
