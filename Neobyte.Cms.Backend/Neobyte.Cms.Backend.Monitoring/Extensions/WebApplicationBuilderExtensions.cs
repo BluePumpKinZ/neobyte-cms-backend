@@ -33,18 +33,22 @@ public static class WebApplicationBuilderExtensions {
 		builder.Logging.AddSerilog(logger);
 
 		var serviceName = "Neobyte.Cms.Backend";
-		
+
 		builder.Services.AddOpenTelemetry()
 			.WithTracing(config => config
 				.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName))
 				.AddConsoleExporter()
+				.AddSqlClientInstrumentation(opt => {
+					opt.SetDbStatementForText = true;
+					opt.RecordException = true;
+				})
 				.AddAspNetCoreInstrumentation()
-				.AddSqlClientInstrumentation(opt => opt.SetDbStatementForText = true)
 				.AddHttpClientInstrumentation()
-				.AddSource(serviceName)
-				).WithMetrics(mbuilder => mbuilder
-				.AddPrometheusExporter()
-			);
+			).WithMetrics(mbuilder => {
+				mbuilder.AddPrometheusExporter();
+				mbuilder.AddConsoleExporter();
+				
+			});
 
 
 		return builder;
