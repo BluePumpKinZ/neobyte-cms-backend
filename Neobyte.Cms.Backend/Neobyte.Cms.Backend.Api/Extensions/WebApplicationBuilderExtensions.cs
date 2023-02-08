@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.DependencyInjection;
 using Neobyte.Cms.Backend.Api.Authorization;
 using Neobyte.Cms.Backend.Api.Endpoints;
 using Neobyte.Cms.Backend.Api.Endpoints.Accounts;
 using Neobyte.Cms.Backend.Api.Endpoints.Identity;
 using Neobyte.Cms.Backend.Api.Endpoints.Loader;
 using Neobyte.Cms.Backend.Api.Endpoints.Mailing;
+using System.Linq;
 
 namespace Neobyte.Cms.Backend.Api.Extensions; 
 
@@ -36,7 +38,10 @@ public static class WebApplicationBuilderExtensions {
 
 		// swagger
 		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen();
+		builder.Services.AddSwaggerGen(c =>
+		{
+				c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+		});
 
 		return builder;
     }
