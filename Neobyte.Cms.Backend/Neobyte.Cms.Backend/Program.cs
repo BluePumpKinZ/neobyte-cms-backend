@@ -6,6 +6,7 @@ using Neobyte.Cms.Backend.Identity.Extensions;
 using Neobyte.Cms.Backend.Mailing.Extensions;
 using Neobyte.Cms.Backend.Monitoring.Extensions;
 using Neobyte.Cms.Backend.Persistence.Extensions;
+using Neobyte.Cms.Backend.RemoteHosting.Extensions;
 using Neobyte.Cms.Backend.Utils.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ builder.AddIdentity();
 builder.AddMailing();
 builder.AddMonitoring();
 builder.AddPersistence();
+builder.AddRemoteHosting();
 builder.AddUtils();
 
 var app = builder.Build();

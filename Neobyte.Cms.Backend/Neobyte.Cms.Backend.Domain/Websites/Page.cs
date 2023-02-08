@@ -14,11 +14,8 @@ public class Page {
 	[Required]
 	public Website? Website { get; set; }
 
-	public Page (string name, string path) {
-		Id = PageId.New();
-		Name = name;
-		Path = path;
-	}
+	public Page (string name, string path)
+		: this (PageId.New(), name, path) {}
 
 	public Page (PageId id, string name, string path) {
 		Id = id;

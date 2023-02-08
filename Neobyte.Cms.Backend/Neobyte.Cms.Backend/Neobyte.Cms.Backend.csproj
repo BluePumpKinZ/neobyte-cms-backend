@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Neobyte.Cms.Backend.Mailing\Neobyte.Cms.Backend.Mailing.csproj" />
     <ProjectReference Include="..\Neobyte.Cms.Backend.Monitoring\Neobyte.Cms.Backend.Monitoring.csproj" />
     <ProjectReference Include="..\Neobyte.Cms.Backend.Persistence\Neobyte.Cms.Backend.Persistence.csproj" />
+    <ProjectReference Include="..\Neobyte.Cms.Backend.RemoteHosting\Neobyte.Cms.Backend.RemoteHosting.csproj" />
   </ItemGroup>
 
 </Project>

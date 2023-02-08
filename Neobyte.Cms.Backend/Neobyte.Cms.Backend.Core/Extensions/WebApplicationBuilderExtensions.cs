@@ -14,6 +14,7 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.Configure<CoreOptions>(builder.Configuration.GetSection("Core"));
 
+		builder.Services.AddScoped<AccountListManager>();
 		builder.Services.AddScoped<AccountManager>();
 		builder.Services.AddScoped<DefaultAccountCreator>();
 

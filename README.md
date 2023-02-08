@@ -5,7 +5,10 @@ We ontwikkelen ons eigen CMS platform voor Neobyte. Het platform zal ondersteuni
 ### Info
 Dit is het backend project van het CMS platform.
 ### Uitvoeren
-Aan te vullen...
+```sh
+cd Neobyte.Cms.Backend
+dotnet run --project Neobyte.Cms.Backend
+```
 
 ## Team
 * Cools Arne - IAI3

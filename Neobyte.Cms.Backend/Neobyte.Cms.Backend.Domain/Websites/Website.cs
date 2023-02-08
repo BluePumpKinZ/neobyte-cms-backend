@@ -14,12 +14,11 @@ public class Website {
 	[StringLength(50)]
 	public string Domain { get; set; }
 	public ICollection<Page>? Pages { get; set; }
+	public ICollection<Snippet>? Snippets { get; set; }
 
-	public Website (string name, string domain) {
-		Id = WebsiteId.New();
-		Name = name;
-		Domain = domain;
+	public Website (string name, string domain) : this(WebsiteId.New(), name, domain) {
 		Pages = new List<Page>();
+		Snippets = new List<Snippet>();
 	}
 
 	public Website (WebsiteId id, string name, string domain) {

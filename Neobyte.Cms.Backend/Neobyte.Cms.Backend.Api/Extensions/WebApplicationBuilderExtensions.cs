@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Neobyte.Cms.Backend.Api.Authorization;
 using Neobyte.Cms.Backend.Api.Endpoints;
+using Neobyte.Cms.Backend.Api.Endpoints.Accounts;
 using Neobyte.Cms.Backend.Api.Endpoints.Identity;
 using Neobyte.Cms.Backend.Api.Endpoints.Loader;
 using Neobyte.Cms.Backend.Api.Endpoints.Mailing;
@@ -14,6 +16,23 @@ public static class WebApplicationBuilderExtensions {
         builder.Services.AddSingleton<ApiEndpointLoader>();
         builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
         builder.Services.AddSingleton<IApiEndpoints, MailingEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, AccountsMeEndpoints>();
+        builder.Services.AddSingleton<IApiEndpoints, AccountsListEndpoints>();
+        builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
+
+		// projections
+		builder.Services.AddSingleton<ProjectionMapperFactory>();
+		builder.Services.AddSingleton(sp => sp.GetRequiredService<ProjectionMapperFactory>().CreateMapper());
+		builder.Services.AddScoped<Projector>();
+		builder.Services.AddSingleton<IProjection, AccountProjection>();
+
+		// principal
+		builder.Services.AddHttpContextAccessor();
+		builder.Services.AddScoped<HttpContextIdentityPrincipalConverter>();
+		builder.Services.AddScoped(sp => {
+			var principalConverter = sp.GetRequiredService<HttpContextIdentityPrincipalConverter>();
+			return principalConverter.GetPrincipalAsync().Result;
+		});
 
 		// swagger
 		builder.Services.AddEndpointsApiExplorer();
