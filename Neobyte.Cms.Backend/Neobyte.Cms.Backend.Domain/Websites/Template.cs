@@ -5,8 +5,7 @@ public partial struct TemplateId { }
 
 public class Template : Website {
 
-	[Key]
-	public new TemplateId Id { get => new TemplateId(base.Id.Value); set => base.Id = new WebsiteId(value.Value); }
+
 	[Required]
 	[StringLength(500)]
 	public string Description { get; set; }

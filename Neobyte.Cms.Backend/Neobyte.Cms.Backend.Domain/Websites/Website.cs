@@ -1,4 +1,6 @@
-﻿namespace Neobyte.Cms.Backend.Domain.Websites;
+﻿using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
+
+namespace Neobyte.Cms.Backend.Domain.Websites;
 
 [StronglyTypedId(converters: StronglyTypedIdConverter.SystemTextJson)]
 public partial struct WebsiteId { }
@@ -13,6 +15,7 @@ public class Website {
 	[Required]
 	[StringLength(50)]
 	public string Domain { get; set; }
+	public HostingConnection? Connection { get; set; }
 	public ICollection<Page>? Pages { get; set; }
 	public ICollection<Snippet>? Snippets { get; set; }
 
