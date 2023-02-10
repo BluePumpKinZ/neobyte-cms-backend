@@ -22,10 +22,4 @@
     <ProjectReference Include="..\Neobyte.Cms.Backend.RemoteHosting\Neobyte.Cms.Backend.RemoteHosting.csproj" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Reference Include="Microsoft.AspNetCore">
-			<HintPath>..\..\..\..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.2\Microsoft.AspNetCore.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-
 </Project>

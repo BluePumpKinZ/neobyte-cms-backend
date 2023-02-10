@@ -1,24 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\Neobyte.Cms.Backend.Utils\Neobyte.Cms.Backend.Utils.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="StronglyTypedId" Version="1.0.0-beta06" />
-	<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.2" />
-  </ItemGroup>
+		<ProjectReference Include="..\Neobyte.Cms.Backend.Utils\Neobyte.Cms.Backend.Utils.csproj" />
+	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="Microsoft.AspNetCore">
-			<HintPath>..\..\..\..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.2\Microsoft.AspNetCore.dll</HintPath>
-		</Reference>
+		<PackageReference Include="StronglyTypedId" Version="1.0.0-beta06" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
 </Project>
