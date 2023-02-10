@@ -8,6 +8,13 @@ internal class FtpConnector : IRemoteHostingConnector {
 
 	private readonly FtpConnectorOptions _options = new FtpConnectorOptions();
 
+	private Ftp GetFtp () {
+		var ftp = new Ftp();
+		ftp.Connect(_options.Host, _options.Port);
+		ftp.Login(_options.Username, _options.Password);
+		return ftp;
+	}
+
 	public bool CanConnect (HostingConnection connection) {
 		return connection is FtpHostingConnection;
 	}
@@ -21,9 +28,7 @@ internal class FtpConnector : IRemoteHostingConnector {
 	}
 
 	public IEnumerable<FilesystemEntry> ListItems (string path) {
-		using var ftp = new Ftp();
-		ftp.Connect(_options.Host);
-		ftp.Login(_options.Username, _options.Password);
+		using var ftp = GetFtp();
 		ftp.ChangeFolder(path);
 		var items = ftp.GetList();
 		ftp.Close();
@@ -33,23 +38,36 @@ internal class FtpConnector : IRemoteHostingConnector {
 	}
 
 	public void CreateFolder (string path, string name) {
-		throw new NotImplementedException ();
+		using var ftp = GetFtp();
+		ftp.ChangeFolder(path);
+		ftp.CreateFolder(name);
+		ftp.Close();
 	}
 
 	public void DeleteFolder (string path) {
-		throw new NotImplementedException ();
+		using var ftp = GetFtp();
+		ftp.DeleteFolder(path);
+		ftp.Close();
 	}
 
 	public void CreateFile (string path, string name, byte[] content) {
-		throw new NotImplementedException ();
+		using var ftp = GetFtp();
+		ftp.ChangeFolder(path);
+		ftp.Upload(name, content);
+		ftp.Close();
 	}
 
 	public void DeleteFile (string path) {
-		throw new NotImplementedException ();
+		using var ftp = GetFtp();
+		ftp.DeleteFile(path);
+		ftp.Close();
 	}
 
 	public byte[] GetFileContent (string path) {
-		throw new NotImplementedException ();
+		using var ftp = GetFtp();
+		var content = ftp.Download(path);
+		ftp.Close();
+		return content;
 	}
 
 }
