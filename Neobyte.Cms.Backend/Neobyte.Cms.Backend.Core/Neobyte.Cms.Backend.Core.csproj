@@ -13,6 +13,7 @@
   <ItemGroup>
     <Folder Include="Identity\Models\Authentication\" />
     <Folder Include="Identity\Managers\" />
+    <Folder Include="Ports\RemoteHosting\" />
   </ItemGroup>
 
   <ItemGroup>

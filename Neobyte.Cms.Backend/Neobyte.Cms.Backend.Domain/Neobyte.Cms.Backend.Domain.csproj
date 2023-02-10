@@ -15,4 +15,8 @@
 	<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Websites\HostingConnections\" />
+  </ItemGroup>
+
 </Project>
