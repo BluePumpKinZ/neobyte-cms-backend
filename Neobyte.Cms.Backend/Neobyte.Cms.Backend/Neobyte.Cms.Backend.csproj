@@ -1,25 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>disable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Neobyte.Cms.Backend.Api\Neobyte.Cms.Backend.Api.csproj" />
-    <ProjectReference Include="..\Neobyte.Cms.Backend.Identity\Neobyte.Cms.Backend.Identity.csproj" />
-    <ProjectReference Include="..\Neobyte.Cms.Backend.Mailing\Neobyte.Cms.Backend.Mailing.csproj" />
-    <ProjectReference Include="..\Neobyte.Cms.Backend.Monitoring\Neobyte.Cms.Backend.Monitoring.csproj" />
-    <ProjectReference Include="..\Neobyte.Cms.Backend.Persistence\Neobyte.Cms.Backend.Persistence.csproj" />
-    <ProjectReference Include="..\Neobyte.Cms.Backend.RemoteHosting\Neobyte.Cms.Backend.RemoteHosting.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Neobyte.Cms.Backend.Api\Neobyte.Cms.Backend.Api.csproj" />
+		<ProjectReference Include="..\Neobyte.Cms.Backend.Identity\Neobyte.Cms.Backend.Identity.csproj" />
+		<ProjectReference Include="..\Neobyte.Cms.Backend.Mailing\Neobyte.Cms.Backend.Mailing.csproj" />
+		<ProjectReference Include="..\Neobyte.Cms.Backend.Monitoring\Neobyte.Cms.Backend.Monitoring.csproj" />
+		<ProjectReference Include="..\Neobyte.Cms.Backend.Persistence\Neobyte.Cms.Backend.Persistence.csproj" />
+		<ProjectReference Include="..\Neobyte.Cms.Backend.RemoteHosting\Neobyte.Cms.Backend.RemoteHosting.csproj" />
+	</ItemGroup>
 
 </Project>
