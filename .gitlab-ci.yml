@@ -1,0 +1,24 @@
+variables:
+  PUBLISH_PATH: "/var/publish/$CI_PIPELINE_ID/"
+
+stages:
+  - build
+  - test
+
+build:
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  stage: build
+  script:
+    - cd Neobyte.Cms.Backend
+    - dotnet restore
+    - dotnet build --no-restore
+    - dotnet publish
+  artifacts:
+    expire_in: 1 days
+
+test:
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  stage: test
+  script:
+    - cd Neobyte.Cms.Backend
+    - dotnet test --no-build --verbosity normal
