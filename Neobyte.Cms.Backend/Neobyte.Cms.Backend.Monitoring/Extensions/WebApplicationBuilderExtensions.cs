@@ -50,10 +50,12 @@ public static class WebApplicationBuilderExtensions {
 				})
 				.AddAspNetCoreInstrumentation()
 				.AddHttpClientInstrumentation()
-			).WithMetrics(mbuilder => {
-				mbuilder.AddPrometheusExporter();
-				mbuilder.AddConsoleExporter();
-			}).StartWithHost();
+				.AddJaegerExporter(c => {
+					c.AgentHost = monitoringOptions.JaegerHost;
+					c.AgentPort = monitoringOptions.JaegerPort;
+				})
+			)
+			.StartWithHost();
 
 
 		return builder;
