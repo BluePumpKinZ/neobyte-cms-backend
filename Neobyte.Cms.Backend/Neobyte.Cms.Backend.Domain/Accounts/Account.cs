@@ -15,9 +15,7 @@ public class Account {
 	public DateTime CreationDate { get; set; }
 
 	public Account (string firstname, string lastname)
-		: this (AccountId.New(), firstname, lastname, DateTime.UtcNow) {
-		
-	}
+		: this (AccountId.New(), firstname, lastname, DateTime.UtcNow) { }
 
 	public Account (AccountId id, string firstname, string lastname, DateTime creationDate) {
 		Id = id;
