@@ -9,6 +9,7 @@ build:
   image: mcr.microsoft.com/dotnet/sdk:7.0
   stage: build
   script:
+    - cd Neobyte.Cms.Backend
     - dotnet restore
     - dotnet build --no-restore
     - dotnet publish
@@ -19,4 +20,5 @@ test:
   image: mcr.microsoft.com/dotnet/sdk:7.0
   stage: test
   script:
+    - cd Neobyte.Cms.Backend
     - dotnet test --no-build --verbosity normal
