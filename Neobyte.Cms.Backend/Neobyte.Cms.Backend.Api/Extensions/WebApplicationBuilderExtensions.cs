@@ -35,6 +35,8 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddEndpointsApiExplorer();
 		builder.Services.AddSwaggerGen();
 
+		builder.Services.AddCors();
+
 		return builder;
     }
 
