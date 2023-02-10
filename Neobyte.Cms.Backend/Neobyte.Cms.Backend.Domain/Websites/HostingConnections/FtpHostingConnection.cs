@@ -24,4 +24,11 @@ public class FtpHostingConnection : HostingConnection {
 		Port = port;
 	}
 
+	public FtpHostingConnection (string host, string username, string password, int port) {
+		Host = host;
+		Username = username;
+		Password = password;
+		Port = port;
+	}
+
 }

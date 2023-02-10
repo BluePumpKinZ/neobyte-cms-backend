@@ -24,7 +24,7 @@ internal class FtpConnector : IRemoteHostingConnector {
 		using var ftp = new Ftp();
 		ftp.Connect(_options.Host);
 		ftp.Login(_options.Username, _options.Password);
-		ftp.ChangeFolder(path); 
+		ftp.ChangeFolder(path);
 		var items = ftp.GetList();
 		ftp.Close();
 		
