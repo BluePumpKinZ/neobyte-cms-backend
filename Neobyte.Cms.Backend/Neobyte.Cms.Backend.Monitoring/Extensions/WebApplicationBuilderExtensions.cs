@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using Serilog.Core;
 using System;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Neobyte.Cms.Backend.Monitoring.Configuration;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -32,7 +35,10 @@ public static class WebApplicationBuilderExtensions {
 		builder.Logging.ClearProviders();
 		builder.Logging.AddSerilog(logger);
 
-		var serviceName = "Neobyte.Cms.Backend";
+		builder.Services.Configure<MonitoringOptions>(builder.Configuration.GetSection(MonitoringOptions.SectionName));
+		var monitoringOptions = new MonitoringOptions();
+		builder.Configuration.GetSection(MonitoringOptions.SectionName).Bind(monitoringOptions);
+		var serviceName = monitoringOptions.ServiceName;
 
 		builder.Services.AddOpenTelemetry()
 			.WithTracing(config => config
@@ -47,8 +53,7 @@ public static class WebApplicationBuilderExtensions {
 			).WithMetrics(mbuilder => {
 				mbuilder.AddPrometheusExporter();
 				mbuilder.AddConsoleExporter();
-				
-			});
+			}).StartWithHost();
 
 
 		return builder;
