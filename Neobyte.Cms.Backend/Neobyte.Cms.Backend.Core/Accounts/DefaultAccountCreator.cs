@@ -31,6 +31,7 @@ internal class DefaultAccountCreator {
 
 		var request = new AccountsCreateRequestModel {
 			Username = _options.Username,
+			Bio = _options.Bio,
 			Email = _options.Email,
 			Password = _options.Password
 		};
