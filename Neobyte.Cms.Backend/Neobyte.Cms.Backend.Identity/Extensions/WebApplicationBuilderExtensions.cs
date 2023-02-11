@@ -6,11 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Neobyte.Cms.Backend.Core.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
-using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Identity.Adapters;
 using Neobyte.Cms.Backend.Identity.Configuration;
 using Neobyte.Cms.Backend.Identity.Initializers;
 using Neobyte.Cms.Backend.Persistence.EF;
+using Neobyte.Cms.Backend.Persistence.Entities.Accounts;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -24,13 +24,12 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddScoped<IIdentityAuthenticationProvider, IdentityAuthenticationProvider>();
 		builder.Services.AddScoped<IIdentityAuthorizationProvider, IdentityAuthorizationProvider>();
-		builder.Services.AddScoped<IIdentityRoleProvider, IdentityRoleProvider>();
 
 		builder.Services.AddScoped<RoleInitializer>();
 
 		builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection("Identity"));
 
-		builder.Services.AddIdentity<IdentityAccount, IdentityRole<Guid>>()
+		builder.Services.AddIdentity<IdentityAccountEntity, IdentityRole<Guid>>()
 			.AddEntityFrameworkStores<EFDbContext>()
 			.AddDefaultTokenProviders();
 

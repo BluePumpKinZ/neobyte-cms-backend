@@ -1,7 +1,7 @@
 ﻿using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Persistence.EF;
-using System.Threading.Tasks;
+using Neobyte.Cms.Backend.Persistence.Entities.Accounts;
 
 namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories; 
 
@@ -13,14 +13,20 @@ public class WriteOnlyAccountRepository : IWriteOnlyAccountRepository {
 		_ctx = ctx;
 	}
 
-	public async Task<Account> CreateAccountAsync (Account account) {
-		return (await _ctx.Accounts.AddAsync(account)).Entity;
-	}
-
 	public async Task<Account> UpdateAccountAsync (Account account) {
-		var entity = _ctx.Accounts.Update(account).Entity;
+		var accountEntity = await _ctx.AccountEntities.SingleAsync(a => a.Id == account.Id);
+		accountEntity.Username = account.Username;
+		accountEntity.Bio = account.Bio;
+
+		IdentityAccountEntity identityAccountEntity = await (from u in _ctx.Users
+										   join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
+										   select u).SingleAsync();
+
+		identityAccountEntity.Email = account.Email;
+		identityAccountEntity.NormalizedEmail = account.Email.ToUpper();
+
 		await _ctx.SaveChangesAsync();
-		return entity;
+		return account;
 	}
 
 }

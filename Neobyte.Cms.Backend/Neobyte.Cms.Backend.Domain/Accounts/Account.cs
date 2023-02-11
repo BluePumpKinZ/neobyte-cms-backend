@@ -5,24 +5,23 @@ public partial struct AccountId { }
 
 public class Account {
 
-	[Key]
 	public AccountId Id { get; set; }
-	[Required]
-	public string Firstname { get; set; }
-	[Required]
-	public string Lastname { get; set; }
-	[Required]
+	public string Email { get; set; }
+	public string Username { get; set; }
+	public string Bio { get; set; }
 	public DateTime CreationDate { get; set; }
+	public string[] Roles { get; set; }
 
-	public Account (string firstname, string lastname)
-		: this (AccountId.New(), firstname, lastname, DateTime.UtcNow) { }
+	public Account (string email, string username, string bio, string[] roles)
+		: this(AccountId.New(), email, username, bio, DateTime.UtcNow, roles) { }
 
-	public Account (AccountId id, string firstname, string lastname, DateTime creationDate) {
+	public Account (AccountId id, string email, string username, string bio, DateTime creationDate, string[] roles) {
 		Id = id;
-		Firstname = firstname;
-		Lastname = lastname;
+		Email = email;
+		Username = username;
+		Bio = bio;
 		CreationDate = creationDate;
+		Roles = roles;
 	}
-
 
 }

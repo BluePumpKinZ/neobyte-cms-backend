@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories; 
+namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories;
 
 public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 
@@ -15,13 +15,6 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 
 	public ReadOnlyAccountRepository (EFDbContext ctx) {
 		_ctx = ctx;
-	}
-
-	public async Task<IdentityAccount> ReadIdentityAccountWithAccountByEmail (string normalizedEmail) {
-		return await _ctx.Users
-			.Include(u => u.Account)
-			.Where(u => u.NormalizedEmail == normalizedEmail.ToUpper())
-			.SingleAsync();
 	}
 
 	public async Task<bool> ReadOwnerAccountExistsAsync () {
@@ -33,20 +26,45 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 				.Any(ur => ur.RoleId == ownerRoleId));
 	}
 
-	public async Task<IdentityAccount> ReadByIdentityAccountIdAsync (Guid identityAccountId) {
-		return await _ctx.Users.SingleAsync(u => u.Id == identityAccountId);
+	public async Task<Account?> ReadAccountByEmailAsync (string normalizedEmail) {
+		return await (from u in _ctx.Users
+					  join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
+					  join ur in _ctx.UserRoles on u.Id equals ur.UserId into urGroup
+					  from ur in urGroup.DefaultIfEmpty()
+					  join r in _ctx.Roles on ur.RoleId equals r.Id into rGroup
+					  from r in rGroup.DefaultIfEmpty()
+					  where u.NormalizedEmail == normalizedEmail
+					  select new { Account = a, u.Email, Role = r } into result
+					  group result by result.Account into g
+					  select new Account(g.Key.Id, g.First().Email, g.Key.Username, g.Key.Bio, g.Key.CreationDate, g.Where(r => r.Role != null).Select(r => r.Role.Name!).ToArray())).SingleOrDefaultAsync();
 	}
 
-	public async Task<IdentityAccount?> ReadIdentityAccountByEmailAsync (string normalizedEmail) {
-		return await _ctx.Users.SingleOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail);
-	}
 
 	public async Task<IEnumerable<Account>> ReadAllAccountsAsync () {
-		return await _ctx.Accounts.ToListAsync();
+		return await (from u in _ctx.Users
+					  join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
+					  join ur in _ctx.UserRoles on u.Id equals ur.UserId into urGroup
+					  from ur in urGroup.DefaultIfEmpty()
+					  join r in _ctx.Roles on ur.RoleId equals r.Id into rGroup
+					  from r in rGroup.DefaultIfEmpty()
+					  select new { Account = a, u.Email, Role = r } into result
+					  group result by result.Account into g
+					  select new Account(g.Key.Id, g.First().Email, g.Key.Username, g.Key.Bio, g.Key.CreationDate, g.Where(r => r.Role != null).Select(r => r.Role.Name!).ToArray()))
+					  .ToListAsync();
 	}
 
 	public async Task<Account> ReadAccountById (AccountId accountId) {
-		return await _ctx.Accounts.SingleAsync(a => a.Id == accountId);
+		return await(from u in _ctx.Users
+					 join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
+					 join ur in _ctx.UserRoles on u.Id equals ur.UserId into urGroup
+					 from ur in urGroup.DefaultIfEmpty()
+					 join r in _ctx.Roles on ur.RoleId equals r.Id into rGroup
+					 from r in rGroup.DefaultIfEmpty()
+					 where a.Id == accountId
+					 select new { Account = a, u.Email, Role = r } into result
+					 group result by result.Account into g
+					 select new Account(g.Key.Id, g.First().Email, g.Key.Username, g.Key.Bio, g.Key.CreationDate, g.Where(r => r.Role != null).Select(r => r.Role.Name!).ToArray())).SingleAsync();
 	}
+
 
 }

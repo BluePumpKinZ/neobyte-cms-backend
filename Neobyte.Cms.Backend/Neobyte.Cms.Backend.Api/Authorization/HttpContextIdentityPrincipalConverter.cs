@@ -37,10 +37,9 @@ public class HttpContextIdentityPrincipalConverter {
 			throw new AuthorizationException("Authentication token is invalid, could not create principal");
 
 		var accountId = new AccountId(Guid.Parse ((string)validationResult.Claims.First(c => c.Key == ClaimTypes.PrimarySid).Value));
-		var identityAccountId = Guid.Parse((string)validationResult.Claims.First(c => c.Key == ClaimTypes.UserData).Value);
 		var roles = validationResult.Claims.Where(c => c.Key == ClaimTypes.Role).Select(c => (string)c.Value);
 
-		return new Principal(accountId, identityAccountId, roles);
+		return new Principal(accountId, roles);
 	}
 
 }

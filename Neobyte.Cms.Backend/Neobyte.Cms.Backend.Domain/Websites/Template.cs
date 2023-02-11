@@ -5,9 +5,6 @@ public partial struct TemplateId { }
 
 public class Template : Website {
 
-
-	[Required]
-	[StringLength(500)]
 	public string Description { get; set; }
 	public string FileName { get; set; }
 	public HtmlContent? HtmlContent { get; set; }
