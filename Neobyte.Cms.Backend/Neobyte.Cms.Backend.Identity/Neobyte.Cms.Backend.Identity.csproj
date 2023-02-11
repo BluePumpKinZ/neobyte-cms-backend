@@ -16,6 +16,7 @@
 		<Folder Include="Adapters\" />
 		<Folder Include="Configuration\" />
 		<Folder Include="Initializers\" />
+		<Folder Include="Repositories\" />
 	</ItemGroup>
 
 	<ItemGroup>

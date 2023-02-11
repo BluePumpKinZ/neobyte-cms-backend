@@ -30,8 +30,8 @@ internal class DefaultAccountCreator {
 			return;
 
 		var request = new AccountsCreateRequestModel {
-			FirstName = _options.FirstName,
-			LastName = _options.LastName,
+			Username = _options.Username,
+			Bio = _options.Bio,
 			Email = _options.Email,
 			Password = _options.Password
 		};
