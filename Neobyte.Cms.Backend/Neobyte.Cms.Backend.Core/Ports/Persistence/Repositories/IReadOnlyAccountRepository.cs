@@ -12,6 +12,6 @@ public interface IReadOnlyAccountRepository {
 
 	public Task<IEnumerable<Account>> ReadAllAccountsAsync ();
 
-	public Task<Account> ReadAccountById (AccountId accountId);
+	public Task<Account> ReadAccountByIdAsync (AccountId accountId);
 
 }

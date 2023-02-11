@@ -22,44 +22,46 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 	}
 
 	public async Task<Account?> ReadAccountByEmailAsync (string normalizedEmail) {
-		return await (from u in _ctx.Users
-					  join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
-					  join ur in _ctx.UserRoles on u.Id equals ur.UserId into urGroup
-					  from ur in urGroup.DefaultIfEmpty()
-					  join r in _ctx.Roles on ur.RoleId equals r.Id into rGroup
-					  from r in rGroup.DefaultIfEmpty()
-					  where u.NormalizedEmail == normalizedEmail
-					  select new { Account = a, u.Email, Role = r } into result
-					  group result by result.Account into g
-					  select new Account(g.Key.Id, g.First().Email, g.Key.Username, g.Key.Bio, g.Key.CreationDate, g.Where(r => r.Role != null).Select(r => r.Role.Name!).ToArray())).SingleOrDefaultAsync();
+		var roles = await (from u in _ctx.Users
+						   join ur in _ctx.UserRoles on u.Id equals ur.UserId
+						   join r in _ctx.Roles on ur.RoleId equals r.Id
+						   where u.NormalizedEmail == normalizedEmail
+						   select r.Name).ToArrayAsync();
+
+		return await _ctx.Users
+			.Include(u => u.Account)
+			.Select(u => new Account(u.Account!.Id, u.Email!, u.Account!.Username, u.Account.Bio, u.Account.CreationDate, roles!)).SingleOrDefaultAsync();
 	}
 
 
 	public async Task<IEnumerable<Account>> ReadAllAccountsAsync () {
-		return await (from u in _ctx.Users
-					  join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
-					  join ur in _ctx.UserRoles on u.Id equals ur.UserId into urGroup
-					  from ur in urGroup.DefaultIfEmpty()
-					  join r in _ctx.Roles on ur.RoleId equals r.Id into rGroup
-					  from r in rGroup.DefaultIfEmpty()
-					  select new { Account = a, u.Email, Role = r } into result
-					  group result by result.Account into g
-					  select new Account(g.Key.Id, g.First().Email, g.Key.Username, g.Key.Bio, g.Key.CreationDate, g.Where(r => r.Role != null).Select(r => r.Role.Name!).ToArray()))
-					  .ToListAsync();
+
+		var userRoles = await (from u in _ctx.Users
+							   join ur in _ctx.UserRoles on u.Id equals ur.UserId
+							   join r in _ctx.Roles on ur.RoleId equals r.Id
+							   group r.Name by u into g
+							   select new { g.Key.Id, Roles = g.ToArray() }).ToListAsync();
+
+		var accounts = await (from u in _ctx.Users
+							  join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
+							  select new { Account = a, u.Email, IdentityAccountEntityId = u.Id }).ToListAsync();
+
+		return accounts.Select(a => {
+			string[] roles = (userRoles.SingleOrDefault(ur => ur.Id == a.IdentityAccountEntityId)?.Roles ?? new string[0])!;
+			return new Account(a.Account.Id, a.Email!, a.Account.Username, a.Account.Bio, a.Account.CreationDate, roles);
+		});
 	}
 
-	public async Task<Account> ReadAccountById (AccountId accountId) {
-		return await(from u in _ctx.Users
-					 join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
-					 join ur in _ctx.UserRoles on u.Id equals ur.UserId into urGroup
-					 from ur in urGroup.DefaultIfEmpty()
-					 join r in _ctx.Roles on ur.RoleId equals r.Id into rGroup
-					 from r in rGroup.DefaultIfEmpty()
-					 where a.Id == accountId
-					 select new { Account = a, u.Email, Role = r } into result
-					 group result by result.Account into g
-					 select new Account(g.Key.Id, g.First().Email, g.Key.Username, g.Key.Bio, g.Key.CreationDate, g.Where(r => r.Role != null).Select(r => r.Role.Name!).ToArray())).SingleAsync();
+	public async Task<Account> ReadAccountByIdAsync (AccountId accountId) {
+
+		var roles = await (from u in _ctx.Users
+						   join ur in _ctx.UserRoles on u.Id equals ur.UserId
+						   join r in _ctx.Roles on ur.RoleId equals r.Id
+						   where u.Account!.Id == accountId
+						   select r.Name).ToArrayAsync();
+
+		return await _ctx.Users
+			.Include(u => u.Account)
+			.Select(u => new Account(u.Account!.Id, u.Email!, u.Account!.Username, u.Account.Bio, u.Account.CreationDate, roles!)).SingleAsync();
 	}
-
-
 }

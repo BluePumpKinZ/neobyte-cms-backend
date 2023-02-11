@@ -25,7 +25,7 @@ public class AccountManager {
 	}
 
 	public async Task<Account> GetAccountDetails (AccountId accountId) {
-		return await _readOnlyAccountRepository.ReadAccountById(accountId);
+		return await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId);
 	}
 
 	public async Task<Account?> GetIdentityAccountWithAccountByEmail (string normalizedEmail) {
@@ -42,7 +42,7 @@ public class AccountManager {
 	}
 
 	public async Task ChangeDetailsAsync (AccountChangeDetailsRequestModel request, AccountId accountId) {
-		var account = await _readOnlyAccountRepository.ReadAccountById(accountId);
+		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId);
 		account.Email = request.Email;
 		account.Username = request.Username;
 		account.Bio = request.Bio;
