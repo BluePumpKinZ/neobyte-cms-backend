@@ -77,7 +77,6 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 		var claims = new List<Claim>();
 		roles.ForEach(r => claims.Add(new Claim(ClaimTypes.Role, r)));
 		claims.Add(new Claim(ClaimTypes.PrimarySid, identityAccount.Account!.Id.ToString()));
-		claims.Add(new Claim(ClaimTypes.UserData, identityAccount.Id.ToString()));
 
 		var tokenDescriptor = new SecurityTokenDescriptor {
 			Subject = new ClaimsIdentity(claims.ToArray()),

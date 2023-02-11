@@ -19,7 +19,9 @@ public class IdentityAccountRepository {
 	}
 
 	public async Task<IdentityAccountEntity> ReadIdentityAccountByAccountIdAsync (AccountId accountId) {
-		return await _ctx.Users.SingleAsync(u => u.Account!.Id == accountId);
+		return await _ctx.Users
+			.Include(u => u.Account)
+			.SingleAsync(u => u.Account!.Id == accountId);
 	}
 
 }
