@@ -2,6 +2,7 @@
 
 namespace Neobyte.Cms.Backend.Persistence.Entities.Accounts;
 
+[Table("Accounts")]
 public class AccountEntity {
 
 	[Key]

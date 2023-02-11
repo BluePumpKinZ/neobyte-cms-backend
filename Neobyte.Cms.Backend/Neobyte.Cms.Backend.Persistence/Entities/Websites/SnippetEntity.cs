@@ -2,6 +2,7 @@
 
 namespace Neobyte.Cms.Backend.Persistence.Entities.Websites;
 
+[Table("Snippets")]
 public class SnippetEntity {
 
 	[Key]
@@ -13,7 +14,7 @@ public class SnippetEntity {
 	public string? FileName { get; set; }
 	public TemplateEntity? Template { get; set; }
 	[Required]
-	public HtmlContent? Content { get; set; }
+	public HtmlContentEntity? Content { get; set; }
 
 	public SnippetEntity (SnippetId id, string name, string description, string? fileName) {
 		Id = id;

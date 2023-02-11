@@ -2,6 +2,7 @@
 
 namespace Neobyte.Cms.Backend.Persistence.Entities.Websites;
 
+[Table("Pages")]
 public class PageEntity {
 
 	[Key]

@@ -3,7 +3,6 @@ using Neobyte.Cms.Backend.Core.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
-using System;
 using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Core.Accounts.Managers;

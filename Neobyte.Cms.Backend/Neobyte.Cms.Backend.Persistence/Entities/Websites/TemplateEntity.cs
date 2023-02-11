@@ -3,6 +3,7 @@ using Neobyte.Cms.Backend.Persistence.Entities.Websites.HostingConnections;
 
 namespace Neobyte.Cms.Backend.Persistence.Entities.Websites;
 
+[Table("Templates")]
 public class TemplateEntity {
 
 	[Key]

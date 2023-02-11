@@ -1,9 +1,9 @@
 ﻿using Neobyte.Cms.Backend.Domain.Websites;
-using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
 using Neobyte.Cms.Backend.Persistence.Entities.Websites.HostingConnections;
 
 namespace Neobyte.Cms.Backend.Persistence.Entities.Websites;
 
+[Table("Websites")]
 public class WebsiteEntity {
 
 	[Key]

@@ -1,11 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
+﻿using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Persistence.EF;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories;
 
