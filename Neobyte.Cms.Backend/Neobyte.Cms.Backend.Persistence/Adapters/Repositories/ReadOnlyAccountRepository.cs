@@ -30,6 +30,7 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 
 		return await _ctx.Users
 			.Include(u => u.Account)
+			.Where(u => u.NormalizedEmail == normalizedEmail)
 			.Select(u => new Account(u.Account!.Id, u.Email!, u.Account!.Username, u.Account.Bio, u.Account.CreationDate, roles!)).SingleOrDefaultAsync();
 	}
 
@@ -62,6 +63,7 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 
 		return await _ctx.Users
 			.Include(u => u.Account)
+			.Where(u => u.Account!.Id == accountId)
 			.Select(u => new Account(u.Account!.Id, u.Email!, u.Account!.Username, u.Account.Bio, u.Account.CreationDate, roles!)).SingleAsync();
 	}
 }

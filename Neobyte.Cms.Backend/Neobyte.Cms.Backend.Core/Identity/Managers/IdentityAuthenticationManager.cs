@@ -22,7 +22,7 @@ public class IdentityAuthenticationManager {
 
 		var normalizedEmail = _authenticationProvider.NormalizeEmail(request.Email);
 		var identityAccount = await _accountManager.GetIdentityAccountWithAccountByEmail(normalizedEmail);
-		var jwtToken = await _authenticationProvider.GenerateJwtTokenAsync(identityAccount, request.RememberMe);
+		var jwtToken = await _authenticationProvider.GenerateJwtTokenAsync(identityAccount!, request.RememberMe);
 		return new IdentityLoginResponseModel(true, jwtToken.token, jwtToken.expires);
 	}
 

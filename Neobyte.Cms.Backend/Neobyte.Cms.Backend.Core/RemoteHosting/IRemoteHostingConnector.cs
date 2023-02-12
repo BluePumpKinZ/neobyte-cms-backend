@@ -13,9 +13,13 @@ public interface IRemoteHostingConnector {
 
 	public void CreateFolder (string path, string name);
 
+	public void RenameFolder (string path, string name, string newName);
+
 	public void DeleteFolder (string path);
 
 	public void CreateFile (string path, string name, byte[] content);
+
+	public void RenameFile (string path, string name, string newName);
 
 	public void DeleteFile (string path);
 

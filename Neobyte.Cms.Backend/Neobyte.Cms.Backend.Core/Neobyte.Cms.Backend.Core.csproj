@@ -15,11 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Exceptions\Websites\" />
     <Folder Include="Exceptions\Persistence\" />
     <Folder Include="Identity\Models\Authentication\" />
     <Folder Include="Identity\Managers\" />
     <Folder Include="Ports\RemoteHosting\" />
     <Folder Include="Websites\Managers\" />
+    <Folder Include="Websites\Models\" />
   </ItemGroup>
 
   <ItemGroup>

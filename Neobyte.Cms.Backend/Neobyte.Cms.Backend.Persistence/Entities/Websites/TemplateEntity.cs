@@ -1,5 +1,4 @@
 ﻿using Neobyte.Cms.Backend.Domain.Websites;
-using Neobyte.Cms.Backend.Persistence.Entities.Websites.HostingConnections;
 
 namespace Neobyte.Cms.Backend.Persistence.Entities.Websites;
 
@@ -17,7 +16,6 @@ public class TemplateEntity {
 	[Required]
 	public DateTime CreateDate { get; set; }
 	public HtmlContentEntity? HtmlContent { get; set; }
-	public HostingConnectionEntity? Connection { get; set; }
 	public ICollection<PageEntity>? Pages { get; set; }
 	public ICollection<SnippetEntity>? Snippets { get; set; }
 

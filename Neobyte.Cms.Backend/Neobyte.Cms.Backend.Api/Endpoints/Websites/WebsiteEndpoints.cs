@@ -1,4 +1,5 @@
 ﻿using Neobyte.Cms.Backend.Core.Websites.Managers;
+using Neobyte.Cms.Backend.Core.Websites.Models;
 using Neobyte.Cms.Backend.Domain.Websites;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.Websites;
@@ -9,6 +10,11 @@ public class WebsiteEndpoints : IApiEndpoints {
 	public string Path => "/api/v1/websites";
 
 	public void RegisterApis (RouteGroupBuilder routes) {
+
+		routes.MapPost("create", async ([FromServices] WebsiteManager manager, [FromBody] WebsiteCreateRequestModel request) => {
+			await manager.AddWebsiteAsync(request);
+			return Results.Ok();
+		}).Authorize(UserPolicy.OwnerPrivilege);
 
 		routes.MapGet("{id:Guid}", async (
 			[FromServices] WebsiteManager manager,
