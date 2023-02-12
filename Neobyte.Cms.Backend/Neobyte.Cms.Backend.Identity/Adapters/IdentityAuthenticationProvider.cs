@@ -54,7 +54,7 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 
 		await _userManager.AddToRolesAsync(identityAccount, account.Roles);
 
-		return new AccountsCreateResponseModel(true) { AccountId = account.Id, IdentityAccountId = identityAccount.Id };
+		return new AccountsCreateResponseModel(true) { AccountId = account.Id };
 	}
 
 	public async Task<bool> LoginAsync (string email, string password) {

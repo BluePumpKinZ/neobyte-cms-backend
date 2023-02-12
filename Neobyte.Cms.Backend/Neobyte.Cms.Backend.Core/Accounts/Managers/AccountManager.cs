@@ -3,6 +3,8 @@ using Neobyte.Cms.Backend.Core.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Core.Accounts.Managers;
@@ -19,7 +21,10 @@ public class AccountManager {
 		_identityAuthenticationProvider = identityAuthenticationProvider;
 	}
 
-	public async Task<AccountsCreateResponseModel> CreateAccountAsync (AccountsCreateRequestModel request, Role role) {
+	public async Task<AccountsCreateResponseModel> CreateAccountAsync (AccountsCreateRequestModel request) {
+		Role role = Role.All.SingleOrDefault(r => string.Equals (r.RoleName, request.Role, StringComparison.InvariantCultureIgnoreCase));
+		if (role.RoleName is null) // check rolename because role will never be null because it is a struct
+			return new AccountsCreateResponseModel(false) { Errors = new string[] { $"Role {request.Role} does not exist" }};
 		var account = new Account(request.Email, request.Username, request.Bio, new string[] { role.RoleName });
 		return await _identityAuthenticationProvider.CreateIdentityAccountAsync(account, request.Password);
 	}
