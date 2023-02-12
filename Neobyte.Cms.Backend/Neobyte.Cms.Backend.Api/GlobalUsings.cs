@@ -7,3 +7,4 @@ global using Neobyte.Cms.Backend.Api.Endpoints.Validation.Extensions;
 global using Neobyte.Cms.Backend.Api.Projections;
 global using Neobyte.Cms.Backend.Api.Projections.Projections;
 global using Neobyte.Cms.Backend.Core.Identity;
+global using System;

@@ -10,9 +10,9 @@ public class Template : Website {
 	public HtmlContent? HtmlContent { get; set; }
 
 	public Template (string name, string description, string fileName, string domain)
-		: this(TemplateId.New(), name, description, fileName, domain) { }
+		: this(TemplateId.New(), name, description, fileName, domain, DateTime.UtcNow) { }
 
-	public Template (TemplateId id, string name, string description, string fileName, string domain) : base(new WebsiteId(id.Value), name, domain) {
+	public Template (TemplateId id, string name, string description, string fileName, string domain, DateTime createdDate) : base(new WebsiteId(id.Value), name, domain, createdDate) {
 		Description = description;
 		FileName = fileName;
 	}

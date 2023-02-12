@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Neobyte.Cms.Backend.Domain\Neobyte.Cms.Backend.Domain.csproj" />
   </ItemGroup>
 
@@ -15,6 +19,7 @@
     <Folder Include="Identity\Models\Authentication\" />
     <Folder Include="Identity\Managers\" />
     <Folder Include="Ports\RemoteHosting\" />
+    <Folder Include="Websites\Managers\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +29,10 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EditorConfigFiles Remove="C:\Users\jonas\source\School\KDG\2022-2023\The Lab\Code\neobyte-cms-backend\Neobyte.Cms.Backend\Neobyte.Cms.Backend.Core\.editorconfig" />
 	</ItemGroup>
 
 </Project>
