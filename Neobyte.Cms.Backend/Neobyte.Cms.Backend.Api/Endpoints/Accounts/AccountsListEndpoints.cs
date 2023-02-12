@@ -1,6 +1,10 @@
-﻿using Neobyte.Cms.Backend.Core.Accounts.Managers;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Logging;
+using Neobyte.Cms.Backend.Api.Authorization;
+using Neobyte.Cms.Backend.Core.Accounts.Managers;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Domain.Accounts;
+using System;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.Accounts;
 
@@ -23,6 +27,24 @@ public class AccountsListEndpoints : IApiEndpoints {
 				return Results.BadRequest(result.Errors);
 
 			return Results.Ok();
+		}).Authorize(UserPolicy.OwnerPrivilege)
+		.ValidateBody<AccountsCreateRequestModel>();
+
+		routes.MapDelete("delete/{id:Guid}", async (
+			[FromServices] AccountListManager manager,
+			[FromServices] Principal principal,
+			[FromServices] ILogger<AccountsListEndpoints> logger,
+			[FromRoute] Guid id) => {
+				var accountId = new AccountId(id);
+				if (principal.AccountId == accountId)
+					return Results.BadRequest("You cannot delete your own account.");
+				try {
+					await manager.DeleteAccountAsync(accountId);
+					return Results.Ok(new { Message = "Account deleted" });
+				} catch (ApplicationException e) {
+					logger.LogWarning(e, "Failed to delete account {AccountId}", accountId);
+					return Results.BadRequest(e.Message);
+				}
 		}).Authorize(UserPolicy.OwnerPrivilege);
 
 	}

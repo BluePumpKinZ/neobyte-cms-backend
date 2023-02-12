@@ -1,4 +1,5 @@
-﻿using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
+﻿using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
+using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Persistence.EF;
 using Neobyte.Cms.Backend.Persistence.Entities.Accounts;
@@ -27,6 +28,19 @@ public class WriteOnlyAccountRepository : IWriteOnlyAccountRepository {
 
 		await _ctx.SaveChangesAsync();
 		return account;
+	}
+
+	public async Task DeleteAccountByIdAsync (AccountId accountId) {
+
+		var identityAccountEntity = _ctx.Users.SingleOrDefault(u => u.Account!.Id == accountId);
+		var accountEntity = _ctx.AccountEntities.SingleOrDefault(a => a.Id == accountId);
+		if (identityAccountEntity is null || accountEntity is null)
+			throw new AccountNotFoundException($"Account {accountId} could not be found");
+
+		_ctx.Users.Remove(identityAccountEntity);
+		_ctx.AccountEntities.Remove(accountEntity);
+
+		await _ctx.SaveChangesAsync();
 	}
 
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Neobyte.Cms.Backend.Core.Exceptions.Identity; 
+namespace Neobyte.Cms.Backend.Core.Exceptions.Identity;
 
 public class IdentityLoginException : IdentityException {
 
