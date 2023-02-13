@@ -11,10 +11,15 @@ public class WebsiteEndpoints : IApiEndpoints {
 
 	public void RegisterApis (RouteGroupBuilder routes) {
 
-		routes.MapPost("create", async ([FromServices] WebsiteManager manager, [FromBody] WebsiteCreateRequestModel request) => {
-			await manager.AddWebsiteAsync(request);
-			return Results.Ok();
-		}).Authorize(UserPolicy.OwnerPrivilege);
+		routes.MapPost("create", async (
+			[FromServices] WebsiteManager manager,
+			[FromServices] Projector projector,
+			[FromBody] WebsiteCreateRequestModel request) => {
+				var website = await manager.AddWebsiteAsync(request);
+				var projection = projector.Project<Website, WebsiteEditProjection>(website);
+				return Results.Created(projection.Id.ToString(), projection);
+			}).Authorize(UserPolicy.OwnerPrivilege)
+			.ValidateBody<WebsiteCreateRequestModel>();
 
 		routes.MapGet("{id:Guid}", async (
 			[FromServices] WebsiteManager manager,
@@ -29,12 +34,21 @@ public class WebsiteEndpoints : IApiEndpoints {
 		routes.MapGet("all", async (
 			[FromServices] WebsiteManager manager,
 			[FromServices] Projector projector) => {
-
 				var websites = await manager.GetAllWebsitesAsync();
 				var projection = projector.Project<Website, WebsiteProjection>(websites);
 				return Results.Ok(projection);
 
 			}).Authorize(UserPolicy.OwnerPrivilege);
+
+		routes.MapPut("edit", async (
+			[FromServices] WebsiteManager manager,
+			[FromServices] Projector projector,
+			[FromBody] WebsiteEditRequestModel request) => {
+				var website = await manager.EditWebsiteAsync(request);
+				var projection = projector.Project<Website, WebsiteEditProjection>(website);
+				return Results.Ok(projection);
+			}).Authorize(UserPolicy.OwnerPrivilege)
+		.ValidateBody<WebsiteEditRequestModel>();
 
 	}
 

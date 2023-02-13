@@ -7,4 +7,6 @@ public interface IWriteOnlyWebsiteRepository {
 
 	public Task<Website> CreateWebsiteAsync (Website website);
 
+	public Task<Website> UpdateWebsiteAsync (Website website);
+
 }
