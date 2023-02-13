@@ -43,7 +43,6 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddOpenTelemetry()
 			.WithTracing(config => config
 				.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName))
-				.AddConsoleExporter()
 				.AddSqlClientInstrumentation(opt => {
 					opt.SetDbStatementForText = true;
 					opt.RecordException = true;
@@ -51,7 +50,7 @@ public static class WebApplicationBuilderExtensions {
 				.AddAspNetCoreInstrumentation()
 				.AddHttpClientInstrumentation()
 				.AddOtlpExporter(otlpOptions => {
-					otlpOptions.Endpoint = new Uri("http://localhost:4317");
+					otlpOptions.Endpoint = new Uri($"http://{monitoringOptions.JaegerHost}:{monitoringOptions.JaegerPort}");
 				})
 			);
 
