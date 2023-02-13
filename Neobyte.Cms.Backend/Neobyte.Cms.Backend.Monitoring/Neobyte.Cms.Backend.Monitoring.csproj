@@ -10,52 +10,6 @@
 		<ProjectReference Include="..\Neobyte.Cms.Backend.Core\Neobyte.Cms.Backend.Core.csproj" />
 	</ItemGroup>
 
-<<<<<<< HEAD
-  <ItemGroup>
-    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.4.0-rc.3" />
-    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.4.0-rc.3" />
-    <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.4.0-rc.3" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0-rc.3" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.12" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.12" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.0.0-rc9.12" />
-    <PackageReference Include="Serilog" Version="2.12.0" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.0" />
-  </ItemGroup>
-=======
-	<ItemGroup>
-		<Folder Include="Extensions\" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Serilog" Version="2.12.0" />
-		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
->>>>>>> main
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Neobyte.Cms.Backend.Core\Neobyte.Cms.Backend.Core.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="Extensions\" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Serilog" Version="2.12.0" />
-		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.4.0-rc.3" />
     <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.4.0-rc.3" />
@@ -71,7 +25,16 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<Folder Include="Extensions\" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Serilog" Version="2.12.0" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 </Project>
