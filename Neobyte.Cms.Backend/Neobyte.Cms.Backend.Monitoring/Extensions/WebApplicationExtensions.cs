@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Options;
-using Neobyte.Cms.Backend.Monitoring.Configuration;
 
 namespace Neobyte.Cms.Backend.Monitoring.Extensions; 
 

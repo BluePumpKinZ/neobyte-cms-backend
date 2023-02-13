@@ -6,10 +6,7 @@ using Serilog.Events;
 using Serilog.Core;
 using System;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Neobyte.Cms.Backend.Monitoring.Configuration;
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 

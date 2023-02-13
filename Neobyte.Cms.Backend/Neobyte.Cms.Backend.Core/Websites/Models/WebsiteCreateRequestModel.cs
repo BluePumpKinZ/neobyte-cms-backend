@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Neobyte.Cms.Backend.Core.Websites.Models; 
+﻿namespace Neobyte.Cms.Backend.Core.Websites.Models; 
 
 public class WebsiteCreateRequestModel {
 
