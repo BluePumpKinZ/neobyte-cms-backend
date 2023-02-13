@@ -18,7 +18,12 @@
 
 	<ItemGroup>
 	  <Folder Include="Endpoints\Accounts\" />
+	  <Folder Include="Endpoints\Websites\" />
 	  <Folder Include="Exceptions\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
 </Project>

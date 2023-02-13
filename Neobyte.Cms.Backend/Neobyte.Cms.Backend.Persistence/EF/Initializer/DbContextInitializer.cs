@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Neobyte.Cms.Backend.Persistence.Exceptions;
 
 namespace Neobyte.Cms.Backend.Persistence.EF.Initializer;
@@ -21,7 +20,7 @@ internal class DbContextInitializer {
 			throw new DbContextAlreadyInitializedException();
 		
 		_dbContext.Database.Migrate();
-			
+		
 		_data.Initialized = true;
 	}
 

@@ -1,18 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\Neobyte.Cms.Backend.Utils\Neobyte.Cms.Backend.Utils.csproj" />
-  </ItemGroup>
+		<ProjectReference Include="..\Neobyte.Cms.Backend.Utils\Neobyte.Cms.Backend.Utils.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="StronglyTypedId" Version="1.0.0-beta06" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StronglyTypedId" Version="1.0.0-beta06" />
-	<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.2" />
+    <Folder Include="Websites\HostingConnections\" />
   </ItemGroup>
 
 </Project>

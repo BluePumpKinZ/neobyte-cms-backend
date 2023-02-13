@@ -1,0 +1,39 @@
+variables:
+  PUBLISH_PATH: "/var/publish/$CI_PIPELINE_ID/"
+
+stages:
+  - build
+  - test
+  - docker_image
+
+build:
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  stage: build
+  script:
+    - cd Neobyte.Cms.Backend
+    - dotnet restore
+    - dotnet build --no-restore
+    - dotnet publish
+  artifacts:
+    expire_in: 1 days
+
+test:
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  stage: test
+  script:
+    - cd Neobyte.Cms.Backend
+    - dotnet test --no-build --verbosity normal
+
+docker_image:
+  image: docker
+  stage: docker_image
+  services:
+    - docker:dind
+  only:
+    refs:
+      - production
+  
+  script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker build -t $CI_REGISTRY_IMAGE/production .
+    - docker push $CI_REGISTRY_IMAGE/production

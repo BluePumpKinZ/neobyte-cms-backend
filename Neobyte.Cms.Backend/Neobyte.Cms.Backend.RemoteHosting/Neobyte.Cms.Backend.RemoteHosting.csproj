@@ -1,23 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Extensions\" />
+    <Folder Include="Adapters\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Neobyte.Cms.Backend.Core\Neobyte.Cms.Backend.Core.csproj" />
+    <PackageReference Include="Ftp.dll" Version="2.0.23025.1902" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Microsoft.AspNetCore">
-      <HintPath>..\..\..\..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.2\Microsoft.AspNetCore.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Neobyte.Cms.Backend.Core\Neobyte.Cms.Backend.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
 </Project>

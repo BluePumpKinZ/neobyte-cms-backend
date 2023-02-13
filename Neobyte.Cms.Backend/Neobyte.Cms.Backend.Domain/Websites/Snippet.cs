@@ -5,15 +5,11 @@ public partial struct SnippetId { }
 
 public class Snippet {
 
-	[Key]
 	public SnippetId Id { get; set; }
-	[Required]
 	public string Name { get; set; }
-	[Required]
 	public string Description { get; set; }
 	public string? FileName { get; set; }
 	public Template? Template { get; set; }
-	[Required]
 	public HtmlContent? Content { get; set; }
 
 	public Snippet (string name, string description, string? fileName = null)
