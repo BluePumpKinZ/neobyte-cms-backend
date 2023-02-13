@@ -50,12 +50,10 @@ public static class WebApplicationBuilderExtensions {
 				})
 				.AddAspNetCoreInstrumentation()
 				.AddHttpClientInstrumentation()
-				.AddJaegerExporter(c => {
-					c.AgentHost = monitoringOptions.JaegerHost;
-					c.AgentPort = monitoringOptions.JaegerPort;
+				.AddOtlpExporter(otlpOptions => {
+					otlpOptions.Endpoint = new Uri("http://localhost:4317");
 				})
-			)
-			.StartWithHost();
+			);
 
 
 		return builder;
