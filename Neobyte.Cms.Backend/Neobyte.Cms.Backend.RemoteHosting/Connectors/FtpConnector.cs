@@ -44,6 +44,12 @@ internal class FtpConnector : IRemoteHostingConnector {
 		ftp.Close();
 	}
 
+	public void RenameFolder (string path, string name, string newName) {
+		using var ftp = GetFtp();
+		ftp.Rename(path + name, path + newName);
+		ftp.Close();
+	}
+
 	public void DeleteFolder (string path) {
 		using var ftp = GetFtp();
 		ftp.DeleteFolder(path);
@@ -54,6 +60,12 @@ internal class FtpConnector : IRemoteHostingConnector {
 		using var ftp = GetFtp();
 		ftp.ChangeFolder(path);
 		ftp.Upload(name, content);
+		ftp.Close();
+	}
+
+	public void RenameFile (string path, string name, string newName) {
+		using var ftp = GetFtp();
+		ftp.Rename(path + name, path + newName);
 		ftp.Close();
 	}
 

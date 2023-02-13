@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Neobyte.Cms.Backend.Domain.Accounts;
-using System;
 
 namespace Neobyte.Cms.Backend.Api.Projections.Projections; 
 

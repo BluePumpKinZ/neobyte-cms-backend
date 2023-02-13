@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Neobyte.Cms.Backend.Api.Exceptions; 
+﻿namespace Neobyte.Cms.Backend.Api.Exceptions; 
 
 public class AuthorizationException : ApplicationException {
 

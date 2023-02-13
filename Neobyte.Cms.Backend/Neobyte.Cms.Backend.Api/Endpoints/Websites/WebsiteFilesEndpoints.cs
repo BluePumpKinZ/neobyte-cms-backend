@@ -1,7 +1,7 @@
 ﻿using Neobyte.Cms.Backend.Core.Ports.RemoteHosting;
 using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
 
-namespace Neobyte.Cms.Backend.Api.Endpoints.Website; 
+namespace Neobyte.Cms.Backend.Api.Endpoints.Websites; 
 
 public class WebsiteFilesEndpoints : IApiEndpoints {
 

@@ -1,7 +1,6 @@
 ﻿using Neobyte.Cms.Backend.Api.Exceptions;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Domain.Accounts;
-using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;

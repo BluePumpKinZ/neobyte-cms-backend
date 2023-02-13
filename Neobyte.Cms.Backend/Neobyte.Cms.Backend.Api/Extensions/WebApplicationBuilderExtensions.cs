@@ -4,7 +4,7 @@ using Neobyte.Cms.Backend.Api.Endpoints;
 using Neobyte.Cms.Backend.Api.Endpoints.Accounts;
 using Neobyte.Cms.Backend.Api.Endpoints.Identity;
 using Neobyte.Cms.Backend.Api.Endpoints.Loader;
-using Neobyte.Cms.Backend.Api.Endpoints.Website;
+using Neobyte.Cms.Backend.Api.Endpoints.Websites;
 
 namespace Neobyte.Cms.Backend.Api.Extensions; 
 
@@ -17,6 +17,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton<IApiEndpoints, AccountsMeEndpoints>();
         builder.Services.AddSingleton<IApiEndpoints, AccountsListEndpoints>();
         builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsiteEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteFilesEndpoints>();
 
 		// projections
@@ -24,6 +25,8 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton(sp => sp.GetRequiredService<ProjectionMapperFactory>().CreateMapper());
 		builder.Services.AddScoped<Projector>();
 		builder.Services.AddSingleton<IProjection, AccountProjection>();
+		builder.Services.AddSingleton<IProjection, WebsiteProjection>();
+		builder.Services.AddSingleton<IProjection, WebsiteEditProjection>();
 
 		// principal
 		builder.Services.AddHttpContextAccessor();

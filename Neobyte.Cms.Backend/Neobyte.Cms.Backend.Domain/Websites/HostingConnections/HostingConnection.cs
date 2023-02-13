@@ -6,7 +6,6 @@ public partial struct HostingConnectionId {}
 public abstract class HostingConnection {
 
 	public HostingConnectionId Id { get; set; }
-	public Website? Website { get; set; }
 
 	protected HostingConnection ()
 		: this (HostingConnectionId.New()) { }

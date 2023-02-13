@@ -1,7 +1,9 @@
-﻿namespace Neobyte.Cms.Backend.Persistence.Entities.Websites.HostingConnections;
+﻿using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
+
+namespace Neobyte.Cms.Backend.Persistence.Entities.Websites.HostingConnections;
 
 public class FtpHostingConnectionEntity : HostingConnectionEntity {
-	
+
 	[Required]
 	public string Host { get; set; }
 	[Required]
@@ -11,7 +13,8 @@ public class FtpHostingConnectionEntity : HostingConnectionEntity {
 	[Required]
 	public int Port { get; set; }
 
-	public FtpHostingConnectionEntity (string host, string username, string password, int port) {
+	public FtpHostingConnectionEntity (HostingConnectionId id, string host, string username, string password, int port)
+		: base(id) {
 		Host = host;
 		Username = username;
 		Password = password;

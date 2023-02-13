@@ -12,6 +12,4 @@ public abstract class HostingConnectionEntity {
 		Id = id;
 	}
 
-	protected HostingConnectionEntity () {}
-
 }
