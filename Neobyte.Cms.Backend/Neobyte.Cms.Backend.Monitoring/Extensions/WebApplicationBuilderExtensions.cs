@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Neobyte.Cms.Backend.Monitoring.Configuration;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using System.Diagnostics;
 
 namespace Neobyte.Cms.Backend.Monitoring.Extensions;
 
@@ -44,13 +45,19 @@ public static class WebApplicationBuilderExtensions {
 					opt.SetDbStatementForText = true;
 					opt.RecordException = true;
 				})
-				.AddAspNetCoreInstrumentation()
-				.AddHttpClientInstrumentation()
+				.AddAspNetCoreInstrumentation(opt => {
+					opt.EnableGrpcAspNetCoreSupport = true;
+					opt.RecordException = true;
+				})
+				.AddHttpClientInstrumentation(opt => {
+					opt.RecordException = true;
+				})
 				.AddOtlpExporter(otlpOptions => {
 					otlpOptions.Endpoint = new Uri($"http://{monitoringOptions.JaegerHost}:{monitoringOptions.JaegerPort}");
 				})
 			);
 
+		builder.Services.AddSingleton(new ActivitySource(serviceName));
 
 		return builder;
 	}
