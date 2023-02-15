@@ -15,7 +15,7 @@ internal class MailingEndpoints : IApiEndpoints {
 				[FromServices] MailingManager manager,
 				[FromServices] ActivitySource activitySource,
 				[FromQuery(Name = "emailTo")] string emailTo) => {
-				using var activity = activitySource.StartActivity("sendTestEmail");
+				using var activity = activitySource.StartActivity();
 				activity?.SetTag("foo", 1);
 				activity?.SetTag("bar", "Hello, World!");
 				activity?.SetTag("baz", new int[] { 1, 2, 3 });
@@ -24,7 +24,7 @@ internal class MailingEndpoints : IApiEndpoints {
 				return Results.Ok();
 			});
 		routes.MapGet("hello", ([FromServices] ActivitySource activitySource) => {
-			using var activity = activitySource.StartActivity("SayHello");
+			using var activity = activitySource.StartActivity();
 			activity?.SetTag("foo", 1);
 			activity?.SetTag("bar", "Hello, World!");
 			activity?.SetTag("baz", new int[] { 1, 2, 3 });

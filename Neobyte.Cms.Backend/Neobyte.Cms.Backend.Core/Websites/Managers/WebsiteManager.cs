@@ -1,4 +1,5 @@
-﻿using Neobyte.Cms.Backend.Core.Exceptions.Websites;
+﻿using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
+using Neobyte.Cms.Backend.Core.Exceptions.Websites;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Core.Websites.Models;
 using Neobyte.Cms.Backend.Domain.Websites;
@@ -32,7 +33,10 @@ public class WebsiteManager {
 	}
 
 	public async Task<Website> GetWebsiteById (WebsiteId websiteId) {
-		return await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
+		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
+		if (website is null)
+			throw new WebsiteNotFoundException($"Website {websiteId} not found");
+		return website;
 	}
 
 	public async Task<IEnumerable<Website>> GetAllWebsitesAsync () {
@@ -42,8 +46,14 @@ public class WebsiteManager {
 	public async Task<Website> EditWebsiteAsync (WebsiteEditRequestModel request) {
 
 		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(new WebsiteId(request.Id));
+
+		if (website is null)
+			throw new WebsiteNotFoundException($"Website {request.Id} not found");
+
 		website.Name = request.Name;
 		website.Domain = request.Domain;
+		website.HomeFolder = request.HomeFolder;
+		website.UploadFolder = request.UploadFolder;
 
 		HostingConnection? hostingConnection = Enum.Parse<WebsiteCreateRequestModel.HostingProtocol>(request.Protocol) switch {
 			WebsiteCreateRequestModel.HostingProtocol.FTP => new FtpHostingConnection(

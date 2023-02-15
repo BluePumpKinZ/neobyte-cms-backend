@@ -17,10 +17,11 @@ public class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 		_logger = logger;
 	}
 
-	public async Task<Website> GetWebsiteByIdAsync (WebsiteId websiteId) {
+	public async Task<Website?> GetWebsiteByIdAsync (WebsiteId websiteId) {
 		var entity = await _ctx.WebsiteEntities
-			.Include(w => w.Connection)
-			.SingleAsync(w => w.Id == websiteId);
+			.SingleOrDefaultAsync(w => w.Id == websiteId);
+
+		if (entity is null) return null;
 
 		HostingConnection? connection = await GetWebsiteConnectionByWebsiteIdAsync(websiteId);
 		return new Website(entity.Id, entity.Name, entity.Domain, entity.HomeFolder, entity.UploadFolder, entity.CreatedDate) { Connection = connection };
@@ -33,7 +34,9 @@ public class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 	}
 
 	private async Task<HostingConnection?> GetWebsiteConnectionByWebsiteIdAsync (WebsiteId websiteId) {
-		var entity = await _ctx.WebsiteEntities.Where(w => w.Id == websiteId).Select(w => w.Connection).SingleOrDefaultAsync();
+		var entity = await _ctx.WebsiteEntities.Where(w => w.Id == websiteId)
+			.Include(w => w.Connection)
+			.Select(w => w.Connection).SingleOrDefaultAsync();
 		
 		switch (entity) {
 		case null: return null;

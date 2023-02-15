@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Tokens;
 using MoreCSharp.Extensions.System.Collections.Generic;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
-using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Identity.Configuration;
 using Neobyte.Cms.Backend.Identity.Repositories;
@@ -30,7 +29,7 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 	private readonly IUserEmailStore<IdentityAccountEntity> _emailStore;
 	private readonly IdentityAccountRepository _identityAccountRepository;
 
-	public IdentityAuthenticationProvider (SignInManager<IdentityAccountEntity> signInManager, IOptions<JwtOptions> jwtOptions, SigningCredentials credentials, UserManager<IdentityAccountEntity> userManager, JwtSecurityTokenHandler tokenHandler, IUserStore<IdentityAccountEntity> userStore, IReadOnlyAccountRepository readOnlyAccountRepository, IdentityAccountRepository identityAccountRepository, RoleManager<IdentityRole<Guid>> roleManager) {
+	public IdentityAuthenticationProvider (SignInManager<IdentityAccountEntity> signInManager, IOptions<JwtOptions> jwtOptions, SigningCredentials credentials, UserManager<IdentityAccountEntity> userManager, JwtSecurityTokenHandler tokenHandler, IUserStore<IdentityAccountEntity> userStore, IdentityAccountRepository identityAccountRepository) {
 		_signInManager = signInManager;
 		_userManager = userManager;
 		_credentials = credentials;

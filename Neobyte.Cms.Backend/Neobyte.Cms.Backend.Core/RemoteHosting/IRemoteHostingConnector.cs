@@ -11,18 +11,22 @@ public interface IRemoteHostingConnector {
 
 	public IEnumerable<FilesystemEntry> ListItems (string path);
 
-	public void CreateFolder (string path, string name);
+	public void CreateFolder (string path);
 
-	public void RenameFolder (string path, string name, string newName);
+	public void RenameFolder (string path, string newPath);
 
 	public void DeleteFolder (string path);
 
-	public void CreateFile (string path, string name, byte[] content);
+	public void CreateFile (string path, byte[] content);
 
-	public void RenameFile (string path, string name, string newName);
+	public void RenameFile (string path, string newPath);
 
 	public void DeleteFile (string path);
 
 	public byte[] GetFileContent (string path);
+
+	public bool FolderExists (string path);
+
+	public bool FileExists (string path);
 
 }

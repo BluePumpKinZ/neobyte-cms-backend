@@ -1,17 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
-using Neobyte.Cms.Backend.Persistence.Exceptions;
+﻿using Neobyte.Cms.Backend.Persistence.Exceptions;
 
 namespace Neobyte.Cms.Backend.Persistence.EF.Initializer;
 
 internal class DbContextInitializer {
 
 	private readonly DbContext _dbContext;
-	private readonly ILogger<DbContextInitializer> _logger;
 	private readonly DbContextInitializerData _data;
 
-	public DbContextInitializer (DbContext dbContext, ILogger<DbContextInitializer> logger, DbContextInitializerData data) {
+	public DbContextInitializer (DbContext dbContext, DbContextInitializerData data) {
 		_dbContext = dbContext;
-		_logger = logger;
 		_data = data;
 	}
 
