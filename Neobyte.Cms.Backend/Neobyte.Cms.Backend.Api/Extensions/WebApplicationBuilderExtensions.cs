@@ -27,6 +27,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton(sp => sp.GetRequiredService<ProjectionMapperFactory>().CreateMapper());
 		builder.Services.AddScoped<Projector>();
 		builder.Services.AddSingleton<IProjection, AccountProjection>();
+		builder.Services.AddSingleton<IProjection, PageProjection>();
 		builder.Services.AddSingleton<IProjection, WebsiteProjection>();
 		builder.Services.AddSingleton<IProjection, WebsiteEditProjection>();
 

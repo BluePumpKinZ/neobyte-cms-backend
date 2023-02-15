@@ -10,4 +10,6 @@ public interface IReadOnlyWebsiteRepository {
 
 	public Task<IEnumerable<Website>> GetAllWebsitesAsync ();
 
+	public Task<IEnumerable<Page>> GetPagesByWebsiteIdAsync (WebsiteId websiteId);
+
 }

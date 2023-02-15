@@ -59,6 +59,12 @@ public class WebsitePageManager {
 	}
 
 	public async Task<string> RenderPageAsync (WebsiteId websiteId, PageId pageId) {
+		var htmlContent = await GetPageSourceAsync(websiteId, pageId);
+		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
+		return _transformer.TransformRenderedWebpage(website!.Domain, htmlContent);
+	}
+
+	public async Task<string> GetPageSourceAsync (WebsiteId websiteId, PageId pageId) {
 		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
 		var page = await _readOnlyPageRepository.GetPageByIdAsync(pageId);
 
@@ -76,8 +82,25 @@ public class WebsitePageManager {
 		if (!connector.FileExists(filepath))
 			throw new PageFileNotFoundException($"File {filepath} does not exist.");
 
-		string htmlContent = Encoding.UTF8.GetString (connector.GetFileContent(filepath));
-		return _transformer.TransformRenderedWebpage(website.Domain, htmlContent);
+		return Encoding.UTF8.GetString (connector.GetFileContent(filepath));
+	}
+
+	public async Task PublishPageSource (PagePublishSourceCreateRequest request) {
+		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(request.WebsiteId);
+		var page = await _readOnlyPageRepository.GetPageByIdAsync(request.PageId);
+
+		if (website is null)
+			throw new WebsiteNotFoundException($"Website {request.WebsiteId} not found");
+		if (page is null)
+			throw new PageNotFoundException($"Page {request.PageId} not found");
+
+		var connection = website.Connection;
+		if (connection is null)
+			throw new WebsiteConnectionNotFoundException($"Website {request.WebsiteId} has no connection");
+
+		var connector = _remoteHostingProvider.CreateConnector(connection);
+		var filepath = Path.Combine(website.HomeFolder, page.Path);
+		connector.CreateFile(filepath, Encoding.UTF8.GetBytes(request.Source));
 	}
 
 }

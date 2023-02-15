@@ -33,6 +33,12 @@ public class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 			.ToListAsync();
 	}
 
+	public async Task<IEnumerable<Page>> GetPagesByWebsiteIdAsync (WebsiteId websiteId) {
+		return await _ctx.PageEntities
+			.Where(p => p.Website!.Id == websiteId)
+			.Select(p => new Page(p.Id, p.Name, p.Path, p.Created, p.Modified)).ToListAsync();
+	}
+
 	private async Task<HostingConnection?> GetWebsiteConnectionByWebsiteIdAsync (WebsiteId websiteId) {
 		var entity = await _ctx.WebsiteEntities.Where(w => w.Id == websiteId)
 			.Include(w => w.Connection)

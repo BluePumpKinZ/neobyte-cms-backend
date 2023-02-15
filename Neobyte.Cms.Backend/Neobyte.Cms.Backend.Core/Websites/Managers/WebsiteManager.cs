@@ -68,4 +68,8 @@ public class WebsiteManager {
 		return await _writeOnlyWebsiteRepository.UpdateWebsiteAsync(website);
 	}
 
+	public async Task<IEnumerable<Page>> GetPagesByWebsiteId (WebsiteId websiteId) {
+		return await _readOnlyWebsiteRepository.GetPagesByWebsiteIdAsync(websiteId);
+	}
+
 }
