@@ -53,7 +53,7 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 		});
 	}
 
-	public async Task<Account> ReadAccountByIdAsync (AccountId accountId) {
+	public async Task<Account?> ReadAccountByIdAsync (AccountId accountId) {
 
 		var roles = await (from u in _ctx.Users
 						   join ur in _ctx.UserRoles on u.Id equals ur.UserId
@@ -64,6 +64,7 @@ public class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 		return await _ctx.Users
 			.Include(u => u.Account)
 			.Where(u => u.Account!.Id == accountId)
-			.Select(u => new Account(u.Account!.Id, u.Email!, u.Account!.Username, u.Account.Bio, u.Account.CreationDate, roles!)).SingleAsync();
+			.Select(u => new Account(u.Account!.Id, u.Email!, u.Account!.Username, u.Account.Bio, u.Account.CreationDate, roles!))
+			.SingleOrDefaultAsync();
 	}
 }

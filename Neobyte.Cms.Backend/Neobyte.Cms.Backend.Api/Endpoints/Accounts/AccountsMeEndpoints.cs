@@ -1,5 +1,6 @@
 ﻿using Neobyte.Cms.Backend.Core.Accounts.Managers;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
+using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Domain.Accounts;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.Accounts;
@@ -15,7 +16,14 @@ public class AccountsMeEndpoints : IApiEndpoints {
 			[FromServices] AccountManager manager,
 			[FromServices] Projector projector,
 			[FromServices] Principal principal) => {
-				var account = await manager.GetAccountDetails(principal.AccountId);
+				Account account;
+				try {
+					account = await manager.GetAccountDetails(principal.AccountId);
+				} catch (NotFoundException e) {
+					return Results.NotFound(new { e.Message });
+				} catch (ApplicationException e) {
+					return Results.BadRequest(new { e.Message });
+				}
 				var projection = projector.Project<Account, AccountProjection>(account);
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.ClientPrivilege);

@@ -1,4 +1,5 @@
 ﻿using Neobyte.Cms.Backend.Core.Accounts.Models;
+using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Core.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
@@ -30,7 +31,11 @@ public class AccountManager {
 	}
 
 	public async Task<Account> GetAccountDetails (AccountId accountId) {
-		return await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId);
+		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId);
+		if (account is null)
+			throw new AccountNotFoundException($"Account {accountId} not found");
+
+		return account;
 	}
 
 	public async Task<Account?> GetIdentityAccountWithAccountByEmail (string normalizedEmail) {
