@@ -29,7 +29,28 @@ public class WebsitePageEndpoints : IApiEndpoints {
 			}).Authorize(UserPolicy.OwnerPrivilege)
 			.ValidateBody<WebsiteCreatePageRequestModel>();
 
-		routes.MapDelete("{pageId}/delete", async (
+		routes.MapGet("{pageId:Guid}/render", async (
+			[FromRoute] Guid websiteId,
+			[FromServices] WebsitePageManager manager,
+			[FromRoute] Guid pageId,
+			[FromServices] IHttpContextAccessor httpContextAccessor) => {
+				string response;
+				try {
+					response = await manager.RenderPageAsync(new WebsiteId(websiteId), new PageId(pageId));
+				} catch (NotFoundException e) {
+					return Results.NotFound(new { e.Message });
+				} catch (ApplicationException e) {
+					return Results.BadRequest(new { e.Message });
+				}
+
+				var httpContext = httpContextAccessor.HttpContext!;
+
+				httpContext.Response.Headers.Remove("Content-Type");
+				httpContext.Response.Headers.Add("Content-Type", "text/html");
+				return Results.Ok(response);
+			}).Authorize(UserPolicy.OwnerPrivilege);
+
+		routes.MapDelete("{pageId:Guid}/delete", async (
 			[FromRoute] Guid websiteId,
 			[FromServices] WebsitePageManager manager,
 			[FromRoute] Guid pageId) => {
