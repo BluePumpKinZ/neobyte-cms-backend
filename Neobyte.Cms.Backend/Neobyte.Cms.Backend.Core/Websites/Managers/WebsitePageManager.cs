@@ -59,6 +59,12 @@ public class WebsitePageManager {
 	}
 
 	public async Task<string> RenderPageAsync (WebsiteId websiteId, PageId pageId) {
+		var htmlContent = await GetPageSourceAsync(websiteId, pageId);
+		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
+		return _transformer.TransformRenderedWebpage(website!.Domain, htmlContent);
+	}
+
+	public async Task<string> GetPageSourceAsync (WebsiteId websiteId, PageId pageId) {
 		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
 		var page = await _readOnlyPageRepository.GetPageByIdAsync(pageId);
 
@@ -76,8 +82,7 @@ public class WebsitePageManager {
 		if (!connector.FileExists(filepath))
 			throw new PageFileNotFoundException($"File {filepath} does not exist.");
 
-		string htmlContent = Encoding.UTF8.GetString (connector.GetFileContent(filepath));
-		return _transformer.TransformRenderedWebpage(website.Domain, htmlContent);
+		return Encoding.UTF8.GetString (connector.GetFileContent(filepath));
 	}
 
 }

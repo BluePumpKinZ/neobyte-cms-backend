@@ -44,7 +44,23 @@ public class WebsitePageEndpoints : IApiEndpoints {
 				}
 
 				return Results.Extensions.Html(response);
-			});//.Authorize(UserPolicy.OwnerPrivilege);
+			}).Authorize(UserPolicy.ClientPrivilege);
+
+		routes.MapGet("{pageId:Guid}/source", async (
+			[FromRoute] Guid websiteId,
+			[FromServices] WebsitePageManager manager,
+			[FromRoute] Guid pageId) => {
+				string response;
+				try {
+					response = await manager.GetPageSourceAsync(new WebsiteId(websiteId), new PageId(pageId));
+				} catch (NotFoundException e) {
+					return Results.NotFound(new { e.Message });
+				} catch (ApplicationException e) {
+					return Results.BadRequest(new { e.Message });
+				}
+
+				return Results.Ok(response);
+			}); //.Authorize(UserPolicy.ClientPrivilege);
 
 		routes.MapDelete("{pageId:Guid}/delete", async (
 			[FromRoute] Guid websiteId,
