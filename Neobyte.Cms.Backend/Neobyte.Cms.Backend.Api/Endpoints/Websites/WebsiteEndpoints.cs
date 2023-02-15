@@ -21,13 +21,21 @@ public class WebsiteEndpoints : IApiEndpoints {
 			}).Authorize(UserPolicy.OwnerPrivilege)
 			.ValidateBody<WebsiteCreateRequestModel>();
 
-		routes.MapGet("{id:Guid}", async (
+		routes.MapGet("{websiteId:Guid}", async (
 			[FromServices] WebsiteManager manager,
 			[FromServices] Projector projector,
-			[FromRoute] Guid id) => {
-				var websiteId = new WebsiteId(id);
-				var websites = await manager.GetWebsiteById(websiteId);
+			[FromRoute] Guid websiteId) => {
+				var websites = await manager.GetWebsiteById(new WebsiteId(websiteId));
 				var projection = projector.Project<Website, WebsiteEditProjection>(websites);
+				return Results.Ok(projection);
+			}).Authorize(UserPolicy.ClientPrivilege);
+
+		routes.MapGet("{websiteId:Guid}/pages", async (
+			[FromServices] WebsiteManager manager,
+			[FromServices] Projector projector,
+			[FromRoute] Guid websiteId) => {
+				var pages = await manager.GetPagesByWebsiteId(new WebsiteId(websiteId));
+				var projection = projector.Project<Page, PageProjection>(pages);
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.ClientPrivilege);
 
