@@ -1,4 +1,5 @@
-﻿using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
+﻿using Neobyte.Cms.Backend.Api.Extensions;
+using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Core.Websites.Managers;
 using Neobyte.Cms.Backend.Core.Websites.Models;
 using Neobyte.Cms.Backend.Domain.Websites;
@@ -32,8 +33,7 @@ public class WebsitePageEndpoints : IApiEndpoints {
 		routes.MapGet("{pageId:Guid}/render", async (
 			[FromRoute] Guid websiteId,
 			[FromServices] WebsitePageManager manager,
-			[FromRoute] Guid pageId,
-			[FromServices] IHttpContextAccessor httpContextAccessor) => {
+			[FromRoute] Guid pageId) => {
 				string response;
 				try {
 					response = await manager.RenderPageAsync(new WebsiteId(websiteId), new PageId(pageId));
@@ -43,12 +43,8 @@ public class WebsitePageEndpoints : IApiEndpoints {
 					return Results.BadRequest(new { e.Message });
 				}
 
-				var httpContext = httpContextAccessor.HttpContext!;
-
-				httpContext.Response.Headers.Remove("Content-Type");
-				httpContext.Response.Headers.Add("Content-Type", "text/html");
-				return Results.Ok(response);
-			}).Authorize(UserPolicy.OwnerPrivilege);
+				return Results.Extensions.Html(response);
+			});//.Authorize(UserPolicy.OwnerPrivilege);
 
 		routes.MapDelete("{pageId:Guid}/delete", async (
 			[FromRoute] Guid websiteId,
