@@ -1,10 +1,12 @@
-﻿using Neobyte.Cms.Backend.Core.Websites.Managers;
+﻿using Neobyte.Cms.Backend.Api.Filters.Authorization.Extensions;
+using Neobyte.Cms.Backend.Api.Filters.Validation.Extensions;
+using Neobyte.Cms.Backend.Core.Websites.Managers;
 using Neobyte.Cms.Backend.Core.Websites.Models;
 using Neobyte.Cms.Backend.Domain.Websites;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.Websites;
 
-public class WebsiteEndpoints : IApiEndpoints {
+internal class WebsiteEndpoints : IApiEndpoints {
 
 	public string GroupName => "Websites";
 	public string Path => "/api/v1/websites";
@@ -45,8 +47,7 @@ public class WebsiteEndpoints : IApiEndpoints {
 				var websites = await manager.GetAllWebsitesAsync();
 				var projection = projector.Project<Website, WebsiteProjection>(websites);
 				return Results.Ok(projection);
-
-			}).Authorize(UserPolicy.OwnerPrivilege);
+		}).Authorize(UserPolicy.OwnerPrivilege);
 
 		routes.MapPut("edit", async (
 			[FromServices] WebsiteManager manager,

@@ -1,4 +1,7 @@
-﻿using Neobyte.Cms.Backend.Core.Accounts.Managers;
+﻿using Neobyte.Cms.Backend.Api.Filters.Authorization;
+using Neobyte.Cms.Backend.Api.Filters.Authorization.Extensions;
+using Neobyte.Cms.Backend.Api.Filters.Validation.Extensions;
+using Neobyte.Cms.Backend.Core.Accounts.Managers;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Domain.Accounts;
@@ -16,14 +19,7 @@ public class AccountsMeEndpoints : IApiEndpoints {
 			[FromServices] AccountManager manager,
 			[FromServices] Projector projector,
 			[FromServices] Principal principal) => {
-				Account account;
-				try {
-					account = await manager.GetAccountDetails(principal.AccountId);
-				} catch (NotFoundException e) {
-					return Results.NotFound(new { e.Message });
-				} catch (ApplicationException e) {
-					return Results.BadRequest(new { e.Message });
-				}
+				Account account = await manager.GetAccountDetails(principal.AccountId);
 				var projection = projector.Project<Account, AccountProjection>(account);
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.ClientPrivilege);
@@ -32,13 +28,7 @@ public class AccountsMeEndpoints : IApiEndpoints {
 			[FromServices] AccountManager manager,
 			[FromServices] Principal principal,
 			[FromBody] AccountChangeDetailsRequestModel request) => {
-				try {
-					await manager.ChangeDetailsAsync(request, principal.AccountId);
-				} catch (NotFoundException e) {
-					return Results.NotFound(new { e.Message });
-				} catch (ApplicationException e) {
-					return Results.BadRequest(new { e.Message });
-				}
+				await manager.ChangeDetailsAsync(request, principal.AccountId);
 				return Results.Ok(new { Message = "Details updated" });
 			}).Authorize(UserPolicy.ClientPrivilege)
 			.ValidateBody<AccountChangeDetailsRequestModel>();

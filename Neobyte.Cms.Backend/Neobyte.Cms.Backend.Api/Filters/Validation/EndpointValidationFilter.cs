@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neobyte.Cms.Backend.Api.Endpoints.Validation;
+namespace Neobyte.Cms.Backend.Api.Filters.Validation;
 
 public class EndpointValidationFilter<T> : IEndpointFilter {
 
@@ -16,7 +16,7 @@ public class EndpointValidationFilter<T> : IEndpointFilter {
 			Validator.ValidateObject(body, new ValidationContext(body), true);
 			return next(context);
 		} catch (ValidationException ex) {
-			return ValueTask.FromResult ((object?)Results.BadRequest(ex.Message));
+			return ValueTask.FromResult((object?)Results.BadRequest(ex.Message));
 		}
 	}
 

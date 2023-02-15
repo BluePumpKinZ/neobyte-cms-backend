@@ -1,7 +1,7 @@
 ﻿using Neobyte.Cms.Backend.Domain.Accounts;
 using System.Collections.Generic;
 
-namespace Neobyte.Cms.Backend.Api.Authorization; 
+namespace Neobyte.Cms.Backend.Api.Filters.Authorization;
 
 public class Principal {
 

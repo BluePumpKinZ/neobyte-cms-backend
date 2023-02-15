@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using Neobyte.Cms.Backend.Api.Filters.Authorization;
+using Neobyte.Cms.Backend.Api.Filters.Authorization.Extensions;
+using Neobyte.Cms.Backend.Api.Filters.Validation.Extensions;
 using Neobyte.Cms.Backend.Core.Accounts.Managers;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
@@ -32,14 +35,7 @@ public class AccountsListEndpoints : IApiEndpoints {
 			[FromServices] AccountManager manager,
 			[FromServices] Projector projector,
 			[FromRoute] Guid accountId) => {
-				Account account;
-				try {
-					account = await manager.GetAccountDetails(new AccountId(accountId));
-				} catch (NotFoundException e) {
-					return Results.NotFound(new { e.Message });
-				} catch (ApplicationException e) {
-					return Results.BadRequest(new { e.Message });
-				}
+				Account account = await manager.GetAccountDetails(new AccountId(accountId));
 				var projection = projector.Project<Account, AccountProjection>(account);
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.OwnerPrivilege);
@@ -51,14 +47,8 @@ public class AccountsListEndpoints : IApiEndpoints {
 			[FromRoute] Guid accountId) => {
 				if (principal.AccountId == new AccountId(accountId))
 					return Results.BadRequest("You cannot delete your own account.");
-				try {
-					await manager.DeleteAccountAsync(new AccountId(accountId));
-				} catch (NotFoundException e) {
-					return Results.NotFound(new { e.Message });
-				} catch (ApplicationException e) {
-					logger.LogWarning(e, "Failed to delete account {AccountId}", accountId);
-					return Results.BadRequest(new { e.Message });
-				}
+				
+				await manager.DeleteAccountAsync(new AccountId(accountId));
 				return Results.Ok(new { Message = "Account deleted" });
 			}).Authorize(UserPolicy.OwnerPrivilege);
 

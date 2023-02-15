@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Neobyte.Cms.Backend.Api.Authorization; 
+namespace Neobyte.Cms.Backend.Api.Filters.Authorization;
 
 public class HttpContextIdentityPrincipalConverter {
 
@@ -35,7 +35,7 @@ public class HttpContextIdentityPrincipalConverter {
 		if (!validationResult.IsValid)
 			throw new AuthorizationException("Authentication token is invalid, could not create principal");
 
-		var accountId = new AccountId(Guid.Parse ((string)validationResult.Claims.First(c => c.Key == ClaimTypes.PrimarySid).Value));
+		var accountId = new AccountId(Guid.Parse((string)validationResult.Claims.First(c => c.Key == ClaimTypes.PrimarySid).Value));
 		var roles = validationResult.Claims.Where(c => c.Key == ClaimTypes.Role).Select(c => (string)c.Value);
 
 		return new Principal(accountId, roles);
