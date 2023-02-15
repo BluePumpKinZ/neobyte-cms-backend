@@ -32,7 +32,13 @@ public class AccountsMeEndpoints : IApiEndpoints {
 			[FromServices] AccountManager manager,
 			[FromServices] Principal principal,
 			[FromBody] AccountChangeDetailsRequestModel request) => {
-				await manager.ChangeDetailsAsync(request, principal.AccountId);
+				try {
+					await manager.ChangeDetailsAsync(request, principal.AccountId);
+				} catch (NotFoundException e) {
+					return Results.NotFound(new { e.Message });
+				} catch (ApplicationException e) {
+					return Results.BadRequest(new { e.Message });
+				}
 				return Results.Ok(new { Message = "Details updated" });
 			}).Authorize(UserPolicy.ClientPrivilege)
 			.ValidateBody<AccountChangeDetailsRequestModel>();

@@ -53,6 +53,8 @@ public class AccountManager {
 
 	public async Task ChangeDetailsAsync (AccountChangeDetailsRequestModel request, AccountId accountId) {
 		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId);
+		if (account is null)
+			throw new AccountNotFoundException($"Account {accountId} not found");
 		account.Email = request.Email;
 		account.Username = request.Username;
 		account.Bio = request.Bio;
