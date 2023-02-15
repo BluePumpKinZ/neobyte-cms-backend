@@ -7,4 +7,6 @@ public interface IWriteOnlyPageRepository {
 
 	public Task<Page> AddPageAsync (Page page);
 
+	public Task DeletePageAsync (Page page);
+
 }

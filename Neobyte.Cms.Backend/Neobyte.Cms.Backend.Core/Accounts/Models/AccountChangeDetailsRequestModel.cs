@@ -3,9 +3,9 @@
 public class AccountChangeDetailsRequestModel {
 
 	[Required]
-	public string Email { get; set; }
+	public string Email { get; set; } = null!;
 	[Required]
-	public string Username { get; set; }
+	public string Username { get; set; } = null!;
 	[Required]
-	public string Bio { get; set; }
+	public string Bio { get; set; } = null!;
 }

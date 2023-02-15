@@ -23,4 +23,10 @@ public class WriteOnlyPageRepository : IWriteOnlyPageRepository {
 		return page;
 	}
 
+	public async Task DeletePageAsync (Page page) {
+		var pageEntity = await _ctx.PageEntities.SingleAsync(p => p.Id == page.Id);
+		_ctx.PageEntities.Remove(pageEntity);
+		await _ctx.SaveChangesAsync();
+	}
+
 }
