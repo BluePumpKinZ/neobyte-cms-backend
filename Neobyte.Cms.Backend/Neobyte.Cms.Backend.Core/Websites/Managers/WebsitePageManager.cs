@@ -12,12 +12,14 @@ namespace Neobyte.Cms.Backend.Core.Websites.Managers;
 
 public class WebsitePageManager {
 
+	private HtmlTransformer _transformer;
 	private readonly IReadOnlyWebsiteRepository _readOnlyWebsiteRepository;
 	private readonly IRemoteHostingProvider _remoteHostingProvider;
 	private readonly IWriteOnlyPageRepository _writeOnlyPageRepository;
 	private readonly IReadOnlyPageRepository _readOnlyPageRepository;
 
-	public WebsitePageManager (IReadOnlyWebsiteRepository readOnlyWebsiteRepository, IRemoteHostingProvider remoteHostingProvider, IWriteOnlyPageRepository writeOnlyPageRepository, IReadOnlyPageRepository readOnlyPageRepository) {
+	public WebsitePageManager (HtmlTransformer transformer, IReadOnlyWebsiteRepository readOnlyWebsiteRepository, IRemoteHostingProvider remoteHostingProvider, IWriteOnlyPageRepository writeOnlyPageRepository, IReadOnlyPageRepository readOnlyPageRepository) {
+		_transformer = transformer;
 		_readOnlyWebsiteRepository = readOnlyWebsiteRepository;
 		_remoteHostingProvider = remoteHostingProvider;
 		_writeOnlyPageRepository = writeOnlyPageRepository;
@@ -73,7 +75,8 @@ public class WebsitePageManager {
 		if (!connector.FileExists(filepath))
 			throw new PageFileNotFoundException($"File {filepath} does not exist.");
 
-		return Encoding.UTF8.GetString (connector.GetFileContent(filepath));
+		string htmlContent = Encoding.UTF8.GetString (connector.GetFileContent(filepath));
+		return _transformer.TransformRenderedWebpage(website.Domain, htmlContent);
 	}
 
 }
