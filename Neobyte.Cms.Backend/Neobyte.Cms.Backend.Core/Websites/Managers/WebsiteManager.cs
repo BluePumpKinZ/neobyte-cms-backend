@@ -44,6 +44,8 @@ public class WebsiteManager {
 		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(new WebsiteId(request.Id));
 		website.Name = request.Name;
 		website.Domain = request.Domain;
+		website.HomeFolder = request.HomeFolder;
+		website.UploadFolder = request.UploadFolder;
 
 		HostingConnection? hostingConnection = Enum.Parse<WebsiteCreateRequestModel.HostingProtocol>(request.Protocol) switch {
 			WebsiteCreateRequestModel.HostingProtocol.FTP => new FtpHostingConnection(

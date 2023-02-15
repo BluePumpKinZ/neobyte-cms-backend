@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Neobyte.Cms.Backend.Api.Authorization;
 using Neobyte.Cms.Backend.Api.Endpoints;
 using Neobyte.Cms.Backend.Api.Endpoints.Accounts;
 using Neobyte.Cms.Backend.Api.Endpoints.Identity;
 using Neobyte.Cms.Backend.Api.Endpoints.Loader;
 using Neobyte.Cms.Backend.Api.Endpoints.Mailing;
 using Neobyte.Cms.Backend.Api.Endpoints.Websites;
-using System.Linq;
 
 namespace Neobyte.Cms.Backend.Api.Extensions; 
 
@@ -21,6 +19,7 @@ public static class WebApplicationBuilderExtensions {
         builder.Services.AddSingleton<IApiEndpoints, AccountsListEndpoints>();
         builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsitePageEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteFilesEndpoints>();
 
 		// projections
@@ -41,10 +40,7 @@ public static class WebApplicationBuilderExtensions {
 
 		// swagger
 		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen(c =>
-		{
-				c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-		});
+		builder.Services.AddSwaggerGen();
 
 		builder.Services.AddCors();
 

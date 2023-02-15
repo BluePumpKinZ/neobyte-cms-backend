@@ -37,16 +37,15 @@ internal class FtpConnector : IRemoteHostingConnector {
 		return filesystemEntries;
 	}
 
-	public void CreateFolder (string path, string name) {
+	public void CreateFolder (string path) {
 		using var ftp = GetFtp();
-		ftp.ChangeFolder(path);
-		ftp.CreateFolder(name);
+		ftp.CreateFolder(path);
 		ftp.Close();
 	}
 
-	public void RenameFolder (string path, string name, string newName) {
+	public void RenameFolder (string path, string newPath) {
 		using var ftp = GetFtp();
-		ftp.Rename(path + name, path + newName);
+		ftp.Rename(path, newPath);
 		ftp.Close();
 	}
 
@@ -56,16 +55,15 @@ internal class FtpConnector : IRemoteHostingConnector {
 		ftp.Close();
 	}
 
-	public void CreateFile (string path, string name, byte[] content) {
+	public void CreateFile (string path, byte[] content) {
 		using var ftp = GetFtp();
-		ftp.ChangeFolder(path);
-		ftp.Upload(name, content);
+		ftp.Upload(path, content);
 		ftp.Close();
 	}
 
-	public void RenameFile (string path, string name, string newName) {
+	public void RenameFile (string path, string newPath) {
 		using var ftp = GetFtp();
-		ftp.Rename(path + name, path + newName);
+		ftp.Rename(path, newPath);
 		ftp.Close();
 	}
 
@@ -80,6 +78,20 @@ internal class FtpConnector : IRemoteHostingConnector {
 		var content = ftp.Download(path);
 		ftp.Close();
 		return content;
+	}
+
+	public bool FolderExists (string path) {
+		using var ftp = GetFtp();
+		var exists = ftp.FolderExists(path);
+		ftp.Close();
+		return exists;
+	}
+
+	public bool FileExists (string path) {
+		using var ftp = GetFtp();
+		var exists = ftp.FileExists(path);
+		ftp.Close();
+		return exists;
 	}
 
 }

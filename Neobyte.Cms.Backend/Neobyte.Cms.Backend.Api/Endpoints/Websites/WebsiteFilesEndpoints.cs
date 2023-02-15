@@ -12,7 +12,7 @@ public class WebsiteFilesEndpoints : IApiEndpoints {
 
 		routes.MapGet("list", async (
 			[FromServices] IRemoteHostingProvider hostingProvider) => {
-				var h = hostingProvider.CreateConnection(new FtpHostingConnection("","","", 21));
+				var h = hostingProvider.CreateConnector(new FtpHostingConnection("","","", 21));
 				return Results.Ok (h.ListItems("/"));
 			}).Authorize(UserPolicy.ClientPrivilege);
 		

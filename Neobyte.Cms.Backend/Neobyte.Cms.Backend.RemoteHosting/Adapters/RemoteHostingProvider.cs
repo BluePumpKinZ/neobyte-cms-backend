@@ -12,7 +12,7 @@ public class RemoteHostingProvider : IRemoteHostingProvider {
 		_hostingConnectors = hostingConnectors;
 	}
 
-	public IRemoteHostingConnector CreateConnection (HostingConnection connection) {
+	public IRemoteHostingConnector CreateConnector (HostingConnection connection) {
 		var hostingConnector = _hostingConnectors.Single(hc => hc.CanConnect(connection));
 		hostingConnector.Configure(connection);
 		return hostingConnector;

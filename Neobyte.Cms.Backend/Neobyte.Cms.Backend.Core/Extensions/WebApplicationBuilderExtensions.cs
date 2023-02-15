@@ -24,6 +24,8 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddScoped<MailingManager>();
 
 		builder.Services.AddScoped<WebsiteManager>();
+		builder.Services.AddScoped<WebsitePageManager>();
+		builder.Services.AddScoped<WebsiteFileManager>();
 
 		return builder;
 	}
