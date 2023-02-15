@@ -60,7 +60,25 @@ public class WebsitePageEndpoints : IApiEndpoints {
 				}
 
 				return Results.Ok(response);
-			}); //.Authorize(UserPolicy.ClientPrivilege);
+			}).Authorize(UserPolicy.ClientPrivilege);
+
+		routes.MapPut("{pageId:Guid}/publish/source", async (
+			[FromRoute] Guid websiteId,
+			[FromServices] WebsitePageManager manager,
+			[FromRoute] Guid pageId,
+			[FromBody] PagePublishSourceCreateRequest request) => {
+				try {
+					request.WebsiteId = new WebsiteId(websiteId);
+					request.PageId = new PageId(pageId);
+					await manager.PublishPageSource(request);
+				} catch (NotFoundException e) {
+					return Results.NotFound(new { e.Message });
+				} catch (ApplicationException e) {
+					return Results.BadRequest(new { e.Message });
+				}
+				return Results.Ok(new { Message = "Page published" });
+			}).Authorize(UserPolicy.ClientPrivilege)
+			.ValidateBody<PagePublishSourceCreateRequest>();
 
 		routes.MapDelete("{pageId:Guid}/delete", async (
 			[FromRoute] Guid websiteId,
