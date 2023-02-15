@@ -8,6 +8,10 @@ public class WebsiteCreateRequestModel {
 	[Url]
 	public string Domain { get; set; } = string.Empty;
 	[Required]
+	public string HomeFolder { get; set; } = string.Empty;
+	[Required]
+	public string UploadFolder { get; set; } = string.Empty;
+	[Required]
 	public string Protocol { get; set; } = string.Empty;
 
 	// Protocols

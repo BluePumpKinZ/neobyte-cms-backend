@@ -18,7 +18,7 @@ public class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 	public async Task<Website> CreateWebsiteAsync (Website website) {
 
 		var hostingConnection = CreateHostingConnectionEntity(website);
-		var entity = new WebsiteEntity(website.Id, website.Name, website.Domain, website.CreatedDate) { Connection = hostingConnection };
+		var entity = new WebsiteEntity(website.Id, website.Name, website.Domain, website.HomeFolder, website.UploadFolder, website.CreatedDate) { Connection = hostingConnection };
 		var addedEntity = await _ctx.WebsiteEntities.AddAsync(entity);
 		await _ctx.SaveChangesAsync();
 		website.Id = addedEntity.Entity.Id;
@@ -54,6 +54,8 @@ public class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 		var entity = await _ctx.WebsiteEntities.SingleAsync(w => w.Id == website.Id);
 		entity.Name = website.Name;
 		entity.Domain = website.Domain;
+		entity.HomeFolder = website.HomeFolder;
+		entity.UploadFolder = website.UploadFolder;
 		entity.Connection = hostingConnectionEntity;
 		_ctx.WebsiteEntities.Update(entity);
 		await _ctx.SaveChangesAsync();
