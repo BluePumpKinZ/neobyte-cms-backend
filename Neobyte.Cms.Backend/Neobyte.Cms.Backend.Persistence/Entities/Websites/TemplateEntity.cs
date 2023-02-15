@@ -9,7 +9,7 @@ public class TemplateEntity {
 	public TemplateId Id { get; set; }
 	[Required]
 	[StringLength(30)]
-	public string Name { get; set; }
+	public string Title { get; set; }
 	[Required]
 	[StringLength(500)]
 	public string Description { get; set; }
@@ -19,9 +19,9 @@ public class TemplateEntity {
 	public ICollection<PageEntity>? Pages { get; set; }
 	public ICollection<SnippetEntity>? Snippets { get; set; }
 
-	public TemplateEntity (TemplateId id, string name, string description, DateTime createDate) {
+	public TemplateEntity (TemplateId id, string title, string description, DateTime createDate) {
 		Id = id;
-		Name = name;
+		Title = title;
 		Description = description;
 		CreateDate = createDate;
 	}

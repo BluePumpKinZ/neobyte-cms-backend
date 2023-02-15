@@ -15,15 +15,21 @@ public class WebsiteEntity {
 	[StringLength(50)]
 	public string Domain { get; set; }
 	[Required]
+	public string HomeFolder { get; set; }
+	[Required]
+	public string UploadFolder { get; set; }
+	[Required]
 	public DateTime CreatedDate { get; set; }
 	public HostingConnectionEntity? Connection { get; set; }
 	public ICollection<PageEntity>? Pages { get; set; }
 	public ICollection<SnippetEntity>? Snippets { get; set; }
 
-	public WebsiteEntity (WebsiteId id, string name, string domain, DateTime createdDate) {
+	public WebsiteEntity (WebsiteId id, string name, string domain, string homeFolder, string uploadFolder, DateTime createdDate) {
 		Id = id;
 		Name = name;
 		Domain = domain;
+		HomeFolder = homeFolder;
+		UploadFolder = uploadFolder;
 		CreatedDate = createdDate;
 	}
 

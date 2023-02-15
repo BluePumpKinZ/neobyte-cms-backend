@@ -9,6 +9,8 @@ public class WebsiteEditProjection : IProjection {
 	public WebsiteId Id { get; set; }
 	public string Name { get; set; } = string.Empty;
 	public string Domain { get; set; } = string.Empty;
+	public string HomeFolder { get; set; } = string.Empty;
+	public string UploadFolder { get; set; } = string.Empty;
 	public string Protocol { get; set; } = string.Empty;
 	public string Host { get; set; } = string.Empty;
 	public string Username { get; set; } = string.Empty;
@@ -26,6 +28,8 @@ public class WebsiteEditProjection : IProjection {
 				Id = source.Id,
 				Name = source.Name,
 				Domain = source.Domain,
+				HomeFolder = source.HomeFolder,
+				UploadFolder = source.UploadFolder,
 				Protocol = ""
 			};
 			switch(source.Connection?.GetType()) {

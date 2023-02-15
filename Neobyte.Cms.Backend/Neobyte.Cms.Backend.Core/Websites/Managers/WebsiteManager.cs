@@ -20,7 +20,7 @@ public class WebsiteManager {
 	}
 
 	public async Task<Website> AddWebsiteAsync (WebsiteCreateRequestModel request) {
-		var website = new Website(request.Name, request.Domain);
+		var website = new Website(request.Name, request.Domain, request.HomeFolder, request.UploadFolder);
 		HostingConnection? hostingConnection = Enum.Parse<WebsiteCreateRequestModel.HostingProtocol>(request.Protocol) switch {
 			WebsiteCreateRequestModel.HostingProtocol.FTP => new FtpHostingConnection(request.Host, request.Username, request.Password, request.Port),
 			WebsiteCreateRequestModel.HostingProtocol.None => null,

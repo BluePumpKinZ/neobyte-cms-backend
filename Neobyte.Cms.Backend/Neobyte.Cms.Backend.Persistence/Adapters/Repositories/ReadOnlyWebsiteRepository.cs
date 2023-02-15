@@ -23,12 +23,12 @@ public class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 			.SingleAsync(w => w.Id == websiteId);
 
 		HostingConnection? connection = await GetWebsiteConnectionByWebsiteIdAsync(websiteId);
-		return new Website(entity.Id, entity.Name, entity.Domain, entity.CreatedDate) { Connection = connection };
+		return new Website(entity.Id, entity.Name, entity.Domain, entity.HomeFolder, entity.UploadFolder, entity.CreatedDate) { Connection = connection };
 	}
 
 	public async Task<IEnumerable<Website>> GetAllWebsitesAsync () {
 		return await _ctx.WebsiteEntities
-			.Select(w => new Website(w.Id, w.Name, w.Domain, w.CreatedDate))
+			.Select(w => new Website(w.Id, w.Name, w.Domain, w.HomeFolder, w.UploadFolder, w.CreatedDate))
 			.ToListAsync();
 	}
 
