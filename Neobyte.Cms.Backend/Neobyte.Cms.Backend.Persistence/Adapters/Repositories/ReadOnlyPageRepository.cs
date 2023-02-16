@@ -4,7 +4,7 @@ using Neobyte.Cms.Backend.Persistence.EF;
 
 namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories; 
 
-public class ReadOnlyPageRepository : IReadOnlyPageRepository {
+internal class ReadOnlyPageRepository : IReadOnlyPageRepository {
 
 	private readonly EFDbContext _ctx;
 
@@ -19,5 +19,13 @@ public class ReadOnlyPageRepository : IReadOnlyPageRepository {
 
 		return new Page(entity.Id, entity.Name, entity.Path, entity.Created, entity.Modified);
 	}
+
+	public async Task<IEnumerable<Page>> GetPagesByWebsiteIdAsync (WebsiteId websiteId) {
+		return await _ctx.PageEntities
+			.Where(p => p.Website!.Id == websiteId)
+			.Select(p => new Page(p.Id, p.Name, p.Path, p.Created, p.Modified)).ToListAsync();
+	}
+
+
 
 }

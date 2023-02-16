@@ -6,21 +6,22 @@ using Neobyte.Cms.Backend.Api.Endpoints.Loader;
 using Neobyte.Cms.Backend.Api.Endpoints.Mailing;
 using Neobyte.Cms.Backend.Api.Endpoints.Websites;
 
-namespace Neobyte.Cms.Backend.Api.Extensions; 
+namespace Neobyte.Cms.Backend.Api.Extensions;
 
 public static class WebApplicationBuilderExtensions {
 
-    public static WebApplicationBuilder AddApi (this WebApplicationBuilder builder) {
+	public static WebApplicationBuilder AddApi (this WebApplicationBuilder builder) {
 
-        // endpoints
-        builder.Services.AddSingleton<ApiEndpointLoader>();
-        builder.Services.AddSingleton<IApiEndpoints, MailingEndpoints>();
+		// endpoints
+		builder.Services.AddSingleton<ApiEndpointLoader>();
+		builder.Services.AddSingleton<IApiEndpoints, MailingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, AccountsMeEndpoints>();
-        builder.Services.AddSingleton<IApiEndpoints, AccountsListEndpoints>();
-        builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, AccountsListEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteEndpoints>();
-		builder.Services.AddSingleton<IApiEndpoints, WebsitePageEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteFilesEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsitePageEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsiteSnippetEndpoints>();
 
 		// projections
 		builder.Services.AddSingleton<ProjectionMapperFactory>();
@@ -28,8 +29,10 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddScoped<Projector>();
 		builder.Services.AddSingleton<IProjection, AccountProjection>();
 		builder.Services.AddSingleton<IProjection, PageProjection>();
-		builder.Services.AddSingleton<IProjection, WebsiteProjection>();
+		builder.Services.AddSingleton<IProjection, SnippetEditProjection>();
+		builder.Services.AddSingleton<IProjection, SnippetProjection>();
 		builder.Services.AddSingleton<IProjection, WebsiteEditProjection>();
+		builder.Services.AddSingleton<IProjection, WebsiteProjection>();
 
 		// principal
 		builder.Services.AddHttpContextAccessor();
@@ -46,6 +49,6 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddCors();
 
 		return builder;
-    }
+	}
 
 }

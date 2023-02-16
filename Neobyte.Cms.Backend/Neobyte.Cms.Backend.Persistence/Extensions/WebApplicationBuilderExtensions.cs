@@ -19,6 +19,9 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddScoped<IReadOnlyPageRepository, ReadOnlyPageRepository>();
 		builder.Services.AddScoped<IWriteOnlyPageRepository, WriteOnlyPageRepository>();
 
+		builder.Services.AddScoped<IReadOnlySnippetRepository, ReadOnlySnippetRepository>();
+		builder.Services.AddScoped<IWriteOnlySnippetRepository, WriteOnlySnippetRepository>();
+
 		builder.Services.AddScoped<IReadOnlyWebsiteRepository, ReadOnlyWebsiteRepository>();
 		builder.Services.AddScoped<IWriteOnlyWebsiteRepository, WriteOnlyWebsiteRepository>();
 

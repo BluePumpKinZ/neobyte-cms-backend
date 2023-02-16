@@ -7,7 +7,7 @@ using Neobyte.Cms.Backend.Persistence.Entities.Websites.HostingConnections;
 
 namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories;
 
-public class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
+internal class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 
 	private readonly EFDbContext _ctx;
 	private readonly ILogger<ReadOnlyWebsiteRepository> _logger;
@@ -17,7 +17,7 @@ public class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 		_logger = logger;
 	}
 
-	public async Task<Website?> GetWebsiteByIdAsync (WebsiteId websiteId) {
+	public async Task<Website?> ReadWebsiteByIdAsync (WebsiteId websiteId) {
 		var entity = await _ctx.WebsiteEntities
 			.SingleOrDefaultAsync(w => w.Id == websiteId);
 
@@ -31,12 +31,6 @@ public class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 		return await _ctx.WebsiteEntities
 			.Select(w => new Website(w.Id, w.Name, w.Domain, w.HomeFolder, w.UploadFolder, w.CreatedDate))
 			.ToListAsync();
-	}
-
-	public async Task<IEnumerable<Page>> GetPagesByWebsiteIdAsync (WebsiteId websiteId) {
-		return await _ctx.PageEntities
-			.Where(p => p.Website!.Id == websiteId)
-			.Select(p => new Page(p.Id, p.Name, p.Path, p.Created, p.Modified)).ToListAsync();
 	}
 
 	private async Task<HostingConnection?> GetWebsiteConnectionByWebsiteIdAsync (WebsiteId websiteId) {

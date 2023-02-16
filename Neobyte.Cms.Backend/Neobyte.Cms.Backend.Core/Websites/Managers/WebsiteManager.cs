@@ -5,8 +5,6 @@ using Neobyte.Cms.Backend.Core.Websites.Models;
 using Neobyte.Cms.Backend.Domain.Websites;
 using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Core.Websites.Managers;
 
@@ -33,7 +31,7 @@ public class WebsiteManager {
 	}
 
 	public async Task<Website> GetWebsiteById (WebsiteId websiteId) {
-		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
 		if (website is null)
 			throw new WebsiteNotFoundException($"Website {websiteId} not found");
 		return website;
@@ -45,7 +43,7 @@ public class WebsiteManager {
 
 	public async Task<Website> EditWebsiteAsync (WebsiteEditRequestModel request) {
 
-		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(new WebsiteId(request.Id));
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(new WebsiteId(request.Id));
 
 		if (website is null)
 			throw new WebsiteNotFoundException($"Website {request.Id} not found");
@@ -66,10 +64,6 @@ public class WebsiteManager {
 		website.Connection = hostingConnection;
 
 		return await _writeOnlyWebsiteRepository.UpdateWebsiteAsync(website);
-	}
-
-	public async Task<IEnumerable<Page>> GetPagesByWebsiteId (WebsiteId websiteId) {
-		return await _readOnlyWebsiteRepository.GetPagesByWebsiteIdAsync(websiteId);
 	}
 
 }

@@ -28,6 +28,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton<HtmlTransformer>();
 		builder.Services.AddScoped<WebsiteManager>();
 		builder.Services.AddScoped<WebsitePageManager>();
+		builder.Services.AddScoped<WebsiteSnippetManager>();
 		builder.Services.AddScoped<WebsiteFileManager>();
 
 		return builder;

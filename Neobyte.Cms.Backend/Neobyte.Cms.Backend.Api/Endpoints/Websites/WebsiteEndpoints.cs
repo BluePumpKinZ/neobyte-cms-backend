@@ -4,7 +4,7 @@ using Neobyte.Cms.Backend.Domain.Websites;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.Websites;
 
-public class WebsiteEndpoints : IApiEndpoints {
+internal class WebsiteEndpoints : IApiEndpoints {
 
 	public string GroupName => "Websites";
 	public string Path => "/api/v1/websites";
@@ -30,23 +30,13 @@ public class WebsiteEndpoints : IApiEndpoints {
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.ClientPrivilege);
 
-		routes.MapGet("{websiteId:Guid}/pages", async (
-			[FromServices] WebsiteManager manager,
-			[FromServices] Projector projector,
-			[FromRoute] Guid websiteId) => {
-				var pages = await manager.GetPagesByWebsiteId(new WebsiteId(websiteId));
-				var projection = projector.Project<Page, PageProjection>(pages);
-				return Results.Ok(projection);
-			}).Authorize(UserPolicy.ClientPrivilege);
-
 		routes.MapGet("all", async (
 			[FromServices] WebsiteManager manager,
 			[FromServices] Projector projector) => {
 				var websites = await manager.GetAllWebsitesAsync();
 				var projection = projector.Project<Website, WebsiteProjection>(websites);
 				return Results.Ok(projection);
-
-			}).Authorize(UserPolicy.OwnerPrivilege);
+		}).Authorize(UserPolicy.OwnerPrivilege);
 
 		routes.MapPut("edit", async (
 			[FromServices] WebsiteManager manager,

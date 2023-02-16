@@ -33,4 +33,8 @@ public class WebsiteEntity {
 		CreatedDate = createdDate;
 	}
 
+	internal Website ToDomain () {
+		return new Website(Id, Name, Domain, HomeFolder, UploadFolder, CreatedDate);
+	}
+
 }

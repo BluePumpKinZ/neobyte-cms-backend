@@ -1,4 +1,4 @@
-﻿namespace Neobyte.Cms.Backend.Api.Endpoints.Validation.Extensions; 
+﻿namespace Neobyte.Cms.Backend.Api.Filters.Validation.Extensions;
 
 public static class RouteHandlerBuilderExtensions {
 

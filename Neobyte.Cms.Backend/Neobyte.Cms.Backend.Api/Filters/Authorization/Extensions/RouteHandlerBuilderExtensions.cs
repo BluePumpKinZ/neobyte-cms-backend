@@ -1,4 +1,4 @@
-﻿namespace Neobyte.Cms.Backend.Api.Authorization.Extensions;
+﻿namespace Neobyte.Cms.Backend.Api.Filters.Authorization.Extensions;
 
 public static class RouteHandlerBuilderExtensions {
 

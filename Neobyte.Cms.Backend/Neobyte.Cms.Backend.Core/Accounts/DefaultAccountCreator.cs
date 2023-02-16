@@ -5,7 +5,6 @@ using Neobyte.Cms.Backend.Core.Accounts.Managers;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Core.Configuration;
 using Neobyte.Cms.Backend.Core.Identity;
-using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Core.Accounts;
 

@@ -6,7 +6,7 @@ using Neobyte.Cms.Backend.Persistence.Entities.Accounts;
 
 namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories; 
 
-public class WriteOnlyAccountRepository : IWriteOnlyAccountRepository {
+internal class WriteOnlyAccountRepository : IWriteOnlyAccountRepository {
 
 	private readonly EFDbContext _ctx;
 
