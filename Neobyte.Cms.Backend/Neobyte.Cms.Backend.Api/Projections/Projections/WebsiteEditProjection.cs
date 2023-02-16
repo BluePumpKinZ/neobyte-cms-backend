@@ -4,7 +4,7 @@ using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
 
 namespace Neobyte.Cms.Backend.Api.Projections.Projections; 
 
-public class WebsiteEditProjection : IProjection {
+internal class WebsiteEditProjection : IProjection {
 
 	public WebsiteId Id { get; set; }
 	public string Name { get; set; } = string.Empty;

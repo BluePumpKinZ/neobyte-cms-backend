@@ -2,7 +2,7 @@
 
 namespace Neobyte.Cms.Backend.Api.Projections.Projections; 
 
-public interface IProjection {
+internal interface IProjection {
 
 	void RegisterMap (IMapperConfigurationExpression configuration);
 
