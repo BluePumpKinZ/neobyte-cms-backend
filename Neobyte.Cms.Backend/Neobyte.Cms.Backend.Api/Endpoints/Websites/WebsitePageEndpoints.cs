@@ -51,17 +51,29 @@ internal class WebsitePageEndpoints : IApiEndpoints {
 				return Results.Ok(response);
 			}).Authorize(UserPolicy.ClientPrivilege);
 
+		routes.MapPut("{pageId:Guid}/publish/render", async (
+			[FromRoute] Guid websiteId,
+			[FromServices] WebsitePageManager manager,
+			[FromRoute] Guid pageId,
+			[FromBody] WebsitePagePublishRequestModel request) => {
+				request.WebsiteId = new WebsiteId(websiteId);
+				request.PageId = new PageId(pageId);
+				await manager.PublishPageRender(request);
+				return Results.Ok(new { Message = "Page published" });
+			}).Authorize(UserPolicy.ClientPrivilege)
+			.ValidateBody<WebsitePagePublishRequestModel>();
+
 		routes.MapPut("{pageId:Guid}/publish/source", async (
 			[FromRoute] Guid websiteId,
 			[FromServices] WebsitePageManager manager,
 			[FromRoute] Guid pageId,
-			[FromBody] PagePublishSourceCreateRequest request) => {
+			[FromBody] WebsitePagePublishRequestModel request) => {
 				request.WebsiteId = new WebsiteId(websiteId);
 				request.PageId = new PageId(pageId);
 				await manager.PublishPageSource(request);
 				return Results.Ok(new { Message = "Page published" });
-			}).Authorize(UserPolicy.ClientPrivilege)
-			.ValidateBody<PagePublishSourceCreateRequest>();
+			}).Authorize(UserPolicy.OwnerPrivilege)
+			.ValidateBody<WebsitePagePublishRequestModel>();
 
 		routes.MapDelete("{pageId:Guid}/delete", async (
 			[FromRoute] Guid websiteId,

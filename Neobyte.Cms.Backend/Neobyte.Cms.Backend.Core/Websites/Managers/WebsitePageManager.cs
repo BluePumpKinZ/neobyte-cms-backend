@@ -64,7 +64,7 @@ public class WebsitePageManager {
 	public async Task<string> RenderPageAsync (WebsiteId websiteId, PageId pageId) {
 		var htmlContent = await GetPageSourceAsync(websiteId, pageId);
 		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
-		return _transformer.TransformRenderedWebpage(website!.Domain, htmlContent);
+		return _transformer.ConstructRenderedWebpage(website!.Domain, htmlContent);
 	}
 
 	public async Task<string> GetPageSourceAsync (WebsiteId websiteId, PageId pageId) {
@@ -88,7 +88,7 @@ public class WebsitePageManager {
 		return Encoding.UTF8.GetString (connector.GetFileContent(filepath));
 	}
 
-	public async Task PublishPageSource (PagePublishSourceCreateRequest request) {
+	public async Task PublishPageSource (WebsitePagePublishRequestModel request) {
 		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(request.WebsiteId);
 		var page = await _readOnlyPageRepository.ReadPageByIdAsync(request.PageId);
 
@@ -104,6 +104,25 @@ public class WebsitePageManager {
 		var connector = _remoteHostingProvider.CreateConnector(connection);
 		var filepath = Path.Combine(website.HomeFolder, page.Path);
 		connector.CreateFile(filepath, Encoding.UTF8.GetBytes(request.Source));
+	}
+
+	public async Task PublishPageRender (WebsitePagePublishRequestModel request) {
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(request.WebsiteId);
+		var page = await _readOnlyPageRepository.ReadPageByIdAsync(request.PageId);
+
+		if (website is null)
+			throw new WebsiteNotFoundException($"Website {request.WebsiteId} not found");
+		if (page is null)
+			throw new PageNotFoundException($"Page {request.PageId} not found");
+
+		var connection = website.Connection;
+		if (connection is null)
+			throw new WebsiteConnectionNotFoundException($"Website {request.WebsiteId} has no connection");
+
+		var htmlContent = _transformer.DeconstructRenderedWebPage(request.Source);
+		var connector = _remoteHostingProvider.CreateConnector(connection);
+		var filepath = Path.Combine(website.HomeFolder, page.Path);
+		connector.CreateFile(filepath, Encoding.UTF8.GetBytes(htmlContent));
 	}
 
 }

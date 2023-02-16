@@ -2,7 +2,7 @@
 
 namespace Neobyte.Cms.Backend.Core.Websites.Models; 
 
-public class PagePublishSourceCreateRequest {
+public class WebsitePagePublishRequestModel {
 
 	public WebsiteId WebsiteId { get; set; }
 	public PageId PageId { get; set; }
