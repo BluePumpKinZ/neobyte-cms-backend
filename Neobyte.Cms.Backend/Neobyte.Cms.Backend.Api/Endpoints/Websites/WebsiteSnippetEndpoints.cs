@@ -20,7 +20,8 @@ internal class WebsiteSnippetEndpoints : IApiEndpoints {
 				var snippet = await manager.AddWebsiteSnippetAsync(request);
 				var projection = projector.Project<Snippet, SnippetEditProjection>(snippet);
 				return Results.Ok(projection);
-			}).Authorize(UserPolicy.OwnerPrivilege);
+			}).Authorize(UserPolicy.OwnerPrivilege)
+			.ValidateBody<WebsiteCreateSnippetRequestModel>();
 
 		routes.MapGet("", async (Guid websiteId,
 			[FromServices] WebsiteSnippetManager manager,
@@ -51,7 +52,8 @@ internal class WebsiteSnippetEndpoints : IApiEndpoints {
 				var snippet = await manager.EditSnippetAsync(request);
 				var projection = projector.Project<Snippet, SnippetEditProjection>(snippet);
 				return Results.Ok(projection);
-			}).Authorize(UserPolicy.OwnerPrivilege);
+			}).Authorize(UserPolicy.OwnerPrivilege)
+			.ValidateBody<WebsiteSnippetEditRequestModel>();
 
 		routes.MapDelete("{snippetId:Guid}/delete", async (
 			[FromRoute] Guid websiteId,
