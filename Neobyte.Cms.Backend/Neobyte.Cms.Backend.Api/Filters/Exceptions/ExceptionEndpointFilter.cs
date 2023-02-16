@@ -14,7 +14,7 @@ public class ExceptionEndpointFilter : IEndpointFilter {
 
 	public async ValueTask<object?> InvokeAsync (EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
 		try {
-			return next.Invoke(context);
+			return await next.Invoke(context);
 		} catch (NotFoundException e) {
 			return await ValueTask.FromResult(Results.NotFound(new { e.Message }));
 		} catch (ApplicationException e) {
