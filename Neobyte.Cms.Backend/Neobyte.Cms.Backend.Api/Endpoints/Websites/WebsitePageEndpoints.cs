@@ -9,6 +9,7 @@ internal class WebsitePageEndpoints : IApiEndpoints {
 
 	public string GroupName => "Website Pages";
 	public string Path => "/api/v1/websites/{websiteId:Guid}/pages";
+	public bool Authorized => true;
 
 	public void RegisterApis (RouteGroupBuilder routes) {
 

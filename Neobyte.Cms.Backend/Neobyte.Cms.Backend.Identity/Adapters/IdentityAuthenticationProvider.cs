@@ -61,6 +61,8 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 		var identityAccount = await _identityAccountRepository.ReadIdentityAccountByEmailAsync(normalizedEmail);
 		if (identityAccount is null)
 			return false;
+		if (!identityAccount.Account!.Enabled)
+			return false;
 		var signInResult = await _signInManager.PasswordSignInAsync(identityAccount, password, false, false);
 		return signInResult.Succeeded;
 

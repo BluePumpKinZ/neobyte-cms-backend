@@ -42,6 +42,9 @@ public static class WebApplicationBuilderExtensions {
 			return principalConverter.GetPrincipalAsync().Result;
 		});
 
+		// authorization
+		builder.Services.AddScoped<EnabledAccountFilter>();
+
 		// swagger
 		builder.Services.AddEndpointsApiExplorer();
 		builder.Services.AddSwaggerGen();

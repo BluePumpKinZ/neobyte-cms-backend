@@ -9,6 +9,7 @@ public class AccountsListEndpoints : IApiEndpoints {
 
 	public string GroupName => "Accounts List";
 	public string Path => "/api/v1/accounts/list";
+	public bool Authorized => true;
 
 	public void RegisterApis (RouteGroupBuilder routes) {
 

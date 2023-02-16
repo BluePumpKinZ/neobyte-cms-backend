@@ -7,11 +7,15 @@ internal class ApiEndpointLoader {
 
 	public void LoadEndpoints (WebApplication app) {
 
-		foreach (var endpoint in app.Services.GetServices<IApiEndpoints>()) {
-			endpoint.RegisterApis(app
-				.MapGroup(endpoint.Path)
-				.WithTags(endpoint.GroupName)
-				.HandleApplicationExceptions());
+		foreach (var endpoints in app.Services.GetServices<IApiEndpoints>()) {
+			var group = app
+				.MapGroup(endpoints.Path)
+				.WithTags(endpoints.GroupName)
+				.HandleApplicationExceptions();
+			endpoints.RegisterApis(endpoints.Authorized
+				? group.FilterEnabledAccounts()
+				: group);
+			
 		}
 	}
 
