@@ -13,7 +13,6 @@
 
 	<ItemGroup>
 		<Folder Include="Extensions\" />
-		<Folder Include="Adapters\" />
 		<Folder Include="Configuration\" />
 		<Folder Include="Initializers\" />
 		<Folder Include="Repositories\" />

@@ -3,7 +3,7 @@ using Neobyte.Cms.Backend.Domain.Websites;
 
 namespace Neobyte.Cms.Backend.Api.Projections.Projections; 
 
-public class WebsiteProjection : IProjection {
+internal class WebsiteProjection : IProjection {
 
 	public WebsiteId Id { get; set; }
 	public string Name { get; set; } = string.Empty;

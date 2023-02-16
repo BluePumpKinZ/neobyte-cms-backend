@@ -4,7 +4,7 @@ using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Persistence.EF;
 using Neobyte.Cms.Backend.Persistence.Entities.Accounts;
 
-namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories; 
+namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories;
 
 internal class WriteOnlyAccountRepository : IWriteOnlyAccountRepository {
 
@@ -18,10 +18,12 @@ internal class WriteOnlyAccountRepository : IWriteOnlyAccountRepository {
 		var accountEntity = await _ctx.AccountEntities.SingleAsync(a => a.Id == account.Id);
 		accountEntity.Username = account.Username;
 		accountEntity.Bio = account.Bio;
+		accountEntity.Enabled = account.Enabled;
 
 		IdentityAccountEntity identityAccountEntity = await (from u in _ctx.Users
-										   join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
-										   select u).SingleAsync();
+															 join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
+															 where a.Id == accountEntity.Id
+															 select u).SingleAsync();
 
 		identityAccountEntity.Email = account.Email;
 		identityAccountEntity.NormalizedEmail = account.Email.ToUpper();

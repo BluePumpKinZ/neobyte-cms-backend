@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Neobyte.Cms.Backend.Api.Filters.Authorization;
 
-public class Principal {
+internal class Principal {
 
-	public AccountId AccountId { get; set; }
-	public IEnumerable<string> Roles { get; set; }
+	public AccountId AccountId { get; }
+	public IEnumerable<string> Roles { get; }
 
 	public Principal (AccountId accountId, IEnumerable<string> roles) {
 		AccountId = accountId;

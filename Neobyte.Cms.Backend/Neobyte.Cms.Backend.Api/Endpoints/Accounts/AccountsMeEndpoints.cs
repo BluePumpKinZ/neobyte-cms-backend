@@ -8,6 +8,7 @@ public class AccountsMeEndpoints : IApiEndpoints {
 
 	public string GroupName => "Account";
 	public string Path => "/api/v1/accounts/me";
+	public bool Authorized => true;
 
 	public void RegisterApis (RouteGroupBuilder routes) {
 

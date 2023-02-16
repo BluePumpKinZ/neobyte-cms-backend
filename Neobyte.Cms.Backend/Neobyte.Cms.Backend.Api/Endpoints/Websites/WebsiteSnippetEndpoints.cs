@@ -8,6 +8,7 @@ internal class WebsiteSnippetEndpoints : IApiEndpoints {
 
 	public string GroupName => "";
 	public string Path => "/api/v1/websites/{websiteId:Guid}/snippets";
+	public bool Authorized => true;
 
 	public void RegisterApis (RouteGroupBuilder routes) {
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Api.Filters.Authorization;
 
-public class HttpContextIdentityPrincipalConverter {
+internal class HttpContextIdentityPrincipalConverter {
 
 	private readonly IIdentityAuthorizationProvider _identityAuthorizationProvider;
 	private readonly IHttpContextAccessor _httpContextAccessor;

@@ -21,7 +21,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddScoped<AccountManager>();
 		builder.Services.AddScoped<DefaultAccountCreator>();
 
-		builder.Services.AddScoped<IdentityAuthenticationManager>();
+		builder.Services.AddScoped<IdentityManager>();
 
 		builder.Services.AddScoped<MailingManager>();
 
