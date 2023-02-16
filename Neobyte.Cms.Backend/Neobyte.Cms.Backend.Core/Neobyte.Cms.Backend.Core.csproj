@@ -20,7 +20,6 @@
     <Folder Include="Identity\Models\Authentication\" />
     <Folder Include="Ports\RemoteHosting\" />
     <Folder Include="Websites\Managers\" />
-    <Folder Include="Websites\Models\" />
   </ItemGroup>
 
   <ItemGroup>
