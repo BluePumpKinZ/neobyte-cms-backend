@@ -41,7 +41,7 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 	}
 
 	public async Task<AccountsCreateResponseModel> CreateIdentityAccountAsync (Account account, string password) {
-		var accountEntity = new AccountEntity(account.Id, account.Username, account.Bio, account.CreationDate);
+		var accountEntity = new AccountEntity(account.Id, account.Username, account.Bio, account.Enabled, account.CreationDate);
 		var identityAccount = new IdentityAccountEntity { Account = accountEntity };
 
 		await _userStore.SetUserNameAsync(identityAccount, identityAccount.Id.ToString(), CancellationToken.None);

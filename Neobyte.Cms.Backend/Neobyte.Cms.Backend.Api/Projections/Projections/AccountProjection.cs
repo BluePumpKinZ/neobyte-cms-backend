@@ -9,6 +9,7 @@ public class AccountProjection : IProjection {
 	public string Email { get; set; } = string.Empty;
 	public string Username { get; set; } = string.Empty;
 	public string Bio { get; set; } = string.Empty;
+	public bool Enabled { get; set; }
 	public DateTime CreationDate { get; set; }
 	public string[]? Roles { get; set; }
 

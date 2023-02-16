@@ -12,7 +12,7 @@ public class IdentityAccountEntity : IdentityUser<Guid> {
 	public AccountEntity? Account { get; set; }
 
 	internal Account ToDomain (string[] roles) {
-		return new Account(Account!.Id, Email!, Account!.Username, Account!.Bio, Account!.CreationDate, roles);
+		return new Account(Account!.Id, Email!, Account!.Username, Account!.Bio, Account!.Enabled, Account!.CreationDate, roles);
 	}
 
 }

@@ -31,7 +31,22 @@ public class AccountsListEndpoints : IApiEndpoints {
 			[FromServices] AccountManager manager,
 			[FromServices] Projector projector,
 			[FromRoute] Guid accountId) => {
-				Account account = await manager.GetAccountDetails(new AccountId(accountId));
+				var account = await manager.GetAccountDetails(new AccountId(accountId));
+				var projection = projector.Project<Account, AccountProjection>(account);
+				return Results.Ok(projection);
+			}).Authorize(UserPolicy.OwnerPrivilege);
+
+		routes.MapPut("{accountId:Guid}/edit", async (
+			[FromServices] AccountListManager manager,
+			[FromServices] Projector projector,
+			[FromBody] AccountChangeDetailsOwnerRequestModel request,
+			[FromServices] Principal principal,
+			[FromRoute] Guid accountId) => {
+				request.AccountId = new AccountId(accountId);
+				if (principal.AccountId == new AccountId())
+					return Results.BadRequest("You cannot edit your own account.");
+				
+				var account = await manager.EditAccountDetailsAsync(request);
 				var projection = projector.Project<Account, AccountProjection>(account);
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.OwnerPrivilege);
@@ -43,7 +58,7 @@ public class AccountsListEndpoints : IApiEndpoints {
 			[FromRoute] Guid accountId) => {
 				if (principal.AccountId == new AccountId(accountId))
 					return Results.BadRequest("You cannot delete your own account.");
-				
+
 				await manager.DeleteAccountAsync(new AccountId(accountId));
 				return Results.Ok(new { Message = "Account deleted" });
 			}).Authorize(UserPolicy.OwnerPrivilege);

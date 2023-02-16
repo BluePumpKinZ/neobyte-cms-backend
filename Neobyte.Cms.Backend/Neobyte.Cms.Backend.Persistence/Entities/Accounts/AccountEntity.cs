@@ -12,14 +12,16 @@ public class AccountEntity {
 	[Required]
 	public string Bio { get; set; }
 	[Required]
+	public bool Enabled { get; set; }
+	[Required]
 	public DateTime CreationDate { get; set; }
 
-	public AccountEntity (AccountId id, string username, string bio, DateTime creationDate) {
+	public AccountEntity (AccountId id, string username, string bio, bool enabled, DateTime creationDate) {
 		Id = id;
 		Username = username;
 		Bio = bio;
+		Enabled = enabled;
 		CreationDate = creationDate;
 	}
-
 
 }
