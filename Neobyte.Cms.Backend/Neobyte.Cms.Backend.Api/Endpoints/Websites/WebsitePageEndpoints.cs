@@ -1,7 +1,4 @@
 ﻿using Neobyte.Cms.Backend.Api.Extensions;
-using Neobyte.Cms.Backend.Api.Filters.Authorization.Extensions;
-using Neobyte.Cms.Backend.Api.Filters.Validation.Extensions;
-using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Core.Websites.Managers;
 using Neobyte.Cms.Backend.Core.Websites.Models;
 using Neobyte.Cms.Backend.Domain.Websites;
@@ -27,6 +24,15 @@ internal class WebsitePageEndpoints : IApiEndpoints {
 				return Results.Ok(new { Message = "Page added" });
 			}).Authorize(UserPolicy.OwnerPrivilege)
 			.ValidateBody<WebsiteCreatePageRequestModel>();
+
+		routes.MapGet("", async (
+			[FromServices] WebsitePageManager manager,
+			[FromServices] Projector projector,
+			[FromRoute] Guid websiteId) => {
+				var pages = await manager.GetPagesByWebsiteId(new WebsiteId(websiteId));
+				var projection = projector.Project<Page, PageProjection>(pages);
+				return Results.Ok(projection);
+			}).Authorize(UserPolicy.ClientPrivilege);
 
 		routes.MapGet("{pageId:Guid}/render", async (
 			[FromRoute] Guid websiteId,
@@ -60,7 +66,7 @@ internal class WebsitePageEndpoints : IApiEndpoints {
 			[FromRoute] Guid websiteId,
 			[FromServices] WebsitePageManager manager,
 			[FromRoute] Guid pageId) => {
-			await manager.DeletePageAsync(new WebsiteId(websiteId), new PageId(pageId));
+				await manager.DeletePageAsync(new WebsiteId(websiteId), new PageId(pageId));
 				return Results.Ok("Page deleted");
 			}).Authorize(UserPolicy.OwnerPrivilege);
 

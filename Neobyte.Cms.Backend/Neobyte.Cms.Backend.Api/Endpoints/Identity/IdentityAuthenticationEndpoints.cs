@@ -1,6 +1,4 @@
-﻿using Neobyte.Cms.Backend.Api.Filters.Authorization.Extensions;
-using Neobyte.Cms.Backend.Api.Filters.Validation.Extensions;
-using Neobyte.Cms.Backend.Core.Identity.Managers;
+﻿using Neobyte.Cms.Backend.Core.Identity.Managers;
 using Neobyte.Cms.Backend.Core.Identity.Models.Authentication;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.Identity;

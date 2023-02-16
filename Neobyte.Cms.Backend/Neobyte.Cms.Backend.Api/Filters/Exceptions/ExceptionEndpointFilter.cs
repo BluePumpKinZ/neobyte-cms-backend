@@ -13,14 +13,13 @@ public class ExceptionEndpointFilter : IEndpointFilter {
 	}
 
 	public async ValueTask<object?> InvokeAsync (EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
-
 		try {
 			return next.Invoke(context);
 		} catch (NotFoundException e) {
-			return Results.NotFound(new { e.Message });
+			return await ValueTask.FromResult(Results.NotFound(new { e.Message }));
 		} catch (ApplicationException e) {
 			_logger.LogError(e, "Application exception");
-			return Results.BadRequest(new { e.Message });
+			return await ValueTask.FromResult(Results.BadRequest(new { e.Message }));
 		}
 	}
 

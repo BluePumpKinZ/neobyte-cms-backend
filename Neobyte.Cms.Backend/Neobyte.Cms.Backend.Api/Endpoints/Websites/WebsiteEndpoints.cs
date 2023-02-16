@@ -1,6 +1,4 @@
-﻿using Neobyte.Cms.Backend.Api.Filters.Authorization.Extensions;
-using Neobyte.Cms.Backend.Api.Filters.Validation.Extensions;
-using Neobyte.Cms.Backend.Core.Websites.Managers;
+﻿using Neobyte.Cms.Backend.Core.Websites.Managers;
 using Neobyte.Cms.Backend.Core.Websites.Models;
 using Neobyte.Cms.Backend.Domain.Websites;
 
@@ -29,15 +27,6 @@ internal class WebsiteEndpoints : IApiEndpoints {
 			[FromRoute] Guid websiteId) => {
 				var websites = await manager.GetWebsiteById(new WebsiteId(websiteId));
 				var projection = projector.Project<Website, WebsiteEditProjection>(websites);
-				return Results.Ok(projection);
-			}).Authorize(UserPolicy.ClientPrivilege);
-
-		routes.MapGet("{websiteId:Guid}/pages", async (
-			[FromServices] WebsiteManager manager,
-			[FromServices] Projector projector,
-			[FromRoute] Guid websiteId) => {
-				var pages = await manager.GetPagesByWebsiteId(new WebsiteId(websiteId));
-				var projection = projector.Project<Page, PageProjection>(pages);
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.ClientPrivilege);
 

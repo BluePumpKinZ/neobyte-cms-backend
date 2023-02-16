@@ -1,10 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Neobyte.Cms.Backend.Api.Filters.Authorization;
-using Neobyte.Cms.Backend.Api.Filters.Authorization.Extensions;
-using Neobyte.Cms.Backend.Api.Filters.Validation.Extensions;
 using Neobyte.Cms.Backend.Core.Accounts.Managers;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
-using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Domain.Accounts;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.Accounts;

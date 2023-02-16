@@ -6,7 +6,6 @@ using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Core.Accounts.Managers;
 

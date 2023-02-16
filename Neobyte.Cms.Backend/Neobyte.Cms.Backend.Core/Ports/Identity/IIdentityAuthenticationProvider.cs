@@ -1,6 +1,5 @@
 ﻿using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Domain.Accounts;
-using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Core.Ports.Identity;
 

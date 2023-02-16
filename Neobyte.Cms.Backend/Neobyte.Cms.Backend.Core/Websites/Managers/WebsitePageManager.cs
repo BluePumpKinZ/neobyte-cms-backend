@@ -7,13 +7,12 @@ using Neobyte.Cms.Backend.Core.Websites.Transformers;
 using Neobyte.Cms.Backend.Domain.Websites;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Neobyte.Cms.Backend.Core.Websites.Managers;
 
 public class WebsitePageManager {
 
-	private HtmlTransformer _transformer;
+	private readonly HtmlTransformer _transformer;
 	private readonly IReadOnlyWebsiteRepository _readOnlyWebsiteRepository;
 	private readonly IRemoteHostingProvider _remoteHostingProvider;
 	private readonly IWriteOnlyPageRepository _writeOnlyPageRepository;
@@ -44,6 +43,10 @@ public class WebsitePageManager {
 		await _writeOnlyPageRepository.AddPageAsync(page);
 
 		return new WebsiteCreatePageResponseModel(true);
+	}
+
+	public async Task<IEnumerable<Page>> GetPagesByWebsiteId (WebsiteId websiteId) {
+		return await _readOnlyPageRepository.GetPagesByWebsiteIdAsync(websiteId);
 	}
 
 	public async Task DeletePageAsync (WebsiteId websiteId, PageId pageId) {

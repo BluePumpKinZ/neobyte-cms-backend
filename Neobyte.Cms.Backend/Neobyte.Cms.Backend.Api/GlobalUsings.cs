@@ -2,9 +2,9 @@
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Routing;
-global using Neobyte.Cms.Backend.Api.Authorization;
-global using Neobyte.Cms.Backend.Api.Authorization.Extensions;
-global using Neobyte.Cms.Backend.Api.Endpoints.Validation.Extensions;
+global using Neobyte.Cms.Backend.Api.Filters.Authorization;
+global using Neobyte.Cms.Backend.Api.Filters.Authorization.Extensions;
+global using Neobyte.Cms.Backend.Api.Filters.Validation.Extensions;
 global using Neobyte.Cms.Backend.Api.Projections;
 global using Neobyte.Cms.Backend.Api.Projections.Projections;
 global using Neobyte.Cms.Backend.Core.Identity;

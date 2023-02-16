@@ -7,7 +7,7 @@ using Neobyte.Cms.Backend.Persistence.Entities.Websites.HostingConnections;
 
 namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories;
 
-public class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
+internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 
 	private readonly EFDbContext _ctx;
 

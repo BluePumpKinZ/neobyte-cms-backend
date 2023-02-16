@@ -5,7 +5,6 @@ using Neobyte.Cms.Backend.Api.Endpoints.Identity;
 using Neobyte.Cms.Backend.Api.Endpoints.Loader;
 using Neobyte.Cms.Backend.Api.Endpoints.Mailing;
 using Neobyte.Cms.Backend.Api.Endpoints.Websites;
-using Neobyte.Cms.Backend.Api.Filters.Authorization;
 
 namespace Neobyte.Cms.Backend.Api.Extensions;
 
@@ -30,6 +29,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddScoped<Projector>();
 		builder.Services.AddSingleton<IProjection, AccountProjection>();
 		builder.Services.AddSingleton<IProjection, PageProjection>();
+		builder.Services.AddSingleton<IProjection, SnippetProjection>();
 		builder.Services.AddSingleton<IProjection, WebsiteProjection>();
 		builder.Services.AddSingleton<IProjection, WebsiteEditProjection>();
 

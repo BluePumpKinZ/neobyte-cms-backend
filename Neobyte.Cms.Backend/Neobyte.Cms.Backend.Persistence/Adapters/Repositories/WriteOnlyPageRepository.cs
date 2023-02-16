@@ -5,7 +5,7 @@ using Neobyte.Cms.Backend.Persistence.Entities.Websites;
 
 namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories; 
 
-public class WriteOnlyPageRepository : IWriteOnlyPageRepository {
+internal class WriteOnlyPageRepository : IWriteOnlyPageRepository {
 
 	private readonly EFDbContext _ctx;
 
