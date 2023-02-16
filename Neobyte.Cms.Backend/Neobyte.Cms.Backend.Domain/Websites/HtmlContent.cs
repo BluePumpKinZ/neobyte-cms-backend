@@ -5,7 +5,6 @@ public partial struct HtmlContentId {}
 
 public class HtmlContent {
 
-	[Key]
 	public HtmlContentId Id { get; set; }
 	public string Html { get; set; }
 

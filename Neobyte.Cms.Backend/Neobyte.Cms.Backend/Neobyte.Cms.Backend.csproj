@@ -23,4 +23,10 @@
 		<ProjectReference Include="..\Neobyte.Cms.Backend.RemoteHosting\Neobyte.Cms.Backend.RemoteHosting.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="cms_styles.css">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

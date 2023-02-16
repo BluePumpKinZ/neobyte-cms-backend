@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Neobyte.Cms.Backend.Api.Projections; 
 
-public class Projector {
+internal class Projector {
 
 	private readonly IMapper _mapper;
 

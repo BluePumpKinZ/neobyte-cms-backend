@@ -1,23 +1,23 @@
-﻿namespace Neobyte.Cms.Backend.Domain.Websites;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Neobyte.Cms.Backend.Domain.Websites;
 
 [StronglyTypedId(converters: StronglyTypedIdConverter.SystemTextJson)]
 public partial struct TemplateId { }
 
 public class Template : Website {
 
-
-	[Required]
-	[StringLength(500)]
+	[Key]
+	public new TemplateId Id { get => new TemplateId(base.Id.Value); set => base.Id = new WebsiteId(value.Value); }
+	public string Title { get; set; }
 	public string Description { get; set; }
-	public string FileName { get; set; }
-	public HtmlContent? HtmlContent { get; set; }
 
-	public Template (string name, string description, string fileName, string domain)
-		: this(TemplateId.New(), name, description, fileName, domain) { }
+	public Template (string name, string title, string description, string domain, string homeFolder, string uploadFolder)
+		: this(TemplateId.New(), name, title, description, domain, homeFolder, uploadFolder, DateTime.UtcNow) { }
 
-	public Template (TemplateId id, string name, string description, string fileName, string domain) : base(new WebsiteId(id.Value), name, domain) {
+	public Template (TemplateId id, string name, string title, string description, string domain, string homeFolder, string uploadFolder, DateTime createdDate) : base(new WebsiteId(id.Value), name, domain, homeFolder, uploadFolder, createdDate) {
+		Title = title;
 		Description = description;
-		FileName = fileName;
 	}
 
 }

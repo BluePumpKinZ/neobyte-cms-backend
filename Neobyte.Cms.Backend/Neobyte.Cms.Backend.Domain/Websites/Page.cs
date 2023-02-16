@@ -5,22 +5,22 @@ public partial struct PageId {}
 
 public class Page {
 
-	[Key]
 	public PageId Id { get; set; }
-	[Required]
 	public string Name { get; set; }
-	[Required]
 	public string Path { get; set; }
-	[Required]
+	public DateTime Created { get; set; }
+	public DateTime Modified { get; set; }
 	public Website? Website { get; set; }
 
 	public Page (string name, string path)
-		: this (PageId.New(), name, path) {}
+		: this (PageId.New(), name, path, DateTime.UtcNow, DateTime.UtcNow) {}
 
-	public Page (PageId id, string name, string path) {
+	public Page (PageId id, string name, string path, DateTime created, DateTime modified) {
 		Id = id;
 		Name = name;
 		Path = path;
+		Created = created;
+		Modified = modified;
 	}
 
 }

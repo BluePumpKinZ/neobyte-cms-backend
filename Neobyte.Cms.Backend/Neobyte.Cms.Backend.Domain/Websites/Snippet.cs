@@ -5,26 +5,21 @@ public partial struct SnippetId { }
 
 public class Snippet {
 
-	[Key]
 	public SnippetId Id { get; set; }
-	[Required]
 	public string Name { get; set; }
-	[Required]
 	public string Description { get; set; }
-	public string? FileName { get; set; }
 	public Template? Template { get; set; }
-	[Required]
+	public Website? Website { get; set; }
 	public HtmlContent? Content { get; set; }
 
-	public Snippet (string name, string description, string? fileName = null)
-		: this (SnippetId.New(), name, description, fileName) {
+	public Snippet (string name, string description)
+		: this (SnippetId.New(), name, description) {
 	}
 
-	public Snippet (SnippetId id, string name, string description, string? fileName) {
+	public Snippet (SnippetId id, string name, string description) {
 		Id = id;
 		Name = name;
 		Description = description;
-		FileName = fileName;
 	}
 
 }

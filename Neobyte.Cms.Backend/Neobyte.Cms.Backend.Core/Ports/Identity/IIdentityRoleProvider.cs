@@ -1,11 +1,9 @@
-﻿using Neobyte.Cms.Backend.Core.Identity;
-using System;
-using System.Threading.Tasks;
+﻿using Neobyte.Cms.Backend.Domain.Accounts;
 
 namespace Neobyte.Cms.Backend.Core.Ports.Identity; 
 
 public interface IIdentityRoleProvider {
 
-	public Task AddRoleToIdentityUserAsync (Guid identityAccountId, Role role);
+	public Task UpdateRoles (Account account);
 
 }

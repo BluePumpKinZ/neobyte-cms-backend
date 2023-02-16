@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
@@ -7,7 +6,6 @@ using Neobyte.Cms.Backend.Persistence.Adapters.Repositories;
 using Neobyte.Cms.Backend.Persistence.Configuration;
 using Neobyte.Cms.Backend.Persistence.EF;
 using Neobyte.Cms.Backend.Persistence.EF.Initializer;
-using System;
 
 namespace Neobyte.Cms.Backend.Persistence.Extensions;
 
@@ -17,6 +15,15 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddScoped<IReadOnlyAccountRepository, ReadOnlyAccountRepository>();
 		builder.Services.AddScoped<IWriteOnlyAccountRepository, WriteOnlyAccountRepository>();
+
+		builder.Services.AddScoped<IReadOnlyPageRepository, ReadOnlyPageRepository>();
+		builder.Services.AddScoped<IWriteOnlyPageRepository, WriteOnlyPageRepository>();
+
+		builder.Services.AddScoped<IReadOnlySnippetRepository, ReadOnlySnippetRepository>();
+		builder.Services.AddScoped<IWriteOnlySnippetRepository, WriteOnlySnippetRepository>();
+
+		builder.Services.AddScoped<IReadOnlyWebsiteRepository, ReadOnlyWebsiteRepository>();
+		builder.Services.AddScoped<IWriteOnlyWebsiteRepository, WriteOnlyWebsiteRepository>();
 
 		// database configuration
 		var dbConfig = new DatabaseConfig();

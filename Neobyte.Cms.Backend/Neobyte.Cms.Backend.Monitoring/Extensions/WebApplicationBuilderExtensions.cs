@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using Serilog.Core;
 using System;
 using Microsoft.Extensions.Logging;
+using Neobyte.Cms.Backend.Monitoring.Configuration;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using System.Diagnostics;
 
-namespace Neobyte.Cms.Backend.Monitoring.Extensions; 
+namespace Neobyte.Cms.Backend.Monitoring.Extensions;
 
 public static class WebApplicationBuilderExtensions {
-
-    public static WebApplicationBuilder AddMonitoring (this WebApplicationBuilder builder) {
-
+	public static WebApplicationBuilder AddMonitoring (this WebApplicationBuilder builder) {
 		// Add logging
 		var logLevel = builder.Configuration.GetValue<LogEventLevel>("Logging:LogLevel:Default");
 		var logLevels = builder.Configuration.GetSection("Logging:LogLevel").GetChildren();
@@ -29,12 +32,33 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Logging.ClearProviders();
 		builder.Logging.AddSerilog(logger);
-		
 
-		// Add tracing
-		// Have fun arne
+		builder.Services.Configure<MonitoringOptions>(builder.Configuration.GetSection(MonitoringOptions.SectionName));
+		var monitoringOptions = new MonitoringOptions();
+		builder.Configuration.GetSection(MonitoringOptions.SectionName).Bind(monitoringOptions);
+		var serviceName = monitoringOptions.ServiceName;
+
+		builder.Services.AddOpenTelemetry()
+			.WithTracing(config => config
+				.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName))
+				.AddSqlClientInstrumentation(opt => {
+					opt.SetDbStatementForText = true;
+					opt.RecordException = true;
+				})
+				.AddAspNetCoreInstrumentation(opt => {
+					opt.EnableGrpcAspNetCoreSupport = true;
+					opt.RecordException = true;
+				})
+				.AddHttpClientInstrumentation(opt => {
+					opt.RecordException = true;
+				})
+				.AddOtlpExporter(otlpOptions => {
+					otlpOptions.Endpoint = new Uri($"http://{monitoringOptions.JaegerHost}:{monitoringOptions.JaegerPort}");
+				})
+			);
+
+		builder.Services.AddSingleton(new ActivitySource(serviceName));
 
 		return builder;
-    }
-
+	}
 }

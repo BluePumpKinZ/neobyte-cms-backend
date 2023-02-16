@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Neobyte.Cms.Backend.Api.Projections; 
 
-public class ProjectionMapperFactory {
+internal class ProjectionMapperFactory {
 
 	private readonly IEnumerable<IProjection> _projections;
 

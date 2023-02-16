@@ -1,5 +1,4 @@
 ﻿using Neobyte.Cms.Backend.Core.Mailing.Models;
-using System.Threading.Tasks;
 using Neobyte.Cms.Backend.Core.Ports.Mailing;
 
 namespace Neobyte.Cms.Backend.Core.Mailing.Managers; 
