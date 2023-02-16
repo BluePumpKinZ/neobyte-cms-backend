@@ -12,18 +12,15 @@ internal class ReadOnlyPageRepository : IReadOnlyPageRepository {
 		_ctx = ctx;
 	}
 
-	public async Task<Page?> GetPageByIdAsync (PageId pageId) {
+	public async Task<Page?> ReadPageByIdAsync (PageId pageId) {
 		var entity = await _ctx.PageEntities.SingleOrDefaultAsync(x => x.Id == pageId);
-		if (entity is null)
-			return null;
-
-		return new Page(entity.Id, entity.Name, entity.Path, entity.Created, entity.Modified);
+		return entity?.ToDomain();
 	}
 
-	public async Task<IEnumerable<Page>> GetPagesByWebsiteIdAsync (WebsiteId websiteId) {
+	public async Task<IEnumerable<Page>> ReadPagesByWebsiteIdAsync (WebsiteId websiteId) {
 		return await _ctx.PageEntities
 			.Where(p => p.Website!.Id == websiteId)
-			.Select(p => new Page(p.Id, p.Name, p.Path, p.Created, p.Modified)).ToListAsync();
+			.Select(p => p.ToDomain()).ToListAsync();
 	}
 
 

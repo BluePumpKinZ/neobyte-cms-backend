@@ -4,8 +4,8 @@ namespace Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 
 public interface IReadOnlyPageRepository {
 
-	public Task<Page?> GetPageByIdAsync (PageId pageId);
+	public Task<Page?> ReadPageByIdAsync (PageId pageId);
 
-	public Task<IEnumerable<Page>> GetPagesByWebsiteIdAsync (WebsiteId websiteId);
+	public Task<IEnumerable<Page>> ReadPagesByWebsiteIdAsync (WebsiteId websiteId);
 
 }

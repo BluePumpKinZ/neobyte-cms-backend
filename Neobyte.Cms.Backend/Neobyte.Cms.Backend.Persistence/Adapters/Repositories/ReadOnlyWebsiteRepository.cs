@@ -23,17 +23,17 @@ internal class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 
 		if (entity is null) return null;
 
-		HostingConnection? connection = await GetWebsiteConnectionByWebsiteIdAsync(websiteId);
+		HostingConnection? connection = await ReadWebsiteConnectionByWebsiteIdAsync(websiteId);
 		return new Website(entity.Id, entity.Name, entity.Domain, entity.HomeFolder, entity.UploadFolder, entity.CreatedDate) { Connection = connection };
 	}
 
-	public async Task<IEnumerable<Website>> GetAllWebsitesAsync () {
+	public async Task<IEnumerable<Website>> ReadAllWebsitesAsync () {
 		return await _ctx.WebsiteEntities
-			.Select(w => new Website(w.Id, w.Name, w.Domain, w.HomeFolder, w.UploadFolder, w.CreatedDate))
+			.Select(w => w.ToDomain())
 			.ToListAsync();
 	}
 
-	private async Task<HostingConnection?> GetWebsiteConnectionByWebsiteIdAsync (WebsiteId websiteId) {
+	private async Task<HostingConnection?> ReadWebsiteConnectionByWebsiteIdAsync (WebsiteId websiteId) {
 		var entity = await _ctx.WebsiteEntities.Where(w => w.Id == websiteId)
 			.Include(w => w.Connection)
 			.Select(w => w.Connection).SingleOrDefaultAsync();

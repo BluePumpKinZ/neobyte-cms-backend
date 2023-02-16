@@ -40,18 +40,18 @@ public class WebsitePageManager {
 			return new WebsiteCreatePageResponseModel(false, new string[] { $"File {request.Path} does not exist." });
 
 		var page = new Page(request.Name, request.Path) { Website = website };
-		await _writeOnlyPageRepository.AddPageAsync(page);
+		await _writeOnlyPageRepository.CreatePageAsync(page);
 
 		return new WebsiteCreatePageResponseModel(true);
 	}
 
 	public async Task<IEnumerable<Page>> GetPagesByWebsiteId (WebsiteId websiteId) {
-		return await _readOnlyPageRepository.GetPagesByWebsiteIdAsync(websiteId);
+		return await _readOnlyPageRepository.ReadPagesByWebsiteIdAsync(websiteId);
 	}
 
 	public async Task DeletePageAsync (WebsiteId websiteId, PageId pageId) {
 		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
-		var page = await _readOnlyPageRepository.GetPageByIdAsync(pageId);
+		var page = await _readOnlyPageRepository.ReadPageByIdAsync(pageId);
 
 		if (website is null)
 			throw new WebsiteNotFoundException($"Website {websiteId} not found");
@@ -69,7 +69,7 @@ public class WebsitePageManager {
 
 	public async Task<string> GetPageSourceAsync (WebsiteId websiteId, PageId pageId) {
 		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
-		var page = await _readOnlyPageRepository.GetPageByIdAsync(pageId);
+		var page = await _readOnlyPageRepository.ReadPageByIdAsync(pageId);
 
 		if (website is null)
 			throw new WebsiteNotFoundException($"Website {websiteId} not found");
@@ -90,7 +90,7 @@ public class WebsitePageManager {
 
 	public async Task PublishPageSource (PagePublishSourceCreateRequest request) {
 		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(request.WebsiteId);
-		var page = await _readOnlyPageRepository.GetPageByIdAsync(request.PageId);
+		var page = await _readOnlyPageRepository.ReadPageByIdAsync(request.PageId);
 
 		if (website is null)
 			throw new WebsiteNotFoundException($"Website {request.WebsiteId} not found");

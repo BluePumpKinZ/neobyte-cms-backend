@@ -26,4 +26,8 @@ public class PageEntity {
 		Modified = modified;
 	}
 
+	internal Page ToDomain () {
+		return new Page(Id, Name, Path, Created, Modified);
+	}
+
 }

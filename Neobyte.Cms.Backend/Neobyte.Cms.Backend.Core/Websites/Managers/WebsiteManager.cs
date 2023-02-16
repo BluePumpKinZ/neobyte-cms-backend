@@ -38,7 +38,7 @@ public class WebsiteManager {
 	}
 
 	public async Task<IEnumerable<Website>> GetAllWebsitesAsync () {
-		return await _readOnlyWebsiteRepository.GetAllWebsitesAsync();
+		return await _readOnlyWebsiteRepository.ReadAllWebsitesAsync();
 	}
 
 	public async Task<Website> EditWebsiteAsync (WebsiteEditRequestModel request) {

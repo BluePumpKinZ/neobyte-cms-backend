@@ -26,12 +26,12 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 						   join ur in _ctx.UserRoles on u.Id equals ur.UserId
 						   join r in _ctx.Roles on ur.RoleId equals r.Id
 						   where u.NormalizedEmail == normalizedEmail
-						   select r.Name).ToArrayAsync();
+						   select r.Name!).ToArrayAsync();
 
 		return await _ctx.Users
 			.Include(u => u.Account)
 			.Where(u => u.NormalizedEmail == normalizedEmail)
-			.Select(u => new Account(u.Account!.Id, u.Email!, u.Account!.Username, u.Account.Bio, u.Account.CreationDate, roles!)).SingleOrDefaultAsync();
+			.Select(u => u.ToDomain(roles!)).SingleOrDefaultAsync();
 	}
 
 
@@ -48,7 +48,7 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 							  select new { Account = a, u.Email, IdentityAccountEntityId = u.Id }).ToListAsync();
 
 		return accounts.Select(a => {
-			string[] roles = (userRoles.SingleOrDefault(ur => ur.Id == a.IdentityAccountEntityId)?.Roles ?? new string[0])!;
+			string[] roles = (userRoles.SingleOrDefault(ur => ur.Id == a.IdentityAccountEntityId)?.Roles ?? Array.Empty<string>())!;
 			return new Account(a.Account.Id, a.Email!, a.Account.Username, a.Account.Bio, a.Account.CreationDate, roles);
 		});
 	}
@@ -64,7 +64,7 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 		return await _ctx.Users
 			.Include(u => u.Account)
 			.Where(u => u.Account!.Id == accountId)
-			.Select(u => new Account(u.Account!.Id, u.Email!, u.Account!.Username, u.Account.Bio, u.Account.CreationDate, roles!))
+			.Select(u => u.ToDomain(roles!))
 			.SingleOrDefaultAsync();
 	}
 }

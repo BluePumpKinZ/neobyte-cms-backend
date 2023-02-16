@@ -13,7 +13,7 @@ internal class WriteOnlyPageRepository : IWriteOnlyPageRepository {
 		_ctx = ctx;
 	}
 
-	public async Task<Page> AddPageAsync (Page page) {
+	public async Task<Page> CreatePageAsync (Page page) {
 
 		var websiteEntity = await _ctx.WebsiteEntities.SingleAsync(w => page.Website!.Id == w.Id);
 		var pageEntity = new PageEntity(page.Id, page.Name, page.Path, page.Created, page.Modified) { Website = websiteEntity };

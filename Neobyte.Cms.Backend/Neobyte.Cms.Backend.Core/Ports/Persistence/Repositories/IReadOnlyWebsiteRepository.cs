@@ -6,6 +6,6 @@ public interface IReadOnlyWebsiteRepository {
 
 	public Task<Website?> ReadWebsiteByIdAsync (WebsiteId websiteId);
 
-	public Task<IEnumerable<Website>> GetAllWebsitesAsync ();
+	public Task<IEnumerable<Website>> ReadAllWebsitesAsync ();
 
 }
