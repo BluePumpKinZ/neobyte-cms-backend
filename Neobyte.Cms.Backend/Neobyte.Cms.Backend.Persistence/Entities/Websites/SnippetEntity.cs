@@ -22,4 +22,13 @@ public class SnippetEntity {
 		Description = description;
 	}
 
+	internal Snippet ToDomain () {
+		return new Snippet(Id, Name, Description);
+	}
+
+	public void Apply (Snippet snippet) {
+		Name = snippet.Name;
+		Description = snippet.Description;
+	}
+
 }

@@ -27,7 +27,7 @@ public class WebsitePageManager {
 	}
 
 	public async Task<WebsiteCreatePageResponseModel> CreateExistingPageAsync (WebsiteCreatePageRequestModel request) {
-		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(request.Id);
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(request.Id);
 		if (website is null)
 			return new WebsiteCreatePageResponseModel(false, new string[] { "Website not found" });
 		var connection = website.Connection;
@@ -50,7 +50,7 @@ public class WebsitePageManager {
 	}
 
 	public async Task DeletePageAsync (WebsiteId websiteId, PageId pageId) {
-		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
 		var page = await _readOnlyPageRepository.GetPageByIdAsync(pageId);
 
 		if (website is null)
@@ -63,12 +63,12 @@ public class WebsitePageManager {
 
 	public async Task<string> RenderPageAsync (WebsiteId websiteId, PageId pageId) {
 		var htmlContent = await GetPageSourceAsync(websiteId, pageId);
-		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
 		return _transformer.TransformRenderedWebpage(website!.Domain, htmlContent);
 	}
 
 	public async Task<string> GetPageSourceAsync (WebsiteId websiteId, PageId pageId) {
-		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
 		var page = await _readOnlyPageRepository.GetPageByIdAsync(pageId);
 
 		if (website is null)
@@ -89,7 +89,7 @@ public class WebsitePageManager {
 	}
 
 	public async Task PublishPageSource (PagePublishSourceCreateRequest request) {
-		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(request.WebsiteId);
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(request.WebsiteId);
 		var page = await _readOnlyPageRepository.GetPageByIdAsync(request.PageId);
 
 		if (website is null)

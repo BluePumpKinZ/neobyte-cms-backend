@@ -15,4 +15,8 @@ public class HtmlContentEntity {
 		Html = html;
 	}
 
+	internal HtmlContent ToDomain () {
+		return new HtmlContent(Id, Html);
+	}
+
 }

@@ -6,4 +6,6 @@ public interface IReadOnlySnippetRepository {
 
 	public Task<IEnumerable<Snippet>> ReadAllSnippetsByWebsiteId (WebsiteId websiteId);
 
+	public Task<Snippet?> ReadSnippetWithWebsiteByIdAsync (SnippetId snippetId);
+
 }

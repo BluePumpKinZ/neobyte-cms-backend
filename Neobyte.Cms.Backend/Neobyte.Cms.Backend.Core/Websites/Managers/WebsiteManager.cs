@@ -31,7 +31,7 @@ public class WebsiteManager {
 	}
 
 	public async Task<Website> GetWebsiteById (WebsiteId websiteId) {
-		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(websiteId);
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
 		if (website is null)
 			throw new WebsiteNotFoundException($"Website {websiteId} not found");
 		return website;
@@ -43,7 +43,7 @@ public class WebsiteManager {
 
 	public async Task<Website> EditWebsiteAsync (WebsiteEditRequestModel request) {
 
-		var website = await _readOnlyWebsiteRepository.GetWebsiteByIdAsync(new WebsiteId(request.Id));
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(new WebsiteId(request.Id));
 
 		if (website is null)
 			throw new WebsiteNotFoundException($"Website {request.Id} not found");

@@ -17,7 +17,7 @@ internal class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 		_logger = logger;
 	}
 
-	public async Task<Website?> GetWebsiteByIdAsync (WebsiteId websiteId) {
+	public async Task<Website?> ReadWebsiteByIdAsync (WebsiteId websiteId) {
 		var entity = await _ctx.WebsiteEntities
 			.SingleOrDefaultAsync(w => w.Id == websiteId);
 

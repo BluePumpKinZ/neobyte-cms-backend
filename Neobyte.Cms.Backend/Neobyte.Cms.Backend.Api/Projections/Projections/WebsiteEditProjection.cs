@@ -21,7 +21,7 @@ public class WebsiteEditProjection : IProjection {
 		configuration.CreateMap<Website, WebsiteEditProjection>().ConvertUsing<WebsiteEditProjectionConverter>();
 	}
 
-	class WebsiteEditProjectionConverter : ITypeConverter<Website, WebsiteEditProjection> {
+	private class WebsiteEditProjectionConverter : ITypeConverter<Website, WebsiteEditProjection> {
 
 		public WebsiteEditProjection Convert (Website source, WebsiteEditProjection? destination, ResolutionContext context) {
 			destination ??= new WebsiteEditProjection {

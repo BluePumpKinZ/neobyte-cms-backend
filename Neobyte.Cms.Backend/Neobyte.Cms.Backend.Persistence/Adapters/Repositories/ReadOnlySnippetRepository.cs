@@ -19,4 +19,18 @@ internal class ReadOnlySnippetRepository : IReadOnlySnippetRepository {
 			.ToListAsync();
 	}
 
+	public async Task<Snippet?> ReadSnippetWithWebsiteByIdAsync (SnippetId snippetId) {
+		var snippetEntity = await _ctx.SnippetEntities
+			.Include(s => s.Website)
+			.Include(s => s.Content)
+			.FirstOrDefaultAsync(s => s.Id == snippetId);
+		if (snippetEntity is null)
+			return null;
+
+		var snippet = snippetEntity.ToDomain();
+		snippet.Website = snippetEntity.Website!.ToDomain();
+		snippet.Content = snippetEntity.Content!.ToDomain();
+		return snippet;
+	}
+
 }
