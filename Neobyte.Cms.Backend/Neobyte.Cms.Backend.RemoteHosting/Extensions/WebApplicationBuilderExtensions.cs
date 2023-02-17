@@ -13,7 +13,8 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddScoped<IRemoteHostingProvider, RemoteHostingProvider>();
 
-		builder.Services.AddScoped<IRemoteHostingConnector, FtpConnector>();
+		// builder.Services.AddScoped<IRemoteHostingConnector, FtpConnector>();
+		builder.Services.AddScoped<IRemoteHostingConnector, FluentFtpConnector>();
 		
 		return builder;
 	}
