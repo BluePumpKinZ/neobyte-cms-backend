@@ -36,7 +36,7 @@ public class WebsitePageManager {
 
 		var connector = _remoteHostingProvider.CreateConnector(connection);
 		var filepath = Path.Combine(website.HomeFolder, request.Path);
-		if (!connector.FileExists(filepath))
+		if (!await connector.FileExistsAsync(filepath))
 			return new WebsiteCreatePageResponseModel(false, new string[] { $"File {request.Path} does not exist." });
 
 		var page = new Page(request.Name, request.Path) { Website = website };
@@ -82,10 +82,10 @@ public class WebsitePageManager {
 
 		var connector = _remoteHostingProvider.CreateConnector(connection);
 		var filepath = Path.Combine(website.HomeFolder, page.Path);
-		if (!connector.FileExists(filepath))
+		if (!await connector.FileExistsAsync(filepath))
 			throw new PageFileNotFoundException($"File {filepath} does not exist.");
 
-		return Encoding.UTF8.GetString (connector.GetFileContent(filepath));
+		return Encoding.UTF8.GetString (await connector.GetFileContentAsync(filepath));
 	}
 
 	public async Task PublishPageSource (WebsitePagePublishRequestModel request) {
@@ -103,7 +103,7 @@ public class WebsitePageManager {
 
 		var connector = _remoteHostingProvider.CreateConnector(connection);
 		var filepath = Path.Combine(website.HomeFolder, page.Path);
-		connector.CreateFile(filepath, Encoding.UTF8.GetBytes(request.Source));
+		await connector.CreateFileAsync(filepath, Encoding.UTF8.GetBytes(request.Source));
 	}
 
 	public async Task PublishPageRender (WebsitePagePublishRequestModel request) {
@@ -122,7 +122,7 @@ public class WebsitePageManager {
 		var htmlContent = _transformer.DeconstructRenderedWebPage(request.Source);
 		var connector = _remoteHostingProvider.CreateConnector(connection);
 		var filepath = Path.Combine(website.HomeFolder, page.Path);
-		connector.CreateFile(filepath, Encoding.UTF8.GetBytes(htmlContent));
+		await connector.CreateFileAsync(filepath, Encoding.UTF8.GetBytes(htmlContent));
 	}
 
 }
