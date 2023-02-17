@@ -2,7 +2,7 @@
 using Neobyte.Cms.Backend.Core.RemoteHosting;
 using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
 
-namespace Neobyte.Cms.Backend.RemoteHosting.Connectors;
+namespace Neobyte.Cms.Backend.RemoteHosting.Connections.Connectors;
 
 internal class FtpConnector : IRemoteHostingConnector {
 

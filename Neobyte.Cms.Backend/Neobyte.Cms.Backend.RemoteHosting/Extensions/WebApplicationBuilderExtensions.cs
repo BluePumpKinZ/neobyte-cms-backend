@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Neobyte.Cms.Backend.Core.Ports.RemoteHosting;
 using Neobyte.Cms.Backend.Core.RemoteHosting;
 using Neobyte.Cms.Backend.RemoteHosting.Adapters;
-using Neobyte.Cms.Backend.RemoteHosting.Connectors;
+using Neobyte.Cms.Backend.RemoteHosting.Connections.Connectors;
 
-namespace Neobyte.Cms.Backend.RemoteHosting.Extensions; 
+namespace Neobyte.Cms.Backend.RemoteHosting.Extensions;
 
 public static class WebApplicationBuilderExtensions {
 

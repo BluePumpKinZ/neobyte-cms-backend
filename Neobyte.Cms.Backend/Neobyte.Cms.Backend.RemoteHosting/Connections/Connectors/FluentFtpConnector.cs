@@ -2,11 +2,11 @@
 using Neobyte.Cms.Backend.Core.RemoteHosting;
 using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
 
-namespace Neobyte.Cms.Backend.RemoteHosting.Connectors;
+namespace Neobyte.Cms.Backend.RemoteHosting.Connections.Connectors;
 
-public class FluentFtpConnector : IRemoteHostingConnector {
+internal class FluentFtpConnector : IRemoteHostingConnector {
 
-	private readonly FtpConnectorOptions _options = new ();
+	private readonly FtpConnectorOptions _options = new();
 
 	private async Task<AsyncFtpClient> GetFtpClient () {
 		var client = new AsyncFtpClient(_options.Host, _options.Username, _options.Password, _options.Port);
