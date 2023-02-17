@@ -27,71 +27,77 @@ internal class FtpConnector : IRemoteHostingConnector {
 		_options.Port = ftpConnection.Port;
 	}
 
-	public IEnumerable<FilesystemEntry> ListItems (string path) {
+	public Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path) {
 		using var ftp = GetFtp();
 		ftp.ChangeFolder(path);
 		var items = ftp.GetList();
 		ftp.Close();
-		
-		var filesystemEntries = items.Select(i => new FilesystemEntry (i.Name, path, i.IsFolder, i.Size, i.ModifyDate));
-		return filesystemEntries;
+
+		var filesystemEntries = items.Select(i => new FilesystemEntry(i.Name, path, i.IsFolder, i.Size, i.ModifyDate));
+		return Task.FromResult(filesystemEntries);
 	}
 
-	public void CreateFolder (string path) {
+	public Task CreateFolderAsync (string path) {
 		using var ftp = GetFtp();
 		ftp.CreateFolder(path);
 		ftp.Close();
+		return Task.CompletedTask;
 	}
 
-	public void RenameFolder (string path, string newPath) {
+	public Task RenameFolderAsync (string path, string newPath) {
 		using var ftp = GetFtp();
 		ftp.Rename(path, newPath);
 		ftp.Close();
+		return Task.CompletedTask;
 	}
 
-	public void DeleteFolder (string path) {
+	public Task DeleteFolderAsync (string path) {
 		using var ftp = GetFtp();
 		ftp.DeleteFolder(path);
 		ftp.Close();
+		return Task.CompletedTask;
 	}
 
-	public void CreateFile (string path, byte[] content) {
+	public Task CreateFileAsync (string path, byte[] content) {
 		using var ftp = GetFtp();
 		ftp.Upload(path, content);
 		ftp.Close();
+		return Task.CompletedTask;
 	}
 
-	public void RenameFile (string path, string newPath) {
+	public Task RenameFileAsync (string path, string newPath) {
 		using var ftp = GetFtp();
 		ftp.Rename(path, newPath);
 		ftp.Close();
+		return Task.CompletedTask;
 	}
 
-	public void DeleteFile (string path) {
+	public Task DeleteFileAsync (string path) {
 		using var ftp = GetFtp();
 		ftp.DeleteFile(path);
 		ftp.Close();
+		return Task.CompletedTask;
 	}
 
-	public byte[] GetFileContent (string path) {
+	public Task<byte[]> GetFileContentAsync (string path) {
 		using var ftp = GetFtp();
 		var content = ftp.Download(path);
 		ftp.Close();
-		return content;
+		return Task.FromResult(content);
 	}
 
-	public bool FolderExists (string path) {
+	public Task<bool> FolderExistsAsync (string path) {
 		using var ftp = GetFtp();
 		var exists = ftp.FolderExists(path);
 		ftp.Close();
-		return exists;
+		return Task.FromResult(exists);
 	}
 
-	public bool FileExists (string path) {
+	public Task<bool> FileExistsAsync (string path) {
 		using var ftp = GetFtp();
 		var exists = ftp.FileExists(path);
 		ftp.Close();
-		return exists;
+		return Task.FromResult(exists);
 	}
 
 }

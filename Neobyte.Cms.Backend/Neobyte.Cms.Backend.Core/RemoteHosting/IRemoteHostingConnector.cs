@@ -8,24 +8,24 @@ public interface IRemoteHostingConnector {
 
 	public void Configure (HostingConnection connection);
 
-	public IEnumerable<FilesystemEntry> ListItems (string path);
+	public Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path);
 
-	public void CreateFolder (string path);
+	public Task CreateFolderAsync (string path);
 
-	public void RenameFolder (string path, string newPath);
+	public Task RenameFolderAsync (string path, string newPath);
 
-	public void DeleteFolder (string path);
+	public Task DeleteFolderAsync (string path);
 
-	public void CreateFile (string path, byte[] content);
+	public Task CreateFileAsync (string path, byte[] content);
 
-	public void RenameFile (string path, string newPath);
+	public Task RenameFileAsync (string path, string newPath);
 
-	public void DeleteFile (string path);
+	public Task DeleteFileAsync (string path);
 
-	public byte[] GetFileContent (string path);
+	public Task<byte[]> GetFileContentAsync (string path);
 
-	public bool FolderExists (string path);
+	public Task<bool> FolderExistsAsync (string path);
 
-	public bool FileExists (string path);
+	public Task<bool> FileExistsAsync (string path);
 
 }
