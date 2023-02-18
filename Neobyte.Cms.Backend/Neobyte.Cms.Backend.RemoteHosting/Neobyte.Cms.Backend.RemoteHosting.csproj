@@ -13,7 +13,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Castle.Core" Version="5.1.1" />
 		<PackageReference Include="FluentFTP" Version="45.0.3" />
 	</ItemGroup>
 

@@ -30,7 +30,7 @@ internal class ConnectionDisconnector {
 			.Where(c => c.connector.LastConnectionTime.AddSeconds(_options.ConnectionTimeout) < DateTime.UtcNow)
 			.ForEach(c => {
 				_cache.RemoveConnector(c.id);
-				_logger.LogDebug("Connector for connection {connectionId} closed after {timeout}s of inactivity",
+				_logger.LogInformation("Connector for connection {connectionId} closed after {timeout}s of inactivity",
 					c.id, (DateTime.UtcNow - c.connector.LastConnectionTime).TotalSeconds );
 			});
 	}
