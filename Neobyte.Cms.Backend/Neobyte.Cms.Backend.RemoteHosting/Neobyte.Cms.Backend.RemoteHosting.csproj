@@ -6,15 +6,15 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-    <Folder Include="Adapters\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Extensions\" />
+		<Folder Include="Adapters\" />
+		<Folder Include="Configuration\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentFTP" Version="45.0.3" />
-    <PackageReference Include="Ftp.dll" Version="2.0.23025.1902" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="FluentFTP" Version="45.0.3" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Neobyte.Cms.Backend.Core\Neobyte.Cms.Backend.Core.csproj" />

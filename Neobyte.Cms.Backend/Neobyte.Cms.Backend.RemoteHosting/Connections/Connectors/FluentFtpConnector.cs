@@ -7,12 +7,21 @@ namespace Neobyte.Cms.Backend.RemoteHosting.Connections.Connectors;
 internal class FluentFtpConnector : IRemoteHostingConnector {
 
 	private readonly FtpConnectorOptions _options = new();
+	private AsyncFtpClient? _client;
+	private AsyncFtpClient Client {
+		get {
+			_client ??= GetFtpClient().Result;
+			return _client;
+		}
+	}
 
 	private async Task<AsyncFtpClient> GetFtpClient () {
 		var client = new AsyncFtpClient(_options.Host, _options.Username, _options.Password, _options.Port);
 		await client.Connect();
 		return client;
 	}
+
+	public DateTime LastConnectionTime { get; set; } = DateTime.UtcNow;
 
 	public bool CanConnect (HostingConnection connection) {
 		return connection is FtpHostingConnection;
@@ -27,67 +36,49 @@ internal class FluentFtpConnector : IRemoteHostingConnector {
 	}
 
 	public async Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path) {
-		var ftpClient = await GetFtpClient();
-		var items = await ftpClient.GetListing(path);
-		await ftpClient.Disconnect();
+		var items = await Client.GetListing(path);
 		return items.Select(i => new FilesystemEntry(i.Name, path, i.Type == FtpObjectType.Directory, i.Size, i.RawModified));
 	}
 
 	public async Task CreateFolderAsync (string path) {
-		var ftpClient = await GetFtpClient();
-		await ftpClient.CreateDirectory(path);
-		await ftpClient.Disconnect();
+		await Client.CreateDirectory(path);
 	}
 
 	public async Task RenameFolderAsync (string path, string newPath) {
-		var ftpClient = await GetFtpClient();
-		await ftpClient.Rename(path, newPath);
-		await ftpClient.Disconnect();
+		await Client.Rename(path, newPath);
 	}
 
 	public async Task DeleteFolderAsync (string path) {
-		var ftpClient = await GetFtpClient();
-		await ftpClient.DeleteDirectory(path);
-		await ftpClient.Disconnect();
+		await Client.DeleteDirectory(path);
 	}
 
 	public async Task CreateFileAsync (string path, byte[] content) {
-		var ftpClient = await GetFtpClient();
-		await ftpClient.UploadBytes(content, path);
-		await ftpClient.Disconnect();
+		await Client.UploadBytes(content, path);
 	}
 
 	public async Task RenameFileAsync (string path, string newPath) {
-		var ftpClient = await GetFtpClient();
-		await ftpClient.Rename(path, newPath);
-		await ftpClient.Disconnect();
+		await Client.Rename(path, newPath);
 	}
 
 	public async Task DeleteFileAsync (string path) {
-		var ftpClient = await GetFtpClient();
-		await ftpClient.DeleteFile(path);
-		await ftpClient.Disconnect();
+		await Client.DeleteFile(path);
 	}
 
 	public async Task<byte[]> GetFileContentAsync (string path) {
-		var ftpClient = await GetFtpClient();
-		var content = await ftpClient.DownloadBytes(path, 0);
-		await ftpClient.Disconnect();
-		return content;
+		return await Client.DownloadBytes(path, 0);
 	}
 
 	public async Task<bool> FolderExistsAsync (string path) {
-		var ftpClient = await GetFtpClient();
-		var exists = await ftpClient.DirectoryExists(path);
-		await ftpClient.Disconnect();
-		return exists;
+		return await Client.DirectoryExists(path);
 	}
 
 	public async Task<bool> FileExistsAsync (string path) {
-		var ftpClient = await GetFtpClient();
-		var exists = await ftpClient.FileExists(path);
-		await ftpClient.Disconnect();
-		return exists;
+		return await Client.FileExists(path);
+	}
+
+	public void Dispose () {
+		_client?.Disconnect();
+		_client?.Dispose();
 	}
 
 }
