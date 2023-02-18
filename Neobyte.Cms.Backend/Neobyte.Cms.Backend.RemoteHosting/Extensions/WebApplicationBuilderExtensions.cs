@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Castle.DynamicProxy;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Neobyte.Cms.Backend.Core.Ports.RemoteHosting;
 using Neobyte.Cms.Backend.Core.RemoteHosting;
@@ -18,6 +19,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddScoped<IRemoteHostingProvider, RemoteHostingProvider>();
 		builder.Services.AddSingleton<HostingConnectorCache>();
 		builder.Services.AddSingleton<ConnectionDisconnector>();
+		builder.Services.AddSingleton<ProxyGenerator>();
 		
 		builder.Services.AddScoped<IRemoteHostingConnector, FluentFtpConnector>();
 
