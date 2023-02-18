@@ -8,7 +8,7 @@ public static class WebApplicationExtensions {
 
 	public static WebApplication UseRemoteHosting (this WebApplication app) {
 		var disconnector = app.Services.GetRequiredService<ConnectionDisconnector>();
-		// disconnector.Start();
+		disconnector.Start();
 		return app;
 	}
 
