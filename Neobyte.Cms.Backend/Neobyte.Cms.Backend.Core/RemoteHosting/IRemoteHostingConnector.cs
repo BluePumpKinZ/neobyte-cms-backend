@@ -1,8 +1,11 @@
 ﻿using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
+using System;
 
 namespace Neobyte.Cms.Backend.Core.RemoteHosting;
 
 public interface IRemoteHostingConnector {
+
+	public DateTime LastConnectionTime { get; set; }
 
 	public bool CanConnect (HostingConnection connection);
 
@@ -27,5 +30,7 @@ public interface IRemoteHostingConnector {
 	public Task<bool> FolderExistsAsync (string path);
 
 	public Task<bool> FileExistsAsync (string path);
+
+	public void Dispose ();
 
 }

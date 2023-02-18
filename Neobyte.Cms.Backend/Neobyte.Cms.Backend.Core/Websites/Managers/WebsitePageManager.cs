@@ -34,7 +34,7 @@ public class WebsitePageManager {
 		if (connection is null)
 			return new WebsiteCreatePageResponseModel(false, new string[] { "Website has no connection" });
 
-		var connector = _remoteHostingProvider.CreateConnector(connection);
+		var connector = _remoteHostingProvider.GetConnector(connection);
 		var filepath = Path.Combine(website.HomeFolder, request.Path);
 		if (!await connector.FileExistsAsync(filepath))
 			return new WebsiteCreatePageResponseModel(false, new string[] { $"File {request.Path} does not exist." });
@@ -80,7 +80,7 @@ public class WebsitePageManager {
 		if (connection is null)
 			throw new WebsiteConnectionNotFoundException($"Website {websiteId} has no connection");
 
-		var connector = _remoteHostingProvider.CreateConnector(connection);
+		var connector = _remoteHostingProvider.GetConnector(connection);
 		var filepath = Path.Combine(website.HomeFolder, page.Path);
 		if (!await connector.FileExistsAsync(filepath))
 			throw new PageFileNotFoundException($"File {filepath} does not exist.");
@@ -101,7 +101,7 @@ public class WebsitePageManager {
 		if (connection is null)
 			throw new WebsiteConnectionNotFoundException($"Website {request.WebsiteId} has no connection");
 
-		var connector = _remoteHostingProvider.CreateConnector(connection);
+		var connector = _remoteHostingProvider.GetConnector(connection);
 		var filepath = Path.Combine(website.HomeFolder, page.Path);
 		await connector.CreateFileAsync(filepath, Encoding.UTF8.GetBytes(request.Source));
 	}
@@ -120,7 +120,7 @@ public class WebsitePageManager {
 			throw new WebsiteConnectionNotFoundException($"Website {request.WebsiteId} has no connection");
 
 		var htmlContent = _transformer.DeconstructRenderedWebPage(request.Source);
-		var connector = _remoteHostingProvider.CreateConnector(connection);
+		var connector = _remoteHostingProvider.GetConnector(connection);
 		var filepath = Path.Combine(website.HomeFolder, page.Path);
 		await connector.CreateFileAsync(filepath, Encoding.UTF8.GetBytes(htmlContent));
 	}
