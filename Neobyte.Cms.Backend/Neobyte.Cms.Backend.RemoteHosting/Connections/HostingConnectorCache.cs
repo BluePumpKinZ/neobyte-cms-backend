@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 
 namespace Neobyte.Cms.Backend.RemoteHosting.Connections;
 
-internal class HostingConnectorCache {
+internal class HostingConnectorCache : IDisposable {
 
 	private readonly ConcurrentDictionary<HostingConnectionId, IRemoteHostingConnector> _cache = new();
 
@@ -27,11 +27,11 @@ internal class HostingConnectorCache {
 		return success;
 	}
 
-	~HostingConnectorCache () {
+	public void Dispose () {
 		Clear();
 	}
 
-	public void Clear () {
+	private void Clear () {
 		_cache.Keys.ForEach(c => RemoveConnector(c));
 	}
 

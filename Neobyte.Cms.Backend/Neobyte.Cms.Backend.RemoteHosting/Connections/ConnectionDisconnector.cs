@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MoreCSharp.Extensions.System.Collections.Generic;
 using Neobyte.Cms.Backend.RemoteHosting.Configuration;
 using System.Timers;
@@ -10,9 +11,11 @@ internal class ConnectionDisconnector {
 
 	private readonly RemoteHostingOptions _options;
 	private readonly HostingConnectorCache _cache;
+	private readonly ILogger<ConnectionDisconnector> _logger;
 
-	public ConnectionDisconnector (IOptions<RemoteHostingOptions> options, HostingConnectorCache cache) {
+	public ConnectionDisconnector (IOptions<RemoteHostingOptions> options, HostingConnectorCache cache, ILogger<ConnectionDisconnector> logger) {
 		_cache = cache;
+		_logger = logger;
 		_options = options.Value;
 	}
 
@@ -24,8 +27,12 @@ internal class ConnectionDisconnector {
 
 	private void DisconnectTimedoutConnections (object? sender, ElapsedEventArgs e) {
 		_cache.GetConnectors()
-			.Where(c => c.connector.LastConnectionTime.AddSeconds(_options.LastConnectionTimeout) < DateTime.UtcNow)
-			.ForEach(c => _cache.RemoveConnector(c.id));
+			.Where(c => c.connector.LastConnectionTime.AddSeconds(_options.ConnectionTimeout) < DateTime.UtcNow)
+			.ForEach(c => {
+				_cache.RemoveConnector(c.id);
+				_logger.LogDebug("Connector for connection {connectionId} closed after {timeout}s of inactivity",
+					c.id, (DateTime.UtcNow - c.connector.LastConnectionTime).TotalSeconds );
+			});
 	}
 
 }

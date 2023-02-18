@@ -17,6 +17,7 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddScoped<IRemoteHostingProvider, RemoteHostingProvider>();
 		builder.Services.AddSingleton<HostingConnectorCache>();
+		builder.Services.AddSingleton<ConnectionDisconnector>();
 		
 		builder.Services.AddScoped<IRemoteHostingConnector, FluentFtpConnector>();
 

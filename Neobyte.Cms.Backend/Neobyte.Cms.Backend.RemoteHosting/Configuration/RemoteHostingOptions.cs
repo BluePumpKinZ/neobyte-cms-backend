@@ -3,6 +3,6 @@
 public class RemoteHostingOptions {
 
 	public const string Section = "RemoteHosting";
-	public int LastConnectionTimeout { get; set; } = 60;
+	public int ConnectionTimeout { get; set; } = 60;
 
 }
