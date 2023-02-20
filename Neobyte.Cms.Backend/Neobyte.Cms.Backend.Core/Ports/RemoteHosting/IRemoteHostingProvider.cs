@@ -5,6 +5,6 @@ namespace Neobyte.Cms.Backend.Core.Ports.RemoteHosting;
 
 public interface IRemoteHostingProvider {
 
-	public IRemoteHostingConnector GetConnector (HostingConnection connection);
+	public RemoteHostingConnector GetConnector (HostingConnection connection);
 
 }

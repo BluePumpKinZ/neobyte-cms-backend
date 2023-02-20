@@ -9,20 +9,20 @@ namespace Neobyte.Cms.Backend.RemoteHosting.Adapters;
 
 internal class RemoteHostingProvider : IRemoteHostingProvider {
 
-	private readonly IEnumerable<IRemoteHostingConnector> _hostingConnectors;
+	private readonly IEnumerable<RemoteHostingConnector> _hostingConnectors;
 	private readonly HostingConnectorCache _cache;
 	private readonly ILogger<RemoteHostingProvider> _logger;
 	private readonly ActivitySource _activitySource;
 
-	public RemoteHostingProvider (IEnumerable<IRemoteHostingConnector> hostingConnectors, HostingConnectorCache cache, ILogger<RemoteHostingProvider> logger, ActivitySource activitySource) {
+	public RemoteHostingProvider (IEnumerable<RemoteHostingConnector> hostingConnectors, HostingConnectorCache cache, ILogger<RemoteHostingProvider> logger, ActivitySource activitySource) {
 		_hostingConnectors = hostingConnectors;
 		_cache = cache;
 		_logger = logger;
 		_activitySource = activitySource;
 	}
 
-	public IRemoteHostingConnector GetConnector (HostingConnection connection) {
-		if (_cache.TryGetConnector(connection.Id, out IRemoteHostingConnector? connector)) {
+	public RemoteHostingConnector GetConnector (HostingConnection connection) {
+		if (_cache.TryGetConnector(connection.Id, out RemoteHostingConnector? connector)) {
 			_logger.LogDebug("Using cached connector for connection {connectionId}", connection.Id);
 			connector!.LastConnectionTime = DateTime.UtcNow;
 			return connector;
@@ -34,7 +34,7 @@ internal class RemoteHostingProvider : IRemoteHostingProvider {
 		return connector;
 	}
 
-	private IRemoteHostingConnector CreateConnector (HostingConnection connection) {
+	private RemoteHostingConnector CreateConnector (HostingConnection connection) {
 		var hostingConnector = _hostingConnectors.Single(hc => hc.CanConnect(connection));
 		hostingConnector.Configure(connection);
 		return new RemoteHostingConnectorProxy (_activitySource, hostingConnector);

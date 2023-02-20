@@ -5,12 +5,12 @@ using System.Runtime.CompilerServices;
 
 namespace Neobyte.Cms.Backend.RemoteHosting.Connections;
 
-public class RemoteHostingConnectorProxy : IRemoteHostingConnector {
+internal class RemoteHostingConnectorProxy : RemoteHostingConnector {
 
 	private readonly ActivitySource _activitySource;
-	private readonly IRemoteHostingConnector _connector;
+	private readonly RemoteHostingConnector _connector;
 
-	public RemoteHostingConnectorProxy (ActivitySource activitySource, IRemoteHostingConnector connector) {
+	public RemoteHostingConnectorProxy (ActivitySource activitySource, RemoteHostingConnector connector) {
 		_activitySource = activitySource;
 		_connector = connector;
 	}
@@ -23,78 +23,86 @@ public class RemoteHostingConnectorProxy : IRemoteHostingConnector {
 		return activity;
 	}
 
-	public DateTime LastConnectionTime { get => _connector.LastConnectionTime; set { _connector.LastConnectionTime = value; } }
+	public override DateTime LastConnectionTime { get => _connector.LastConnectionTime; set { _connector.LastConnectionTime = value; } }
 
-	public bool CanConnect (HostingConnection connection) {
+	public override bool CanConnect (HostingConnection connection) {
 		return _connector.CanConnect(connection);
 	}
 
-	public void Configure (HostingConnection connection) {
+	public override void Configure (HostingConnection connection) {
 		_connector.Configure(connection);
 	}
 
-	public async Task<bool> ValidateAsync () {
+	public override async Task<bool> ValidateAsync () {
 		using var activity = GetActivity();
 		return await _connector.ValidateAsync();
 	}
 
-	public async Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path) {
+	public override async Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path) {
 		using var activity = GetActivity();
 		return await _connector.ListItemsAsync(path);
 	}
 
-	public async Task CreateFolderAsync (string path) {
+	public override async Task CreateFolderAsync (string path) {
 		using var activity = GetActivity();
 		await _connector.CreateFolderAsync(path);
 	}
 
-	public async Task RenameFolderAsync (string path, string newPath) {
+	public override async Task RenameFolderAsync (string path, string newPath) {
 		using var activity = GetActivity();
 		await _connector.RenameFolderAsync(path, newPath);
 	}
 
-	public async Task DeleteFolderAsync (string path) {
+	public override async Task DeleteFolderAsync (string path) {
 		using var activity = GetActivity();
 		await _connector.DeleteFolderAsync(path);
 	}
 
-	public async Task CreateFileAsync (string path, byte[] content) {
+	public override async Task CreateFileAsync (string path, byte[] content) {
 		using var activity = GetActivity();
 		await _connector.CreateFileAsync(path, content);
 	}
 
-	public async Task RenameFileAsync (string path, string newPath) {
+	public override async Task RenameFileAsync (string path, string newPath) {
 		using var activity = GetActivity();
 		await _connector.RenameFileAsync(path, newPath);
 	}
 
-	public async Task DeleteFileAsync (string path) {
+	public override async Task DeleteFileAsync (string path) {
 		using var activity = GetActivity();
 		await _connector.DeleteFileAsync(path);
 	}
 
-	public async Task<byte[]> GetFileContentAsync (string path) {
+	public override async Task<byte[]> GetFileContentAsync (string path) {
 		using var activity = GetActivity();
 		var result = await _connector.GetFileContentAsync(path);
 		return result;
 	}
 
-	public async Task<bool> FolderExistsAsync (string path) {
+	public override async Task<bool> FolderExistsAsync (string path) {
 		using var activity = GetActivity();
 		return await _connector.FolderExistsAsync(path);
 	}
 
-	public async Task<bool> FileExistsAsync (string path) {
+	public override async Task<bool> FileExistsAsync (string path) {
 		using var activity = GetActivity();
 		return await _connector.FileExistsAsync(path);
 	}
 
-	public async Task<FilesystemEntry> GetFilesystemEntryInfo (string path) {
+	public override async Task<FilesystemEntry> GetFilesystemEntryInfo (string path) {
 		using var activity = GetActivity();
 		return await _connector.GetFilesystemEntryInfo(path);
 	}
 
-	public void Dispose () {
+	public override bool Equals (object? obj) {
+		return _connector.Equals(obj);
+	}
+
+	public override int GetHashCode () {
+		return _connector.GetHashCode();
+	}
+
+	public override void Dispose () {
 		_connector.Dispose();
 	}
 

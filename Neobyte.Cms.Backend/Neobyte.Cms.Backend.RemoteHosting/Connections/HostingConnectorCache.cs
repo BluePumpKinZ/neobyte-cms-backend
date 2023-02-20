@@ -7,17 +7,17 @@ namespace Neobyte.Cms.Backend.RemoteHosting.Connections;
 
 internal class HostingConnectorCache : IDisposable {
 
-	private readonly ConcurrentDictionary<HostingConnectionId, IRemoteHostingConnector> _cache = new();
+	private readonly ConcurrentDictionary<HostingConnectionId, RemoteHostingConnector> _cache = new();
 
-	public bool AddConnector (HostingConnectionId id, IRemoteHostingConnector connector) {
+	public bool AddConnector (HostingConnectionId id, RemoteHostingConnector connector) {
 		return _cache.TryAdd(id, connector);
 	}
 
-	public bool TryGetConnector (HostingConnectionId id, out IRemoteHostingConnector? connector) {
+	public bool TryGetConnector (HostingConnectionId id, out RemoteHostingConnector? connector) {
 		return _cache.TryGetValue(id, out connector);
 	}
 	
-	public IEnumerable<(HostingConnectionId id, IRemoteHostingConnector connector)> GetConnectors () {
+	public IEnumerable<(HostingConnectionId id, RemoteHostingConnector connector)> GetConnectors () {
 		return _cache.Select(kvp => (kvp.Key, kvp.Value));
 	}
 
