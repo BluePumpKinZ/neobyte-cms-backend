@@ -1,4 +1,5 @@
 ﻿using FluentFTP;
+using FluentFTP.Exceptions;
 using Neobyte.Cms.Backend.Core.RemoteHosting;
 using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
 
@@ -33,6 +34,15 @@ internal class FluentFtpConnector : IRemoteHostingConnector {
 		_options.Username = ftpConnection.Username;
 		_options.Password = ftpConnection.Password;
 		_options.Port = ftpConnection.Port;
+	}
+
+	public async Task<bool> ValidateAsync () {
+		try {
+			await GetFtpClient();
+			return true;
+		} catch (FtpAuthenticationException) {
+			return false;
+		}
 	}
 
 	public async Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path) {

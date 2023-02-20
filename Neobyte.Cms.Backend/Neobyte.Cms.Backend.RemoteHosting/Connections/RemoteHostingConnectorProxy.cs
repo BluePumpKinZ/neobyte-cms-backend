@@ -33,6 +33,11 @@ public class RemoteHostingConnectorProxy : IRemoteHostingConnector {
 		_connector.Configure(connection);
 	}
 
+	public async Task<bool> ValidateAsync () {
+		using var activity = GetActivity();
+		return await _connector.ValidateAsync();
+	}
+
 	public async Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path) {
 		using var activity = GetActivity();
 		return await _connector.ListItemsAsync(path);

@@ -11,6 +11,8 @@ public interface IRemoteHostingConnector {
 
 	public void Configure (HostingConnection connection);
 
+	public Task<bool> ValidateAsync ();
+
 	public Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path);
 
 	public Task CreateFolderAsync (string path);

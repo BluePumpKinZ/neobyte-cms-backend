@@ -4,6 +4,7 @@ using Neobyte.Cms.Backend.Api.Endpoints.Accounts;
 using Neobyte.Cms.Backend.Api.Endpoints.Identity;
 using Neobyte.Cms.Backend.Api.Endpoints.Loader;
 using Neobyte.Cms.Backend.Api.Endpoints.Mailing;
+using Neobyte.Cms.Backend.Api.Endpoints.RemoteHosting;
 using Neobyte.Cms.Backend.Api.Endpoints.Websites;
 
 namespace Neobyte.Cms.Backend.Api.Extensions;
@@ -14,13 +15,14 @@ public static class WebApplicationBuilderExtensions {
 
 		// endpoints
 		builder.Services.AddSingleton<ApiEndpointLoader>();
-		builder.Services.AddSingleton<IApiEndpoints, MailingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, AccountsMeEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, AccountsListEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, MailingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteEndpoints>();
-		builder.Services.AddSingleton<IApiEndpoints, WebsiteFilesEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, RemoteHostingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsitePageEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsiteRemoteHostingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteSnippetEndpoints>();
 
 		// projections

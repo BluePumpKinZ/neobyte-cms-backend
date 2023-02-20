@@ -6,7 +6,7 @@ namespace Neobyte.Cms.Backend.Api.Endpoints.Websites;
 
 internal class WebsiteSnippetEndpoints : IApiEndpoints {
 
-	public string GroupName => "";
+	public string GroupName => "Website Snippets";
 	public string Path => "/api/v1/websites/{websiteId:Guid}/snippets";
 	public bool Authorized => true;
 

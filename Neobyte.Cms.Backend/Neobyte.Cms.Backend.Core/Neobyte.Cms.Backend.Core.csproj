@@ -18,7 +18,6 @@
     <Folder Include="Exceptions\RemoteHosting\" />
     <Folder Include="Exceptions\Websites\" />
     <Folder Include="Identity\Models\Authentication\" />
-    <Folder Include="Monitoring\" />
     <Folder Include="Ports\RemoteHosting\" />
     <Folder Include="Websites\Managers\" />
   </ItemGroup>
