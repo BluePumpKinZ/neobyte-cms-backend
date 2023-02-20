@@ -38,7 +38,9 @@ internal class FluentFtpConnector : IRemoteHostingConnector {
 
 	public async Task<bool> ValidateAsync () {
 		try {
-			await GetFtpClient();
+			var client = await GetFtpClient();
+			await client.Disconnect();
+			client.Dispose();
 			return true;
 		} catch (FtpAuthenticationException) {
 			return false;
