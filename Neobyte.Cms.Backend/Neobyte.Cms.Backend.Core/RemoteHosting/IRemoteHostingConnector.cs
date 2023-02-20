@@ -33,6 +33,8 @@ public interface IRemoteHostingConnector {
 
 	public Task<bool> FileExistsAsync (string path);
 
+	public Task<FilesystemEntry> GetFilesystemEntryInfo (string path);
+
 	public void Dispose ();
 
 }

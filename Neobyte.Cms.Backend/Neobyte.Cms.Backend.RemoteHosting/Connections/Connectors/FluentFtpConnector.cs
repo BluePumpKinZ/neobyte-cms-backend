@@ -86,6 +86,11 @@ internal class FluentFtpConnector : IRemoteHostingConnector {
 		return await Client.FileExists(path);
 	}
 
+	public async Task<FilesystemEntry> GetFilesystemEntryInfo (string path) {
+		var info = await Client.GetObjectInfo(path, true);
+		return new FilesystemEntry(info.Name, info.FullName, info.Type == FtpObjectType.Directory, info.Size, info.RawModified);
+	}
+
 	public void Dispose () {
 		_client?.Disconnect();
 		_client?.Dispose();

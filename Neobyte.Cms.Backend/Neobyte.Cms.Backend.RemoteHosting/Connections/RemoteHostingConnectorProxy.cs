@@ -89,6 +89,11 @@ public class RemoteHostingConnectorProxy : IRemoteHostingConnector {
 		return await _connector.FileExistsAsync(path);
 	}
 
+	public async Task<FilesystemEntry> GetFilesystemEntryInfo (string path) {
+		using var activity = GetActivity();
+		return await _connector.GetFilesystemEntryInfo(path);
+	}
+
 	public void Dispose () {
 		_connector.Dispose();
 	}
