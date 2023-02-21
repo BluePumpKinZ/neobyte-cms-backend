@@ -26,8 +26,8 @@ internal class WebsiteEndpoints : IApiEndpoints {
 			[FromServices] WebsiteManager manager,
 			[FromServices] Projector projector,
 			[FromRoute] Guid websiteId) => {
-				var websites = await manager.GetWebsiteById(new WebsiteId(websiteId));
-				var projection = projector.Project<Website, WebsiteEditProjection>(websites);
+				var website = await manager.GetWebsiteByIdAsync(new WebsiteId(websiteId));
+				var projection = projector.Project<Website, WebsiteEditProjection>(website);
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.ClientPrivilege);
 

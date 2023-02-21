@@ -17,9 +17,13 @@ public class RemoteHostingConnectorProxy : IRemoteHostingConnector {
 
 	private Activity? GetActivity ([CallerMemberName] string name = "") {
 		var activity = _activitySource.CreateActivity("hosting_connection", ActivityKind.Client);
-		activity?.SetTag("hosting_connection.connector", _connector.GetType().Name);
-		activity?.SetTag("hosting_connection.method", name);
-		activity?.Start();
+		if (activity is null)
+			return null;
+		activity
+			.SetTag("hosting_connection.connector", _connector.GetType().Name)
+			.SetTag("hosting_connection.method", name)
+			.SetTag("peer.service", "localhost")
+			.Start();
 		return activity;
 	}
 

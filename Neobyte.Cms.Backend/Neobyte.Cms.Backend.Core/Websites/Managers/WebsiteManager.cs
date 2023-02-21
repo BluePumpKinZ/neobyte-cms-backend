@@ -26,7 +26,7 @@ public class WebsiteManager {
 		return await _writeOnlyWebsiteRepository.CreateWebsiteAsync(website);
 	}
 
-	public async Task<Website> GetWebsiteById (WebsiteId websiteId) {
+	public async Task<Website> GetWebsiteByIdAsync (WebsiteId websiteId) {
 		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
 		if (website is null)
 			throw new WebsiteNotFoundException($"Website {websiteId} not found");
