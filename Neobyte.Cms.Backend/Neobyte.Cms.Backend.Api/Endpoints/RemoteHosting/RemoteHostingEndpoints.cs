@@ -20,6 +20,14 @@ public class RemoteHostingEndpoints : IApiEndpoints {
 			}).Authorize(UserPolicy.OwnerPrivilege)
 			.ValidateBody<RemoteHostingRequestModel>();
 
+		routes.MapPost("folder/add", async (
+			[FromServices] RemoteHostingManager manager,
+			[FromBody] RemoteHostingAddFolderRequestModel request) => {
+				await manager.PublicAddFolderAsync(request);
+				return Results.Ok("Added");
+			}).Authorize(UserPolicy.OwnerPrivilege)
+			.ValidateBody<RemoteHostingAddFolderRequestModel>();
+
 		routes.MapPost("folder/list", async (
 			[FromServices] RemoteHostingManager manager,
 			[FromBody] RemoteHostingListRequestModel request) => {
