@@ -24,6 +24,9 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddScoped<IReadOnlyWebsiteRepository, ReadOnlyWebsiteRepository>();
 		builder.Services.AddScoped<IWriteOnlyWebsiteRepository, WriteOnlyWebsiteRepository>();
+		
+		builder.Services.AddScoped<IReadOnlyWebsiteAccountRepository, ReadOnlyWebsiteAccountRepository>();
+		builder.Services.AddScoped<IWriteOnlyWebsiteAccountRepository, WriteOnlyWebsiteAccountRepository>();
 
 		// database configuration
 		var dbConfig = new DatabaseConfig();

@@ -1,4 +1,5 @@
 ﻿using Neobyte.Cms.Backend.Domain.Accounts;
+using Neobyte.Cms.Backend.Persistence.Entities.Websites;
 
 namespace Neobyte.Cms.Backend.Persistence.Entities.Accounts;
 
@@ -15,6 +16,7 @@ public class AccountEntity {
 	public bool Enabled { get; set; }
 	[Required]
 	public DateTime CreationDate { get; set; }
+	public ICollection<WebsiteAccountEntity>? WebsiteAccounts { get; set; }
 
 	public AccountEntity (AccountId id, string username, string bio, bool enabled, DateTime creationDate) {
 		Id = id;

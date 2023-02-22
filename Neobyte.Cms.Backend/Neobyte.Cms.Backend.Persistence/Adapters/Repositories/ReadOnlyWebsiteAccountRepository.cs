@@ -14,10 +14,30 @@ public class ReadOnlyWebsiteAccountRepository : IReadOnlyWebsiteAccountRepositor
 	}
 	
 	public async Task<IEnumerable<Account>> ReadAccountsByWebsiteIdAsync (WebsiteId websiteId) {
-		throw new NotImplementedException();
+		var userRoles = await (from u in _ctx.Users
+			join ur in _ctx.UserRoles on u.Id equals ur.UserId
+			join r in _ctx.Roles on ur.RoleId equals r.Id
+			group r.Name by u into g
+			select new { g.Key.Id, Roles = g.ToArray()})
+			.ToListAsync();
+
+		var accounts = await (from u in _ctx.Users
+			join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
+			select new { Account = a, u.Email, IdentityAccountEntityId = u.Id }).ToListAsync();
+
+		return accounts
+			.Where(a => a.Account.WebsiteAccounts!.Any(wa => wa.Website!.Id == websiteId))
+			.Select(a => {
+			string[] roles = (userRoles
+				.SingleOrDefault(ur => ur.Id == a.IdentityAccountEntityId)?.Roles ?? Array.Empty<string>())!;
+			return new Account(a.Account.Id, a.Email!, a.Account.Username, a.Account.Bio, a.Account.Enabled, a.Account.CreationDate, roles);
+		});
 	}
 
 	public async Task<IEnumerable<Website>> ReadWebsitesByAccountIdAsync (AccountId accountId) {
-		throw new NotImplementedException();
+		return await _ctx.WebsiteAccountEntities
+			.Where(w => w.Account!.Id == accountId)
+			.Select(w => w.Website!.ToDomain())
+			.ToListAsync();
 	}
 }

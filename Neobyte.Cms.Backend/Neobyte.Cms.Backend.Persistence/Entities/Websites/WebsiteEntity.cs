@@ -23,6 +23,7 @@ public class WebsiteEntity {
 	public HostingConnectionEntity? Connection { get; set; }
 	public ICollection<PageEntity>? Pages { get; set; }
 	public ICollection<SnippetEntity>? Snippets { get; set; }
+	public ICollection<WebsiteAccountEntity>? WebsiteAccounts { get; set; }
 
 	public WebsiteEntity (WebsiteId id, string name, string domain, string homeFolder, string uploadFolder, DateTime createdDate) {
 		Id = id;
