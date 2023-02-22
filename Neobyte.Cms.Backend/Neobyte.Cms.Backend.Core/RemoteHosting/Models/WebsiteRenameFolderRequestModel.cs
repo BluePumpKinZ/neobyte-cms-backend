@@ -2,7 +2,7 @@
 
 namespace Neobyte.Cms.Backend.Core.RemoteHosting.Models; 
 
-public class WebsiteHomeRenameFolderRequestModel {
+public class WebsiteRenameFolderRequestModel {
 
 	public WebsiteId WebsiteId { get; set; }
 	[Required]

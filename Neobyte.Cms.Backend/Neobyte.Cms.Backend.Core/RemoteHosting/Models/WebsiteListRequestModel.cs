@@ -2,7 +2,7 @@
 
 namespace Neobyte.Cms.Backend.Core.RemoteHosting.Models; 
 
-public class WebsiteHomeListRequestModel {
+public class WebsiteListRequestModel {
 
 	public WebsiteId WebsiteId { get; set; }
 	[Required]
