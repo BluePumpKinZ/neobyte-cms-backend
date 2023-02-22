@@ -19,7 +19,7 @@ public class WebsiteHomeRemoteHostingEndpoints : IApiEndpoints {
 			[FromBody] WebsiteCreateFolderRequestModel request) => {
 				request.WebsiteId = new WebsiteId(websiteId);
 				await manager.HomeAddFolderAsync(request);
-				return Results.Ok("Created");
+				return Results.Ok(new { Message = "Created" });
 			}).Authorize(UserPolicy.OwnerPrivilege)
 			.ValidateBody<WebsiteCreateFolderRequestModel>();
 
@@ -40,7 +40,7 @@ public class WebsiteHomeRemoteHostingEndpoints : IApiEndpoints {
 			[FromBody] WebsiteRenameFolderRequestModel request) => {
 				request.WebsiteId = new WebsiteId(websiteId);
 				await manager.HomeRenameFolderAsync(request);
-				return Results.Ok("Renamed");
+				return Results.Ok(new { Message = "Renamed" });
 			}).Authorize(UserPolicy.OwnerPrivilege)
 			.ValidateBody<WebsiteRenameFolderRequestModel>();
 
@@ -52,7 +52,7 @@ public class WebsiteHomeRemoteHostingEndpoints : IApiEndpoints {
 					WebsiteId = new WebsiteId(websiteId), Path = path
 				};
 				await manager.HomeDeleteFolderAsync(request);
-				return Results.Ok("Deleted");
+				return Results.Ok(new { Message = "Deleted" });
 			}).Authorize(UserPolicy.OwnerPrivilege);
 
 	}

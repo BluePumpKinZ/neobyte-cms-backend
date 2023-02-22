@@ -24,7 +24,7 @@ public class RemoteHostingEndpoints : IApiEndpoints {
 			[FromServices] RemoteHostingManager manager,
 			[FromBody] RemoteHostingAddFolderRequestModel request) => {
 				await manager.PublicAddFolderAsync(request);
-				return Results.Ok("Added");
+				return Results.Ok(new { Message = "Added" });
 			}).Authorize(UserPolicy.OwnerPrivilege)
 			.ValidateBody<RemoteHostingAddFolderRequestModel>();
 
@@ -40,7 +40,7 @@ public class RemoteHostingEndpoints : IApiEndpoints {
 			[FromServices] RemoteHostingManager manager,
 			[FromBody] RemoteHostingRenameRequestModel request) => {
 				await manager.PublicRenameFolderAsync(request);
-				return Results.Ok("Renamed");
+				return Results.Ok(new { Message = "Renamed" });
 			}).Authorize(UserPolicy.OwnerPrivilege)
 			.ValidateBody<RemoteHostingRenameRequestModel>();
 

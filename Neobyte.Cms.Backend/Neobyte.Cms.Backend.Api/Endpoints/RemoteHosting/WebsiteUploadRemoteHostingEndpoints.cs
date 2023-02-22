@@ -3,7 +3,7 @@ using Neobyte.Cms.Backend.Core.RemoteHosting.Models;
 using Neobyte.Cms.Backend.Domain.Websites;
 using System.Linq;
 
-namespace Neobyte.Cms.Backend.Api.Endpoints.RemoteHosting; 
+namespace Neobyte.Cms.Backend.Api.Endpoints.RemoteHosting;
 
 public class WebsiteUploadRemoteHostingEndpoints : IApiEndpoints {
 
@@ -19,7 +19,7 @@ public class WebsiteUploadRemoteHostingEndpoints : IApiEndpoints {
 			[FromBody] WebsiteCreateFolderRequestModel request) => {
 				request.WebsiteId = new WebsiteId(websiteId);
 				await manager.UploadAddFolderAsync(request);
-				return Results.Ok("Created");
+				return Results.Ok(new { Message = "Created" });
 			}).Authorize(UserPolicy.ClientPrivilege)
 			.ValidateBody<WebsiteCreateFolderRequestModel>();
 
@@ -40,7 +40,7 @@ public class WebsiteUploadRemoteHostingEndpoints : IApiEndpoints {
 			[FromBody] WebsiteRenameFolderRequestModel request) => {
 				request.WebsiteId = new WebsiteId(websiteId);
 				await manager.UploadRenameFolderAsync(request);
-				return Results.Ok("Renamed");
+				return Results.Ok(new { Message = "Renamed" });
 			}).Authorize(UserPolicy.ClientPrivilege)
 			.ValidateBody<WebsiteRenameFolderRequestModel>();
 
@@ -52,7 +52,7 @@ public class WebsiteUploadRemoteHostingEndpoints : IApiEndpoints {
 					WebsiteId = new WebsiteId(websiteId), Path = path
 				};
 				await manager.UploadDeleteFolderAsync(request);
-				return Results.Ok("Deleted");
+				return Results.Ok(new { Message = "Deleted" });
 			}).Authorize(UserPolicy.ClientPrivilege);
 
 	}
