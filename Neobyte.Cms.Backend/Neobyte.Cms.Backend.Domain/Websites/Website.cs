@@ -16,6 +16,7 @@ public class Website {
 	public HostingConnection? Connection { get; set; }
 	public ICollection<Page>? Pages { get; set; }
 	public ICollection<Snippet>? Snippets { get; set; }
+	public ICollection<WebsiteAccount>? WebsiteAccounts { get; set; }
 
 	public Website (string name, string domain, string homeFolder, string uploadFolder) : this(WebsiteId.New(), name, domain, homeFolder, uploadFolder, DateTime.UtcNow) {
 		Pages = new List<Page>();

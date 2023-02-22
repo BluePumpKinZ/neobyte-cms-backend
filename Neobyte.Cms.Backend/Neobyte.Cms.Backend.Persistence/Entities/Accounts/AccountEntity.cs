@@ -23,5 +23,4 @@ public class AccountEntity {
 		Enabled = enabled;
 		CreationDate = creationDate;
 	}
-
 }
