@@ -24,6 +24,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton<IApiEndpoints, WebsitePageEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteRemoteHostingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteSnippetEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsiteUserEndpoints>();
 
 		// projections
 		builder.Services.AddSingleton<ProjectionMapperFactory>();

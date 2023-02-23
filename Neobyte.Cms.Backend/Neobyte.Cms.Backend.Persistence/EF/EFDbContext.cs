@@ -19,6 +19,7 @@ public class EFDbContext : IdentityDbContext<IdentityAccountEntity, IdentityRole
 	public DbSet<SnippetEntity> SnippetEntities { get; set; } = null!;
 	public DbSet<TemplateEntity> TemplateEntities { get; set; } = null!;
 	public DbSet<WebsiteEntity> WebsiteEntities { get; set; } = null!;
+	public DbSet<WebsiteAccountEntity> WebsiteAccountEntities { get; set; } = null!;
 
 	public EFDbContext (DbContextOptions<EFDbContext> options) : base(options) { }
 
@@ -32,6 +33,7 @@ public class EFDbContext : IdentityDbContext<IdentityAccountEntity, IdentityRole
 		var snippets = modelBuilder.Entity<SnippetEntity>();
 		var templates = modelBuilder.Entity<TemplateEntity>();
 		var websites = modelBuilder.Entity<WebsiteEntity>();
+		var websiteAccounts = modelBuilder.Entity<WebsiteAccountEntity>();
 
 		accounts.Property(p => p.Id).HasConversion(v => v.Value, v => new AccountId(v));
 		htmlContents.Property(p => p.Id).HasConversion(v => v.Value, v => new HtmlContentId(v));
@@ -40,6 +42,7 @@ public class EFDbContext : IdentityDbContext<IdentityAccountEntity, IdentityRole
 		snippets.Property(p => p.Id).HasConversion(v => v.Value, v => new SnippetId(v));
 		templates.Property(p => p.Id).HasConversion(v => v.Value, v => new TemplateId(v));
 		websites.Property(p => p.Id).HasConversion(v => v.Value, v => new WebsiteId(v));
+		websiteAccounts.Property(p => p.Id).HasConversion(v => v.Value, v => new WebsiteAccountId(v));
 
 	}
 	
