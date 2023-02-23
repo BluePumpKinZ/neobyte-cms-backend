@@ -27,6 +27,9 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddScoped<MailingManager>();
 
 		builder.Services.AddScoped<RemoteHostingManager>();
+		builder.Services.AddScoped<HomeRemoteHostingManager>();
+		builder.Services.AddScoped<PublicRemoteHostingManager>();
+		builder.Services.AddScoped<UploadRemoteHostingManager>();
 
 		builder.Services.AddSingleton<HtmlTransformer>();
 		builder.Services.AddScoped<WebsiteManager>();

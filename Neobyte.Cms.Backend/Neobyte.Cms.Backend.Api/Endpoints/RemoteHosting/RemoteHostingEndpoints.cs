@@ -13,7 +13,7 @@ public class RemoteHostingEndpoints : IApiEndpoints {
 	public void RegisterApis (RouteGroupBuilder routes) {
 
 		routes.MapGet("verify", async (
-			[FromServices] RemoteHostingManager manager,
+			[FromServices] PublicRemoteHostingManager manager,
 			[FromBody] RemoteHostingRequestModel request) => {
 				var valid = await manager.PublicCheckConnectionAsync(request);
 				return Results.Ok(new { Valid = valid });
@@ -21,7 +21,7 @@ public class RemoteHostingEndpoints : IApiEndpoints {
 			.ValidateBody<RemoteHostingRequestModel>();
 
 		routes.MapPost("folder/add", async (
-			[FromServices] RemoteHostingManager manager,
+			[FromServices] PublicRemoteHostingManager manager,
 			[FromBody] RemoteHostingAddFolderRequestModel request) => {
 				await manager.PublicAddFolderAsync(request);
 				return Results.Ok(new { Message = "Added" });
@@ -29,7 +29,7 @@ public class RemoteHostingEndpoints : IApiEndpoints {
 			.ValidateBody<RemoteHostingAddFolderRequestModel>();
 
 		routes.MapPost("folder/list", async (
-			[FromServices] RemoteHostingManager manager,
+			[FromServices] PublicRemoteHostingManager manager,
 			[FromBody] RemoteHostingListRequestModel request) => {
 				var entries = await manager.PublicListEntriesAsync(request);
 				return Results.Ok(entries.ToArray());
@@ -37,7 +37,7 @@ public class RemoteHostingEndpoints : IApiEndpoints {
 			.ValidateBody<RemoteHostingListRequestModel>();
 
 		routes.MapPost("folder/rename", async (
-			[FromServices] RemoteHostingManager manager,
+			[FromServices] PublicRemoteHostingManager manager,
 			[FromBody] RemoteHostingRenameRequestModel request) => {
 				await manager.PublicRenameFolderAsync(request);
 				return Results.Ok(new { Message = "Renamed" });

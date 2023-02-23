@@ -34,17 +34,12 @@ public class RemoteHostingManager {
 		return hostingConnection;
 	}
 
-	public async Task<bool> PublicCheckConnectionAsync (RemoteHostingRequestModel request) {
-		var connection = FromRequestModel(request);
-		return await CheckConnectionAsync(connection);
-	}
-
-	private async Task<bool> CheckConnectionAsync (HostingConnection connection) {
+	public async Task<bool> CheckConnectionAsync (HostingConnection connection) {
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		return await connector.ValidateAsync();
 	}
 
-	private async Task<Website> GetAndValidateWebsiteByIdAsync(WebsiteId id) {
+	public async Task<Website> GetAndValidateWebsiteByIdAsync (WebsiteId id) {
 		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(id);
 		if (website is null)
 			throw new WebsiteNotFoundException($"Website {id} not found.");
@@ -53,91 +48,38 @@ public class RemoteHostingManager {
 		return website;
 	}
 
-	public async Task PublicAddFolderAsync (RemoteHostingAddFolderRequestModel request) {
-		var connection = FromRequestModel(request.Connection);
-		await AddFolderAsync(connection, "/", request.Path);
-	}
-
-	public async Task HomeAddFolderAsync (WebsiteCreateFolderRequestModel request) {
-		var website = await GetAndValidateWebsiteByIdAsync(request.WebsiteId);
-		await AddFolderAsync(website.Connection!, website.HomeFolder, request.Path);
-	}
-
-	public async Task UploadAddFolderAsync (WebsiteCreateFolderRequestModel request) {
-		var website = await GetAndValidateWebsiteByIdAsync(request.WebsiteId);
-		await AddFolderAsync(website.Connection!, website.UploadFolder, request.Path);
-	}
-
-	private async Task AddFolderAsync (HostingConnection connection, string relativePath, string path) {
+	public async Task AddFolderAsync (HostingConnection connection, string relativePath, string path) {
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		path = _pathUtils.Combine(relativePath, path);
+		if (await connector.FolderExistsAsync(path) || await connector.FileExistsAsync(path))
+			throw new AlreadyExistsException($"Folder {path} already exists");
 		await connector.CreateFolderAsync(path);
 	}
 
-	public async Task<IEnumerable<FilesystemEntry>> PublicListEntriesAsync (RemoteHostingListRequestModel request) {
-		var connection = FromRequestModel(request.Connection);
-		return await ListEntriesAsync(connection, "/", request.Path);
-	}
-
-	public async Task<IEnumerable<FilesystemEntry>> HomeListEntriesAsync (WebsiteListRequestModel request) {
-		var website = await GetAndValidateWebsiteByIdAsync(request.WebsiteId);
-		return await ListEntriesAsync(website.Connection!, website.HomeFolder, request.Path);
-	}
-
-	public async Task<IEnumerable<FilesystemEntry>> UploadListEntriesAsync (WebsiteListRequestModel request) {
-		var website = await GetAndValidateWebsiteByIdAsync(request.WebsiteId);
-		return await ListEntriesAsync(website.Connection!, website.UploadFolder, request.Path);
-	}
-
-	private async Task<IEnumerable<FilesystemEntry>> ListEntriesAsync (HostingConnection connection, string relativePath, string path) {
+	public async Task<IEnumerable<FilesystemEntry>> ListEntriesAsync (HostingConnection connection, string relativePath, string path) {
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		string fsPath = _pathUtils.Combine(relativePath, path);
 		return await connector.ListItemsAsync(fsPath);
 	}
 
-	public async Task PublicRenameFolderAsync (RemoteHostingRenameRequestModel request) {
-		var connection = FromRequestModel(request.Connection);
-		await RenameFolderAsync(connection, "/", request.Path, request.NewPath);
-	}
-
-	public async Task HomeRenameFolderAsync (WebsiteRenameFolderRequestModel request) {
-		var website = await GetAndValidateWebsiteByIdAsync(request.WebsiteId);
-		await RenameFolderAsync(website.Connection!, website.HomeFolder, request.Path, request.NewPath);
-	}
-
-	public async Task UploadRenameFolderAsync (WebsiteRenameFolderRequestModel request) {
-		var website = await GetAndValidateWebsiteByIdAsync(request.WebsiteId);
-		await RenameFolderAsync(website.Connection!, website.UploadFolder, request.Path, request.NewPath);
-	}
-
-	private async Task RenameFolderAsync (HostingConnection connection, string relativePath, string path, string newPath) {
+	public async Task RenameFolderAsync (HostingConnection connection, string relativePath, string path, string newPath) {
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		path = _pathUtils.Combine(relativePath, path);
 		newPath = _pathUtils.Combine(relativePath, newPath);
+		if (!await connector.FolderExistsAsync(path))
+			throw new InvalidPathException("The specified folder does not exist");
 		var entryInfo = await connector.GetFilesystemEntryInfo(path);
-		if (entryInfo is null)
-			throw new InvalidPathException("The specified path does not exist");
 		if (!entryInfo.IsDirectory)
 			throw new InvalidPathException("The specified path is not a directory");
 		await connector.RenameFolderAsync(path, newPath);
 	}
 
-	public async Task HomeDeleteFolderAsync (WebsiteDeleteFolderRequestModel request) {
-		var website = await GetAndValidateWebsiteByIdAsync(request.WebsiteId);
-		await DeleteFolderAsync(website.Connection!, website.HomeFolder, request.Path);
-	}
-
-	public async Task UploadDeleteFolderAsync(WebsiteDeleteFolderRequestModel request) {
-		var website = await GetAndValidateWebsiteByIdAsync(request.WebsiteId);
-		await DeleteFolderAsync(website.Connection!, website.UploadFolder, request.Path);
-	}
-
-	private async Task DeleteFolderAsync (HostingConnection connection, string relativePath, string path) {
+	public async Task DeleteFolderAsync (HostingConnection connection, string relativePath, string path) {
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		path = _pathUtils.Combine(relativePath, path);
+		if (await connector.FolderExistsAsync(path))
+			throw new InvalidPathException("The specified folder does not exist");
 		var entryInfo = await connector.GetFilesystemEntryInfo(path);
-		if (entryInfo is null)
-			throw new InvalidPathException("The specified path does not exist");
 		if (!entryInfo.IsDirectory)
 			throw new InvalidPathException("The specified path is not a directory");
 		await connector.DeleteFolderAsync(path);
