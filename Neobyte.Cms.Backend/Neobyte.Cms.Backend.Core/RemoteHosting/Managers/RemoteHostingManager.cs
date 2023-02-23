@@ -52,7 +52,7 @@ public class RemoteHostingManager {
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		path = _pathUtils.Combine(relativePath, path);
 		if (await connector.FolderExistsAsync(path) || await connector.FileExistsAsync(path))
-			throw new AlreadyExistsException($"Folder {path} already exists");
+			throw new FolderAlreadyExistsException($"Folder {path} already exists");
 		await connector.CreateFolderAsync(path);
 	}
 

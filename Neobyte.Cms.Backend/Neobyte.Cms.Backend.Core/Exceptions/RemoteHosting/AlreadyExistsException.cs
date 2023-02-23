@@ -1,9 +1,13 @@
 ﻿using System;
 
-namespace Neobyte.Cms.Backend.Core.Exceptions.RemoteHosting; 
+namespace Neobyte.Cms.Backend.Core.Exceptions.RemoteHosting;
 
-public class AlreadyExistsException : ApplicationException {
+public abstract class AlreadyExistsException : ApplicationException {
 
-	public AlreadyExistsException (string? message) : base (message) {}
+	protected AlreadyExistsException () {}
+
+	protected AlreadyExistsException (string? message) : base (message) {}
+
+	protected AlreadyExistsException (string? message, Exception? innerException) : base (message, innerException) {}
 
 }
