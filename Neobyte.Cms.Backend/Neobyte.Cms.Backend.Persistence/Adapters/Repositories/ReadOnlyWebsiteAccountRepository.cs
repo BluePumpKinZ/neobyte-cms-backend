@@ -18,16 +18,19 @@ public class ReadOnlyWebsiteAccountRepository : IReadOnlyWebsiteAccountRepositor
 		var userRoles = await (from u in _ctx.Users
 			join ur in _ctx.UserRoles on u.Id equals ur.UserId
 			join r in _ctx.Roles on ur.RoleId equals r.Id
+			join wa in _ctx.WebsiteAccountEntities on u.Account!.Id equals wa.Account!.Id
+			where wa.Website!.Id == websiteId
 			group r.Name by u into g
 			select new { g.Key.Id, Roles = g.ToArray()})
 			.ToListAsync();
 
 		var accounts = await (from u in _ctx.Users
 			join a in _ctx.AccountEntities on u.Account!.Id equals a.Id
+			join wa in _ctx.WebsiteAccountEntities on a.Id equals wa.Account!.Id
+			where wa.Website!.Id == websiteId
 			select new { Account = a, u.Email, IdentityAccountEntityId = u.Id }).ToListAsync();
 
 		return accounts
-			.Where(a => (a.Account.WebsiteAccounts ?? new List<WebsiteAccountEntity>()).Any(wa => wa.Website!.Id == websiteId))
 			.Select(a => {
 			string[] roles = (userRoles
 				.SingleOrDefault(ur => ur.Id == a.IdentityAccountEntityId)?.Roles ?? Array.Empty<string>())!;
