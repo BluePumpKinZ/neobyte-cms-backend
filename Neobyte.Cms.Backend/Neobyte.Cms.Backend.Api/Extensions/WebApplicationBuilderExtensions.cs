@@ -3,7 +3,6 @@ using Neobyte.Cms.Backend.Api.Endpoints;
 using Neobyte.Cms.Backend.Api.Endpoints.Accounts;
 using Neobyte.Cms.Backend.Api.Endpoints.Identity;
 using Neobyte.Cms.Backend.Api.Endpoints.Loader;
-using Neobyte.Cms.Backend.Api.Endpoints.Mailing;
 using Neobyte.Cms.Backend.Api.Endpoints.RemoteHosting;
 using Neobyte.Cms.Backend.Api.Endpoints.Websites;
 
@@ -18,11 +17,11 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton<IApiEndpoints, AccountsMeEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, AccountsListEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
-		builder.Services.AddSingleton<IApiEndpoints, MailingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteEndpoints>();
-		builder.Services.AddSingleton<IApiEndpoints, RemoteHostingEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, PublicRemoteHostingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsitePageEndpoints>();
-		builder.Services.AddSingleton<IApiEndpoints, WebsiteRemoteHostingEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsiteHomeRemoteHostingEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsiteUploadRemoteHostingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteSnippetEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteUserEndpoints>();
 
@@ -50,7 +49,9 @@ public static class WebApplicationBuilderExtensions {
 
 		// swagger
 		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen();
+		builder.Services.AddSwaggerGen(opt => {
+			opt.CustomSchemaIds(x => x.FullName);
+		});
 
 		builder.Services.AddCors();
 

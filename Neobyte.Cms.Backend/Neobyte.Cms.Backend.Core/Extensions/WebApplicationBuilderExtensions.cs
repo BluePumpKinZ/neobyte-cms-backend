@@ -4,7 +4,6 @@ using Neobyte.Cms.Backend.Core.Accounts;
 using Neobyte.Cms.Backend.Core.Accounts.Managers;
 using Neobyte.Cms.Backend.Core.Configuration;
 using Neobyte.Cms.Backend.Core.Identity.Managers;
-using Neobyte.Cms.Backend.Core.Mailing.Managers;
 using Neobyte.Cms.Backend.Core.RemoteHosting.Managers;
 using Neobyte.Cms.Backend.Core.Websites.Managers;
 using Neobyte.Cms.Backend.Core.Websites.Transformers;
@@ -24,9 +23,10 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddScoped<IdentityManager>();
 
-		builder.Services.AddScoped<MailingManager>();
-
 		builder.Services.AddScoped<RemoteHostingManager>();
+		builder.Services.AddScoped<HomeRemoteHostingManager>();
+		builder.Services.AddScoped<PublicRemoteHostingManager>();
+		builder.Services.AddScoped<UploadRemoteHostingManager>();
 
 		builder.Services.AddSingleton<HtmlTransformer>();
 		builder.Services.AddScoped<WebsiteManager>();

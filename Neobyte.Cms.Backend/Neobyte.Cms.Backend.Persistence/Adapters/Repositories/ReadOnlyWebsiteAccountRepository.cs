@@ -2,9 +2,8 @@
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Domain.Websites;
 using Neobyte.Cms.Backend.Persistence.EF;
-using Neobyte.Cms.Backend.Persistence.Entities.Websites;
 
-namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories; 
+namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories;
 
 public class ReadOnlyWebsiteAccountRepository : IReadOnlyWebsiteAccountRepository {
 	
