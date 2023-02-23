@@ -15,8 +15,13 @@ internal class EnabledAccountFilter : IEndpointFilter {
 
 	public async ValueTask<object?> InvokeAsync (EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
 
-		bool valid = await _identityManager.CanLoginAsync(_principal.AccountId);
-		return valid ? await next(context) : Results.Forbid();
+		try {
+			bool valid = await _identityManager.CanLoginAsync(_principal.AccountId);
+			return valid ? await next(context) : Results.Forbid();
+		} catch (Exception) {
+			// account does not exist
+			return Results.Unauthorized();
+		}
 
 	}
 

@@ -33,6 +33,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddScoped<WebsitePageManager>();
 		builder.Services.AddScoped<WebsiteSnippetManager>();
 		builder.Services.AddScoped<WebsiteFileManager>();
+		builder.Services.AddScoped<WebsiteAccountManager>();
 
 		return builder;
 	}

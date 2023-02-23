@@ -1,4 +1,6 @@
-﻿namespace Neobyte.Cms.Backend.Domain.Accounts;
+﻿using Neobyte.Cms.Backend.Domain.Websites;
+
+namespace Neobyte.Cms.Backend.Domain.Accounts;
 
 [StronglyTypedId(converters: StronglyTypedIdConverter.SystemTextJson)]
 public partial struct AccountId { }
@@ -12,6 +14,7 @@ public class Account {
 	public bool Enabled { get; set; }
 	public DateTime CreationDate { get; set; }
 	public string[] Roles { get; set; }
+	public ICollection<WebsiteAccount>? WebsiteAccounts { get; set; }
 
 	public Account (string email, string username, string bio, string[] roles)
 		: this(AccountId.New(), email, username, bio, true, DateTime.UtcNow, roles) { }
