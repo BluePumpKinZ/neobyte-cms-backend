@@ -2,6 +2,7 @@
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Domain.Websites;
 using Neobyte.Cms.Backend.Persistence.EF;
+using Neobyte.Cms.Backend.Persistence.Entities.Websites;
 
 namespace Neobyte.Cms.Backend.Persistence.Adapters.Repositories; 
 
@@ -26,7 +27,7 @@ public class ReadOnlyWebsiteAccountRepository : IReadOnlyWebsiteAccountRepositor
 			select new { Account = a, u.Email, IdentityAccountEntityId = u.Id }).ToListAsync();
 
 		return accounts
-			.Where(a => a.Account.WebsiteAccounts!.Any(wa => wa.Website!.Id == websiteId))
+			.Where(a => (a.Account.WebsiteAccounts ?? new List<WebsiteAccountEntity>()).Any(wa => wa.Website!.Id == websiteId))
 			.Select(a => {
 			string[] roles = (userRoles
 				.SingleOrDefault(ur => ur.Id == a.IdentityAccountEntityId)?.Roles ?? Array.Empty<string>())!;

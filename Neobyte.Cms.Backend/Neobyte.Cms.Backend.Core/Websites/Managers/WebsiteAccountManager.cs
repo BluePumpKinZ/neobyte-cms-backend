@@ -30,11 +30,9 @@ public class WebsiteAccountManager {
 		if (account is null)
 			throw new AccountNotFoundException($"Account {request.AccountId} not found");
 		
-		//check if websiteAccount already exists
 		var wa = await _readOnlyWebsiteAccountRepository.ReadWebsiteAccountByWebsiteIdAndAccountIdAsync(request.WebsiteId, request.AccountId);
-		//if (wa != null)
-			//throw new WebsiteAccountAlreadyExistsException($"WebsiteAccount for website {request.WebsiteId} and user {request.AccountId} already exists");
-			//todo throw proper exception
+		if (wa != null)
+			throw new WebsiteAccountAlreadyExistsException($"WebsiteAccount for website {request.WebsiteId} and user {request.AccountId} already exists");
 		
 		var websiteAccount = new WebsiteAccount(DateTime.Now) {
 			Website = website,

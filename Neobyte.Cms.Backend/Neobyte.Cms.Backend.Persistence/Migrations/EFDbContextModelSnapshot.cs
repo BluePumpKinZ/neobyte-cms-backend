@@ -375,6 +375,29 @@ namespace Neobyte.Cms.Backend.Persistence.Migrations
                     b.ToTable("Templates");
                 });
 
+            modelBuilder.Entity("Neobyte.Cms.Backend.Persistence.Entities.Websites.WebsiteAccountEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("WebsiteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("WebsiteId");
+
+                    b.ToTable("WebsiteAccounts");
+                });
+
             modelBuilder.Entity("Neobyte.Cms.Backend.Persistence.Entities.Websites.WebsiteEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -542,6 +565,25 @@ namespace Neobyte.Cms.Backend.Persistence.Migrations
                     b.Navigation("HtmlContent");
                 });
 
+            modelBuilder.Entity("Neobyte.Cms.Backend.Persistence.Entities.Websites.WebsiteAccountEntity", b =>
+                {
+                    b.HasOne("Neobyte.Cms.Backend.Persistence.Entities.Accounts.AccountEntity", "Account")
+                        .WithMany("WebsiteAccounts")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Neobyte.Cms.Backend.Persistence.Entities.Websites.WebsiteEntity", "Website")
+                        .WithMany("WebsiteAccounts")
+                        .HasForeignKey("WebsiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Website");
+                });
+
             modelBuilder.Entity("Neobyte.Cms.Backend.Persistence.Entities.Websites.WebsiteEntity", b =>
                 {
                     b.HasOne("Neobyte.Cms.Backend.Persistence.Entities.Websites.HostingConnections.HostingConnectionEntity", "Connection")
@@ -549,6 +591,11 @@ namespace Neobyte.Cms.Backend.Persistence.Migrations
                         .HasForeignKey("ConnectionId");
 
                     b.Navigation("Connection");
+                });
+
+            modelBuilder.Entity("Neobyte.Cms.Backend.Persistence.Entities.Accounts.AccountEntity", b =>
+                {
+                    b.Navigation("WebsiteAccounts");
                 });
 
             modelBuilder.Entity("Neobyte.Cms.Backend.Persistence.Entities.Websites.TemplateEntity", b =>
@@ -563,6 +610,8 @@ namespace Neobyte.Cms.Backend.Persistence.Migrations
                     b.Navigation("Pages");
 
                     b.Navigation("Snippets");
+
+                    b.Navigation("WebsiteAccounts");
                 });
 #pragma warning restore 612, 618
         }
