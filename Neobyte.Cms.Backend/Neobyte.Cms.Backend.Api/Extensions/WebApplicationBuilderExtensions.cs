@@ -50,7 +50,9 @@ public static class WebApplicationBuilderExtensions {
 
 		// swagger
 		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen();
+		builder.Services.AddSwaggerGen(opt => {
+			opt.CustomSchemaIds(x => x.FullName);
+		});
 
 		builder.Services.AddCors();
 
