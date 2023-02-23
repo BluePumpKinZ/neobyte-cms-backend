@@ -10,7 +10,7 @@ public class HomeRemoteHostingManager {
 		_remoteHostingManager = remoteHostingManager;
 	}
 
-	public async Task HomeAddFolderAsync (WebsiteCreateFolderRequestModel request) {
+	public async Task HomeAddFolderAsync (WebsiteCreateRequestModel request) {
 		var website = await _remoteHostingManager.GetAndValidateWebsiteByIdAsync(request.WebsiteId);
 		await _remoteHostingManager.AddFolderAsync(website.Connection!, website.HomeFolder, request.Path);
 	}
@@ -20,14 +20,24 @@ public class HomeRemoteHostingManager {
 		return await _remoteHostingManager.ListEntriesAsync(website.Connection!, website.HomeFolder, request.Path);
 	}
 
-	public async Task HomeRenameFolderAsync (WebsiteRenameFolderRequestModel request) {
+	public async Task HomeRenameFolderAsync (WebsiteRenameRequestModel request) {
 		var website = await _remoteHostingManager.GetAndValidateWebsiteByIdAsync(request.WebsiteId);
 		await _remoteHostingManager.RenameFolderAsync(website.Connection!, website.HomeFolder, request.Path, request.NewPath);
 	}
 
-	public async Task HomeDeleteFolderAsync (WebsiteDeleteFolderRequestModel request) {
+	public async Task HomeDeleteFolderAsync (WebsiteDeleteRequestModel request) {
 		var website = await _remoteHostingManager.GetAndValidateWebsiteByIdAsync(request.WebsiteId);
 		await _remoteHostingManager.DeleteFolderAsync(website.Connection!, website.HomeFolder, request.Path);
+	}
+
+	public async Task HomeRenameFileAsync (WebsiteRenameRequestModel request) {
+		var website = await _remoteHostingManager.GetAndValidateWebsiteByIdAsync(request.WebsiteId);
+		await _remoteHostingManager.RenameFileAsync(website.Connection!, website.HomeFolder, request.Path, request.NewPath);
+	}
+
+	public async Task HomeDeleteFileAsync (WebsiteDeleteRequestModel request) {
+		var website = await _remoteHostingManager.GetAndValidateWebsiteByIdAsync(request.WebsiteId);
+		await _remoteHostingManager.DeleteFileAsync(website.Connection!, website.HomeFolder, request.Path);
 	}
 
 

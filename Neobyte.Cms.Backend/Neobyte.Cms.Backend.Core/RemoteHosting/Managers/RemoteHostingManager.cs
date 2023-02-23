@@ -85,4 +85,27 @@ public class RemoteHostingManager {
 		await connector.DeleteFolderAsync(path);
 	}
 
+	public async Task RenameFileAsync (HostingConnection connection, string relativePath, string path, string newPath) {
+		var connector = _remoteHostingProvider.GetConnector(connection);
+		path = _pathUtils.Combine(relativePath, path);
+		newPath = _pathUtils.Combine(relativePath, newPath);
+		if (!await connector.FileExistsAsync(path))
+			throw new InvalidPathException("The specified file does not exist");
+		var entryInfo = await connector.GetFilesystemEntryInfo(path);
+		if (entryInfo.IsDirectory)
+			throw new InvalidPathException("The specified path is not a file");
+		await connector.RenameFileAsync(path, newPath);
+	}
+
+	public async Task DeleteFileAsync (HostingConnection connection, string relativePath, string path) {
+		var connector = _remoteHostingProvider.GetConnector(connection);
+		path = _pathUtils.Combine(relativePath, path);
+		if (!await connector.FileExistsAsync(path))
+			throw new InvalidPathException("The specified file does not exist");
+		var entryInfo = await connector.GetFilesystemEntryInfo(path);
+		if (entryInfo.IsDirectory)
+			throw new InvalidPathException("The specified path is not a file");
+		await connector.DeleteFileAsync(path);
+	}
+
 }

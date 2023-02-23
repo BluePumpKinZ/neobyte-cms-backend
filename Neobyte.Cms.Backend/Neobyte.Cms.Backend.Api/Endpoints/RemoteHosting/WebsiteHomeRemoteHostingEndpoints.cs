@@ -16,12 +16,12 @@ public class WebsiteHomeRemoteHostingEndpoints : IApiEndpoints {
 		routes.MapPost("folder/create", async (
 			[FromRoute] Guid websiteId,
 			[FromServices] HomeRemoteHostingManager manager,
-			[FromBody] WebsiteCreateFolderRequestModel request) => {
+			[FromBody] WebsiteCreateRequestModel request) => {
 				request.WebsiteId = new WebsiteId(websiteId);
 				await manager.HomeAddFolderAsync(request);
 				return Results.Ok(new { Message = "Created" });
 			}).Authorize(UserPolicy.OwnerPrivilege)
-			.ValidateBody<WebsiteCreateFolderRequestModel>();
+			.ValidateBody<WebsiteCreateRequestModel>();
 
 		routes.MapGet("folder/list", async (
 			[FromRoute] Guid websiteId,
@@ -37,21 +37,43 @@ public class WebsiteHomeRemoteHostingEndpoints : IApiEndpoints {
 		routes.MapPut("folder/rename", async (
 			[FromRoute] Guid websiteId,
 			[FromServices] HomeRemoteHostingManager manager,
-			[FromBody] WebsiteRenameFolderRequestModel request) => {
+			[FromBody] WebsiteRenameRequestModel request) => {
 				request.WebsiteId = new WebsiteId(websiteId);
 				await manager.HomeRenameFolderAsync(request);
 				return Results.Ok(new { Message = "Renamed" });
 			}).Authorize(UserPolicy.OwnerPrivilege)
-			.ValidateBody<WebsiteRenameFolderRequestModel>();
+			.ValidateBody<WebsiteRenameRequestModel>();
 
 		routes.MapDelete("folder/delete", async (
 			[FromRoute] Guid websiteId,
 			[FromServices] HomeRemoteHostingManager manager,
 			[FromQuery] string path) => {
-				var request = new WebsiteDeleteFolderRequestModel {
+				var request = new WebsiteDeleteRequestModel {
 					WebsiteId = new WebsiteId(websiteId), Path = path
 				};
 				await manager.HomeDeleteFolderAsync(request);
+				return Results.Ok(new { Message = "Deleted" });
+			}).Authorize(UserPolicy.OwnerPrivilege);
+
+		routes.MapPut("file/rename", async ([FromRoute] Guid websiteId,
+			[FromServices] HomeRemoteHostingManager manager,
+			[FromQuery] string path, string newPath) => {
+				var request = new WebsiteRenameRequestModel {
+					WebsiteId = new WebsiteId(websiteId), Path = path, NewPath = newPath
+				};
+				await manager.HomeRenameFileAsync(request);
+				return Results.Ok(new { Message = "Renamed" });
+			}).Authorize(UserPolicy.OwnerPrivilege)
+		.ValidateBody<WebsiteRenameRequestModel>();
+
+		routes.MapDelete("file/delete", async (
+			[FromRoute] Guid websiteId,
+			[FromServices] HomeRemoteHostingManager manager,
+			[FromQuery] string path) => {
+				var request = new WebsiteDeleteRequestModel {
+					WebsiteId = new WebsiteId(websiteId), Path = path
+				};
+				await manager.HomeDeleteFileAsync(request);
 				return Results.Ok(new { Message = "Deleted" });
 			}).Authorize(UserPolicy.OwnerPrivilege);
 

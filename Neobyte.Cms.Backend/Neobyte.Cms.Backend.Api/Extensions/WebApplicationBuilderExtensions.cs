@@ -20,7 +20,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, MailingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteEndpoints>();
-		builder.Services.AddSingleton<IApiEndpoints, RemoteHostingEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, PublicRemoteHostingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsitePageEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteHomeRemoteHostingEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteUploadRemoteHostingEndpoints>();

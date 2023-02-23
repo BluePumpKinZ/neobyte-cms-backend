@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.RemoteHosting;
 
-public class RemoteHostingEndpoints : IApiEndpoints {
+public class PublicRemoteHostingEndpoints : IApiEndpoints {
 
 	public string GroupName => "Hosting Connection";
 	public string Path => "/api/v1/remote-hosting";

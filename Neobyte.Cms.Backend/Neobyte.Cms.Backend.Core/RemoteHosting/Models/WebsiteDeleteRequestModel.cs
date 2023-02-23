@@ -2,10 +2,9 @@
 
 namespace Neobyte.Cms.Backend.Core.RemoteHosting.Models; 
 
-public class WebsiteCreateFolderRequestModel {
+public class WebsiteDeleteRequestModel {
 
 	public WebsiteId WebsiteId { get; set; }
-	[Required]
 	public string Path { get; set; } = string.Empty;
 
 }
