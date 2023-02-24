@@ -25,7 +25,7 @@ internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 		return website;
 	}
 
-	private HostingConnectionEntity? CreateHostingConnectionEntity (Website website) {
+	private static HostingConnectionEntity? CreateHostingConnectionEntity (Website website) {
 		HostingConnectionEntity? hostingConnection = null;
 		switch (website.Connection?.GetType()) {
 		case var value when value == typeof(FtpHostingConnection):
@@ -36,6 +36,15 @@ internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 				ftpHostingConnection.Username,
 				ftpHostingConnection.Password,
 				ftpHostingConnection.Port);
+			break;
+		case var value when value == typeof(SftpHostingConnection):
+			var sftpHostingConnection = website.Connection as SftpHostingConnection;
+			hostingConnection = new SftpHostingConnectionEntity(
+				new HostingConnectionId(sftpHostingConnection!.Id.Value),
+				sftpHostingConnection.Host,
+				sftpHostingConnection.Username,
+				sftpHostingConnection.Password,
+				sftpHostingConnection.Port);
 			break;
 		case null:
 			hostingConnection = null;

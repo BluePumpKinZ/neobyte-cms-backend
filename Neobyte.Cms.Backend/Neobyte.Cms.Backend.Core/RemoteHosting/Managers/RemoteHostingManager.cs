@@ -28,6 +28,9 @@ public class RemoteHostingManager {
 			RemoteHostingRequestModel.HostingProtocol.FTP => new FtpHostingConnection(
 				existingConnection is not null ? new FtpHostingConnectionId(existingConnection.Id.Value) : FtpHostingConnectionId.New(),
 				request.Host, request.Username, request.Password, request.Port),
+			RemoteHostingRequestModel.HostingProtocol.SFTP => new SftpHostingConnection(
+				existingConnection is not null ? new SftpHostingConnectionId(existingConnection.Id.Value) : SftpHostingConnectionId.New(),
+				request.Host, request.Username, request.Password, request.Port),
 			_ => throw new InvalidProtocolException("Unsupported protocol specified")
 		};
 
