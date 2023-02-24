@@ -5,6 +5,7 @@ using Neobyte.Cms.Backend.Core.Ports.RemoteHosting;
 using Neobyte.Cms.Backend.Core.Websites.Models;
 using Neobyte.Cms.Backend.Core.Websites.Transformers;
 using Neobyte.Cms.Backend.Domain.Websites;
+using Neobyte.Cms.Backend.Utils;
 using System.IO;
 using System.Text;
 
@@ -17,13 +18,15 @@ public class WebsitePageManager {
 	private readonly IRemoteHostingProvider _remoteHostingProvider;
 	private readonly IWriteOnlyPageRepository _writeOnlyPageRepository;
 	private readonly IReadOnlyPageRepository _readOnlyPageRepository;
+	private readonly PathUtils _pathUtils;
 
-	public WebsitePageManager (HtmlTransformer transformer, IReadOnlyWebsiteRepository readOnlyWebsiteRepository, IRemoteHostingProvider remoteHostingProvider, IWriteOnlyPageRepository writeOnlyPageRepository, IReadOnlyPageRepository readOnlyPageRepository) {
+	public WebsitePageManager (HtmlTransformer transformer, IReadOnlyWebsiteRepository readOnlyWebsiteRepository, IRemoteHostingProvider remoteHostingProvider, IWriteOnlyPageRepository writeOnlyPageRepository, IReadOnlyPageRepository readOnlyPageRepository, PathUtils pathUtils) {
 		_transformer = transformer;
 		_readOnlyWebsiteRepository = readOnlyWebsiteRepository;
 		_remoteHostingProvider = remoteHostingProvider;
 		_writeOnlyPageRepository = writeOnlyPageRepository;
 		_readOnlyPageRepository = readOnlyPageRepository;
+		_pathUtils = pathUtils;
 	}
 
 	public async Task<WebsiteCreatePageResponseModel> CreateExistingPageAsync (WebsiteCreatePageRequestModel request) {
@@ -35,8 +38,8 @@ public class WebsitePageManager {
 			return new WebsiteCreatePageResponseModel(false, new string[] { "Website has no connection" });
 
 		var connector = _remoteHostingProvider.GetConnector(connection);
-		var filepath = Path.Combine(website.HomeFolder, request.Path);
-		if (!await connector.FileExistsAsync(filepath))
+		var filePath = _pathUtils.Combine(website.HomeFolder, request.Path);
+		if (!await connector.FileExistsAsync(filePath))
 			return new WebsiteCreatePageResponseModel(false, new string[] { $"File {request.Path} does not exist." });
 
 		var page = new Page(request.Name, request.Path) { Website = website };
