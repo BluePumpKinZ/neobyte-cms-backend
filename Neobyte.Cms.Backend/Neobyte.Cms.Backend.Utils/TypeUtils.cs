@@ -13,12 +13,16 @@ public class TypeUtils {
 		Type[] types = AppDomain.CurrentDomain.GetAssemblies()
 			.SelectMany(a => a.GetTypes())
 			.ToArray();
-		foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-			Console.WriteLine(a.FullName);
-		for (int i = 0; i < types.Length; i++)
-			if (types[i].IsSubclassOf(type))
-				output.Add(types[i]);
-		
+		for (int i = 0; i < types.Length; i++) {
+			var t = types[i];
+			if (type.IsInterface) {
+				if (t.GetInterfaces().Any(tImpl => tImpl == type))
+					output.Add(t);
+			} else {
+				if (t.IsSubclassOf(type))
+					output.Add(t);
+			}
+		}
 
 		return output.ToArray();
 	}
