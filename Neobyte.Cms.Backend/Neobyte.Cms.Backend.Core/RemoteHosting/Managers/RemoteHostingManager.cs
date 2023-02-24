@@ -43,9 +43,8 @@ public class RemoteHostingManager {
 	}
 
 	public async Task<Website> GetAndValidateWebsiteByIdAsync (WebsiteId id) {
-		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(id);
-		if (website is null)
-			throw new WebsiteNotFoundException($"Website {id} not found.");
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(id)
+			?? throw new WebsiteNotFoundException($"Website {id} not found.");
 		if (website.Connection is null)
 			throw new WebsiteConnectionNotFoundException($"Website {id} has no connection");
 		return website;

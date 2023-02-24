@@ -27,9 +27,8 @@ public class AccountListManager {
 	}
 
 	public async Task<Account> EditAccountDetailsAsync (AccountChangeDetailsOwnerRequestModel request) {
-		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(request.AccountId);
-		if (account is null)
-			throw new AccountNotFoundException($"Account {request.AccountId} not found");
+		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(request.AccountId)
+			?? throw new AccountNotFoundException($"Account {request.AccountId} not found");
 		
 		account.Email = request.Email;
 		account.Username = request.Username;

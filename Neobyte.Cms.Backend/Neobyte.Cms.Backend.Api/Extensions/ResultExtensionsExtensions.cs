@@ -5,6 +5,7 @@ namespace Neobyte.Cms.Backend.Api.Extensions;
 public static class ResultExtensionsExtensions {
 
 	public static IResult Html (this IResultExtensions results, string text) {
+		_ = results; // warning
 		return new HtmlResult(text);
 	}
 

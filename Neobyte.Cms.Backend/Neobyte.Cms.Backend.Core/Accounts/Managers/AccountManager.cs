@@ -30,9 +30,8 @@ public class AccountManager {
 	}
 
 	public async Task<Account> GetAccountDetails (AccountId accountId) {
-		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId);
-		if (account is null)
-			throw new AccountNotFoundException($"Account {accountId} not found");
+		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId)
+			?? throw new AccountNotFoundException($"Account {accountId} not found");
 
 		return account;
 	}
@@ -46,14 +45,13 @@ public class AccountManager {
 	}
 
 	public async Task<AccountChangePasswordResponseModel> ChangePasswordAsync (AccountChangePasswordRequestModel request, AccountId accountId) {
-		var result = await _identityAuthenticationProvider.ChangePasswordAsync(accountId, request.OldPassword, request.NewPassword);
-		return new AccountChangePasswordResponseModel(result.valid, result.errors);
+		var (valid, errors) = await _identityAuthenticationProvider.ChangePasswordAsync(accountId, request.OldPassword, request.NewPassword);
+		return new AccountChangePasswordResponseModel(valid, errors);
 	}
 
 	public async Task ChangeDetailsAsync (AccountChangeDetailsRequestModel request, AccountId accountId) {
-		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId);
-		if (account is null)
-			throw new AccountNotFoundException($"Account {accountId} not found");
+		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId)
+			?? throw new AccountNotFoundException($"Account {accountId} not found");
 		account.Email = request.Email;
 		account.Username = request.Username;
 		account.Bio = request.Bio;

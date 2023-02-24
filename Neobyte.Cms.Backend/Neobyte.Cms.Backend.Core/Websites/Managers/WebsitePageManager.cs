@@ -78,9 +78,8 @@ public class WebsitePageManager {
 		if (page is null)
 			throw new PageNotFoundException($"Page {pageId} not found");
 
-		var connection = website.Connection;
-		if (connection is null)
-			throw new WebsiteConnectionNotFoundException($"Website {websiteId} has no connection");
+		var connection = website.Connection
+			?? throw new WebsiteConnectionNotFoundException($"Website {websiteId} has no connection");
 
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		var filePath = _pathUtils.Combine(website.HomeFolder, page.Path);
@@ -99,9 +98,8 @@ public class WebsitePageManager {
 		if (page is null)
 			throw new PageNotFoundException($"Page {request.PageId} not found");
 
-		var connection = website.Connection;
-		if (connection is null)
-			throw new WebsiteConnectionNotFoundException($"Website {request.WebsiteId} has no connection");
+		var connection = website.Connection
+			?? throw new WebsiteConnectionNotFoundException($"Website {request.WebsiteId} has no connection");
 
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		var filePath = _pathUtils.Combine(website.HomeFolder, page.Path);
@@ -117,9 +115,8 @@ public class WebsitePageManager {
 		if (page is null)
 			throw new PageNotFoundException($"Page {request.PageId} not found");
 
-		var connection = website.Connection;
-		if (connection is null)
-			throw new WebsiteConnectionNotFoundException($"Website {request.WebsiteId} has no connection");
+		var connection = website.Connection
+			?? throw new WebsiteConnectionNotFoundException($"Website {request.WebsiteId} has no connection");
 
 		var htmlContent = _transformer.DeconstructRenderedWebPage(request.Source);
 		var connector = _remoteHostingProvider.GetConnector(connection);
