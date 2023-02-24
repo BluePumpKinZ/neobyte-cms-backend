@@ -8,7 +8,7 @@ public class PublicRemoteHostingEndpoints : IApiEndpoints {
 
 	public string GroupName => "Hosting Connection";
 	public string Path => "/api/v1/remote-hosting";
-	public bool Authorized => false;
+	public bool Authorized => true;
 
 	public void RegisterApis (RouteGroupBuilder routes) {
 
