@@ -29,17 +29,24 @@ internal class WebsiteEditProjection : IProjection {
 				Name = source.Name,
 				Domain = source.Domain,
 				HomeFolder = source.HomeFolder,
-				UploadFolder = source.UploadFolder,
-				Protocol = ""
+				UploadFolder = source.UploadFolder
 			};
 			switch(source.Connection?.GetType()) {
 			case var value when value == typeof(FtpHostingConnection):
-				var connection = (FtpHostingConnection)source.Connection!;
-				destination.Host = connection.Host;
-				destination.Username = connection.Username;
-				destination.Password = connection.Password;
-				destination.Port = connection.Port;
+				var ftpConnection = (FtpHostingConnection)source.Connection!;
+				destination.Host = ftpConnection.Host;
+				destination.Username = ftpConnection.Username;
+				destination.Password = ftpConnection.Password;
+				destination.Port = ftpConnection.Port;
 				destination.Protocol = "FTP";
+				break;
+			case var value when value == typeof(SftpHostingConnection):
+				var sftpConnection = (SftpHostingConnection)source.Connection!;
+				destination.Host = sftpConnection.Host;
+				destination.Username = sftpConnection.Username;
+				destination.Password = sftpConnection.Password;
+				destination.Port = sftpConnection.Port;
+				destination.Protocol = "SFTP";
 				break;
 			}
 			return destination;

@@ -31,7 +31,7 @@ internal class HostingConnectorCache : IDisposable {
 			return false;
 		
 		bool success = _cache.Remove(new HostingConnectorCacheEntry(connection, null));
-		connector.Dispose();
+		connector.Disconnect();
 		return success;
 	}
 

@@ -35,6 +35,6 @@ public interface IRemoteHostingConnector {
 
 	public Task<FilesystemEntry> GetFilesystemEntryInfo (string path);
 
-	public void Dispose ();
+	public void Disconnect ();
 
 }

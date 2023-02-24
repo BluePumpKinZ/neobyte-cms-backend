@@ -11,12 +11,12 @@ internal class FluentFtpConnector : IRemoteHostingConnector {
 	private AsyncFtpClient? _client;
 	private AsyncFtpClient Client {
 		get {
-			_client ??= GetFtpClient().Result;
+			_client ??= GetClient().Result;
 			return _client;
 		}
 	}
 
-	private async Task<AsyncFtpClient> GetFtpClient () {
+	private async Task<AsyncFtpClient> GetClient () {
 		var client = new AsyncFtpClient(_options.Host, _options.Username, _options.Password, _options.Port);
 		await client.Connect();
 		return client;
@@ -38,7 +38,7 @@ internal class FluentFtpConnector : IRemoteHostingConnector {
 
 	public async Task<bool> ValidateAsync () {
 		try {
-			var client = await GetFtpClient();
+			var client = await GetClient();
 			await client.Disconnect();
 			client.Dispose();
 			return true;
@@ -93,7 +93,7 @@ internal class FluentFtpConnector : IRemoteHostingConnector {
 		return new FilesystemEntry(info.Name, info.FullName, info.Type == FtpObjectType.Directory, info.Size, info.RawModified);
 	}
 
-	public void Dispose () {
+	public void Disconnect () {
 		_client?.Disconnect();
 		_client?.Dispose();
 	}
