@@ -31,7 +31,7 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 		return await _ctx.Users
 			.Include(u => u.Account)
 			.Where(u => u.NormalizedEmail == normalizedEmail)
-			.Select(u => u.ToDomain(roles!)).SingleOrDefaultAsync();
+			.Select(u => u.ToDomain(roles)).SingleOrDefaultAsync();
 	}
 
 
@@ -48,7 +48,7 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 							  select new { Account = a, u.Email, IdentityAccountEntityId = u.Id }).ToListAsync();
 
 		return accounts.Select(a => {
-			string[] roles = (userRoles.SingleOrDefault(ur => ur.Id == a.IdentityAccountEntityId)?.Roles ?? Array.Empty<string>())!;
+			string[] roles = (userRoles.SingleOrDefault(ur => ur.Id == a.IdentityAccountEntityId)?.Roles ?? Array.Empty<string>());
 			return new Account(a.Account.Id, a.Email!, a.Account.Username, a.Account.Bio, a.Account.Enabled, a.Account.CreationDate, roles);
 		});
 	}
@@ -64,7 +64,7 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 		return await _ctx.Users
 			.Include(u => u.Account)
 			.Where(u => u.Account!.Id == accountId)
-			.Select(u => u.ToDomain(roles!))
+			.Select(u => u.ToDomain(roles))
 			.SingleOrDefaultAsync();
 	}
 }

@@ -53,7 +53,7 @@ public partial class HtmlTransformer {
 	// Deconstruction
 	[GeneratedRegex("<base href=\".*\">", RegexOptions.Compiled)]
 	private static partial Regex GetHtmlBaseHrefRegex ();
-	[GeneratedRegex("(<style id=\"cms_style_k4U\".*>[\\S\\s]*<\\/style>)([\\S\\s]*<\\/head>)", RegexOptions.Compiled)]
+	[GeneratedRegex("(<style id=\"cms_style_k4U\".*>[\\S\\s]*?<\\/style>)([\\S\\s]*<\\/head>)", RegexOptions.Compiled)]
 	private static partial Regex GetCssStylingRegex ();
 
 	public string DeconstructRenderedWebPage (string htmlContent) {
