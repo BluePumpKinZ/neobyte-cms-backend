@@ -6,7 +6,7 @@ using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using System.Threading.Tasks;
 
-namespace Neobyte.Cms.Backend.Core.Tests;
+namespace Neobyte.Cms.Backend.Core.Tests.Accounts.Managers;
 
 public class AccountListManagerTests {
 
@@ -25,7 +25,7 @@ public class AccountListManagerTests {
 	[Fact]
 	public async Task EditAccountDetailsAsync_ShouldUpdateAccountDetails () {
 		// Arrange
-		var account = new Account (
+		var account = new Account(
 			"john.doe@example.com",
 			"johndoe",
 			"Hello, world!", new string[] { "Client" });

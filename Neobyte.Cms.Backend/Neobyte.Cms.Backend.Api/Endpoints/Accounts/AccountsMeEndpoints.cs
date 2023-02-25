@@ -16,7 +16,7 @@ public class AccountsMeEndpoints : IApiEndpoints {
 			[FromServices] AccountManager manager,
 			[FromServices] Projector projector,
 			[FromServices] Principal principal) => {
-				Account account = await manager.GetAccountDetails(principal.AccountId);
+				Account account = await manager.GetAccountDetailsAsync(principal.AccountId);
 				var projection = projector.Project<Account, AccountProjection>(account);
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.ClientPrivilege);

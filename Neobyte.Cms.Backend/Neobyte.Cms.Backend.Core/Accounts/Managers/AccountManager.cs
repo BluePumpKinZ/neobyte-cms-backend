@@ -29,14 +29,14 @@ public class AccountManager {
 		return await _identityAuthenticationProvider.CreateIdentityAccountAsync(account, request.Password);
 	}
 
-	public async Task<Account> GetAccountDetails (AccountId accountId) {
+	public async Task<Account> GetAccountDetailsAsync (AccountId accountId) {
 		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId)
 			?? throw new AccountNotFoundException($"Account {accountId} not found");
 
 		return account;
 	}
 
-	public async Task<Account?> GetIdentityAccountWithAccountByEmail (string normalizedEmail) {
+	public async Task<Account?> GetAccountWithAccountByEmailAsync (string normalizedEmail) {
 		return await _readOnlyAccountRepository.ReadAccountByEmailAsync(normalizedEmail);
 	}
 

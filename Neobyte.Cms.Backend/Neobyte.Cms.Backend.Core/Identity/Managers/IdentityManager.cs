@@ -23,7 +23,7 @@ public class IdentityManager {
 			return new IdentityLoginResponseModel (false, null, null);
 
 		var normalizedEmail = _authenticationProvider.NormalizeEmail(request.Email);
-		var identityAccount = await _accountManager.GetIdentityAccountWithAccountByEmail(normalizedEmail);
+		var identityAccount = await _accountManager.GetAccountWithAccountByEmailAsync(normalizedEmail);
 		var (token, expires) = await _authenticationProvider.GenerateJwtTokenAsync(identityAccount!, request.RememberMe);
 		return new IdentityLoginResponseModel(true, token, expires);
 	}

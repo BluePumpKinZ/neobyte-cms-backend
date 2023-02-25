@@ -32,7 +32,7 @@ public class AccountsListEndpoints : IApiEndpoints {
 			[FromServices] AccountManager manager,
 			[FromServices] Projector projector,
 			[FromRoute] Guid accountId) => {
-				var account = await manager.GetAccountDetails(new AccountId(accountId));
+				var account = await manager.GetAccountDetailsAsync(new AccountId(accountId));
 				var projection = projector.Project<Account, AccountProjection>(account);
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.OwnerPrivilege);
