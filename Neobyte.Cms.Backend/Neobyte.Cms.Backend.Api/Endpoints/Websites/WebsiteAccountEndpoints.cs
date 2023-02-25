@@ -37,5 +37,14 @@ internal class WebsiteUserEndpoints : IApiEndpoints {
 			await manager.DeleteWebsiteAccountAsync(new WebsiteId(websiteId), new AccountId(accountId));
 			return Results.Ok();
 		}).Authorize(UserPolicy.OwnerPrivilege);
+		
+		routes.MapGet("unassigned", async (
+			[FromServices] WebsiteAccountManager manager,
+			[FromServices] Projector projector,
+			[FromRoute] Guid websiteId) => {
+			var websiteAccounts = await manager.GetUnassignedAccountsByWebsiteIdAsync(new WebsiteId(websiteId));
+			var projection = projector.Project<Account, AccountProjection>(websiteAccounts);
+			return Results.Ok(projection);
+		}).Authorize(UserPolicy.ClientPrivilege);
 	}
 }
