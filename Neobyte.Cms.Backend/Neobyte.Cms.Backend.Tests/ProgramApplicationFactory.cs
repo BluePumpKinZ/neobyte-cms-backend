@@ -2,7 +2,7 @@
 
 namespace Neobyte.Cms.Backend.Tests;
 
-public class ProgramApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class {
+internal class ProgramApplicationFactory : WebApplicationFactory<Program> {
 
 	protected override void ConfigureWebHost (IWebHostBuilder builder) {
 

@@ -1,23 +1,30 @@
-﻿namespace Neobyte.Cms.Backend.Tests.Identity;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Neobyte.Cms.Backend.Core.Accounts.Managers;
+using Neobyte.Cms.Backend.Core.Accounts.Models;
+using Neobyte.Cms.Backend.Core.Identity;
 
-public class IdentityAuthenticationTests {
+namespace Neobyte.Cms.Backend.Tests.Identity;
 
-	private readonly ProgramApplicationFactory<Program> _factory;
-
-	public IdentityAuthenticationTests () {
-		_factory = new ProgramApplicationFactory<Program>();
-	}
+public class IdentityAuthenticationTests : IntegrationTests {
 
 	[Fact]
 	public async Task Login_ShouldReturnJwtToken_IfCredentialsAreValid () {
 
 		// Arrange
-		var client = _factory.CreateClient();
+		using var scope = ServiceScope;
+		var accountManager = scope.ServiceProvider.GetRequiredService<AccountManager>();
+		await accountManager.CreateAccountAsync(new AccountsCreateRequestModel {
+			Username = "Test User",
+			Bio = "I am a test user!",
+			Email = "test@user.com",
+			Password = "Pas$wOrd123",
+			Role = Role.Client.RoleName
+		});
 
 		// Act
-		var response = await client.PostAsJsonAsync("/api/v1/identity/authentication/login", new {
-			Email = "admin@neobyte.net",
-			Password = "Ne0byteCMS!",
+		var response = await Client.PostAsJsonAsync("/api/v1/identity/authentication/login", new {
+			Email = "test@user.com",
+			Password = "Pas$wOrd123",
 			RememberMe = false
 		});
 
