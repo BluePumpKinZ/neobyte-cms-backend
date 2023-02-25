@@ -2,10 +2,10 @@
 
 public class IdentityAuthenticationTests {
 
-	private readonly WebApplicationFactory<Program> _factory;
+	private readonly ProgramApplicationFactory<Program> _factory;
 
 	public IdentityAuthenticationTests () {
-		_factory = new WebApplicationFactory<Program>();
+		_factory = new ProgramApplicationFactory<Program>();
 	}
 
 	[Fact]
@@ -31,6 +31,7 @@ public class IdentityAuthenticationTests {
 		Assert.NotNull(result);
 		Assert.NotNull(result!.Token);
 		Assert.NotNull(result.Expires);
+
 	}
 
 }
