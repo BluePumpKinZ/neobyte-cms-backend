@@ -22,12 +22,12 @@ test:
   stage: test
   variables:
     ACCEPT_EULA: Y
-    SA_PASSWORD: wS9Dt!EefX
+    SA_PASSWORD: wS9Dt_EefX
   services:
     - mcr.microsoft.com/mssql/server:2019-latest
   script:
-    - env Identity:Jwt:Secret=U3skMqIFnuKQ6XtO
-    - env Database:ConnectionString=Server=localhost;Database=neobyte_cms_db_test;User Id=sa;Password=wS9Dt!EefX;MultipleActiveResultSets=true;encrypt=false
+    - env Identity:Jwt:Secret=U3skMqIFnuKQ6XtO grep ^Database
+    - env "Database:ConnectionString=Server=localhost;Database=neobyte_cms_db_test;User Id=sa;Password=wS9Dt_EefX;MultipleActiveResultSets=true;encrypt=false" | grep ^Database
     - cd Neobyte.Cms.Backend
     - dotnet test
 
