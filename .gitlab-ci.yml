@@ -26,7 +26,6 @@ test:
   services:
     - mcr.microsoft.com/mssql/server:2019-latest
   script:
-    - env Identity:Jwt:Secret=U3skMqIFnuKQ6XtO | grep ^Identity
     - env "Database:ConnectionString=Server=localhost;Database=neobyte_cms_db_test;User Id=sa;Password=wS9Dt_EefX;MultipleActiveResultSets=true;encrypt=false" | grep ^Database
     - cd Neobyte.Cms.Backend
     - dotnet test
