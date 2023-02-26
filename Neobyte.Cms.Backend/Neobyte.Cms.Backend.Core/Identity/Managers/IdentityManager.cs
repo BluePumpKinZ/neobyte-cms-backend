@@ -23,9 +23,9 @@ public class IdentityManager {
 			return new IdentityLoginResponseModel (false, null, null);
 
 		var normalizedEmail = _authenticationProvider.NormalizeEmail(request.Email);
-		var identityAccount = await _accountManager.GetIdentityAccountWithAccountByEmail(normalizedEmail);
-		var jwtToken = await _authenticationProvider.GenerateJwtTokenAsync(identityAccount!, request.RememberMe);
-		return new IdentityLoginResponseModel(true, jwtToken.token, jwtToken.expires);
+		var account = await _accountManager.GetAccountWithAccountByEmailAsync(normalizedEmail);
+		var (token, expires) = await _authenticationProvider.GenerateJwtTokenAsync(account!.Id, request.RememberMe);
+		return new IdentityLoginResponseModel(true, token, expires);
 	}
 
 	public async Task<bool> CanLoginAsync (AccountId accountId) {

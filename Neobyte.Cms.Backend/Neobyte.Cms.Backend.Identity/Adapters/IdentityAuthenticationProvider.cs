@@ -68,11 +68,11 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 
 	}
 
-	public async Task<(string token, long expires)> GenerateJwtTokenAsync (Account account, bool rememberMe) {
+	public async Task<(string token, long expires)> GenerateJwtTokenAsync (AccountId accountId, bool rememberMe) {
 
 		long expirationMilliseconds = rememberMe ? _jwtOptions.ExpirationLong : _jwtOptions.ExpirationShort;
 
-		var identityAccount = await _identityAccountRepository.ReadIdentityAccountByAccountIdAsync(account.Id);
+		var identityAccount = await _identityAccountRepository.ReadIdentityAccountByAccountIdAsync(accountId);
 		var roles = await _userManager.GetRolesAsync(identityAccount);
 
 		var claims = new List<Claim>();

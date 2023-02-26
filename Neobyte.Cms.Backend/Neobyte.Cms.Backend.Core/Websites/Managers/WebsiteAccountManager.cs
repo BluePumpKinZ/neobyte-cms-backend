@@ -22,12 +22,10 @@ public class WebsiteAccountManager {
 	}
 
 	public async Task<WebsiteAccount> AddWebsiteAccountAsync (WebsiteId websiteId, AccountId accountId) {
-		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
-		if (website is null)
-			throw new WebsiteNotFoundException($"Website {websiteId} not found");
-		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId);
-		if (account is null)
-			throw new AccountNotFoundException($"Account {accountId} not found");
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId)
+			?? throw new WebsiteNotFoundException($"Website {websiteId} not found");
+		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId)
+			?? throw new AccountNotFoundException($"Account {accountId} not found");
 
 		var wa = await _readOnlyWebsiteAccountRepository.ReadWebsiteAccountByWebsiteIdAndAccountIdAsync(
 			websiteId, accountId);
@@ -43,28 +41,24 @@ public class WebsiteAccountManager {
 	}
 
 	public async Task DeleteWebsiteAccountAsync (WebsiteId websiteId, AccountId accountId) {
-		var websiteAccount =
-			await _readOnlyWebsiteAccountRepository
-				.ReadWebsiteAccountByWebsiteIdAndAccountIdAsync(websiteId, accountId);
-		if (websiteAccount is null)
-			throw new WebsiteAccountNotFoundException(
+		var websiteAccount = await _readOnlyWebsiteAccountRepository
+				.ReadWebsiteAccountByWebsiteIdAndAccountIdAsync(websiteId, accountId)
+				?? throw new WebsiteAccountNotFoundException(
 				$"WebsiteAccount for website {websiteId} and user {accountId} not found");
 		await _writeOnlyWebsiteAccountRepository.DeleteWebsiteAccountAsync(websiteAccount);
 	}
 
 	public async Task<IEnumerable<Account>> GetAccountsByWebsiteIdAsync (WebsiteId websiteId) {
-		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
-		if (website is null)
-			throw new WebsiteNotFoundException($"Website {websiteId} not found");
-		
+		_ = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId)
+			?? throw new WebsiteNotFoundException($"Website {websiteId} not found");
+
 		return await _readOnlyWebsiteAccountRepository.ReadAccountsByWebsiteIdAsync(websiteId);
 	}
 
 	public async Task<IEnumerable<Website>> GetWebsitesByAccountIdAsync (AccountId accountId) {
-		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId);
-		if (account is null)
-			throw new AccountNotFoundException($"Account {accountId} not found");
-		
+		_ = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId)
+			?? throw new AccountNotFoundException($"Account {accountId} not found");
+
 		return await _readOnlyWebsiteAccountRepository.ReadWebsitesByAccountIdAsync(accountId);
 	}
 

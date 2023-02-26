@@ -1,1 +1,2 @@
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Ne0byteCMS!" -p 1433:1433 --name neobyte_cms_db -d mcr.microsoft.com/mssql/server:2019-latest
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Ne0byteCMS!" -p 1434:1433 --name neobyte_cms_db_test -d mcr.microsoft.com/mssql/server:2019-latest

@@ -24,6 +24,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<InternalsVisibleTo Include="Neobyte.Cms.Backend.Tests " />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Update="cms_styles.css">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>

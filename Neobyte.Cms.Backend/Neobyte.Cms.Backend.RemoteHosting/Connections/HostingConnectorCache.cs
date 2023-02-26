@@ -7,7 +7,7 @@ namespace Neobyte.Cms.Backend.RemoteHosting.Connections;
 
 internal class HostingConnectorCache : IDisposable {
 
-	private readonly HashSet<HostingConnectorCacheEntry> _cache = new HashSet<HostingConnectorCacheEntry>();
+	private readonly HashSet<HostingConnectorCacheEntry> _cache = new();
 
 	public bool AddConnector (HostingConnection connection, IRemoteHostingConnector connector) {
 		return _cache.Add(new HostingConnectorCacheEntry(connection, connector));
@@ -29,7 +29,7 @@ internal class HostingConnectorCache : IDisposable {
 	public bool RemoveConnector (HostingConnection connection) {
 		if (!TryGetConnector(connection, out var connector))
 			return false;
-		
+
 		bool success = _cache.Remove(new HostingConnectorCacheEntry(connection, null));
 		connector.Disconnect();
 		return success;

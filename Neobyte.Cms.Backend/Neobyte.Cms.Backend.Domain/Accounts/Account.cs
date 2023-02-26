@@ -29,4 +29,35 @@ public class Account {
 		Roles = roles;
 	}
 
+	private bool Equals (Account other) {
+		return Id.Equals (other.Id)
+			&& Email == other.Email
+			&& Username == other.Username
+			&& Bio == other.Bio
+			&& Enabled == other.Enabled
+			&& CreationDate.Equals (other.CreationDate)
+			&& Roles.Equals (other.Roles);
+	}
+
+	public override bool Equals (object? obj) {
+		if (obj is null) {
+			return false;
+		}
+
+		if (ReferenceEquals (this, obj)) {
+			return true;
+		}
+
+		if (obj.GetType () != GetType ()) {
+			return false;
+		}
+
+		return Equals ((Account)obj);
+	}
+
+	public override int GetHashCode () {
+		// ReSharper disable NonReadonlyMemberInGetHashCode
+		return HashCode.Combine (Id, Email, Username, Bio, Enabled, CreationDate, Roles);
+	}
+
 }
