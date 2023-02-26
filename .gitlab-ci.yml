@@ -21,13 +21,13 @@ test:
   image: mcr.microsoft.com/dotnet/sdk:7.0
   stage: test
   variables:
-    Identity:Jwt:Secret: U3skMqIFnuKQ6XtO
-    Database:ConnectionString: Server=localhost;Database=neobyte_cms_db_test;User Id=sa;Password=wS9Dt!EefX;MultipleActiveResultSets=true;encrypt=false
     ACCEPT_EULA: Y
     SA_PASSWORD: wS9Dt!EefX
   services:
     - mcr.microsoft.com/mssql/server:2019-latest
   script:
+    - env Identity:Jwt:Secret=U3skMqIFnuKQ6XtO
+    - env Database:ConnectionString=Server=localhost;Database=neobyte_cms_db_test;User Id=sa;Password=wS9Dt!EefX;MultipleActiveResultSets=true;encrypt=false
     - cd Neobyte.Cms.Backend
     - dotnet test
 
