@@ -27,8 +27,8 @@ test:
     - mcr.microsoft.com/mssql/server:2019-latest
   script:
     # - env "Database:ConnectionString=Server=localhost;Database=neobyte_cms_db_test;User Id=sa;Password=wS9Dt_EefX;MultipleActiveResultSets=true;encrypt=false" | grep ^Database
-    - echo "{\"Database\":{\"ConnectionString\":\"Server=localhost;Database=neobyte_cms_db_test;User Id=sa;Password=wS9Dt_EefX;MultipleActiveResultSets=true;encrypt=false\"}}" > Neobyte.Cms.Backend/env.json
     - cd Neobyte.Cms.Backend
+    - echo "{\"Database\":{\"ConnectionString\":\"Server=localhost;Database=neobyte_cms_db_test;User Id=sa;Password=wS9Dt_EefX;MultipleActiveResultSets=true;encrypt=false\"}}" > Neobyte.Cms.Backend/env.json
     - dotnet test
 
 docker_image:
