@@ -20,8 +20,6 @@ public class PathUtils {
 		path = CollapseSlashes(path);
 		path = path.Trim().Trim('/');
 		var parts = path.Split('/');
-		if (parts.Length == 0)
-			return "";
 		return Combine(parts.Take(parts.Length - 1).ToArray());
 	}
 

@@ -9,7 +9,7 @@ public interface IIdentityAuthenticationProvider {
 
 	public Task<bool> LoginAsync (string email, string password);
 
-	public Task<(string token, long expires)> GenerateJwtTokenAsync (Account account, bool rememberMe);
+	public Task<(string token, long expires)> GenerateJwtTokenAsync (AccountId accountId, bool rememberMe);
 
 	public string NormalizeEmail (string email);
 

@@ -24,7 +24,7 @@ public class AccountsListEndpoints : IApiEndpoints {
 			if (!result.Success)
 				return Results.BadRequest(result.Errors);
 
-			return Results.Ok();
+			return Results.Ok(new { Message = "Created", Id = result.AccountId!.Value.Value });
 		}).Authorize(UserPolicy.OwnerPrivilege)
 		.ValidateBody<AccountsCreateRequestModel>();
 
@@ -46,11 +46,12 @@ public class AccountsListEndpoints : IApiEndpoints {
 				request.AccountId = new AccountId(accountId);
 				if (principal.AccountId == new AccountId())
 					return Results.BadRequest("You cannot edit your own account.");
-				
+
 				var account = await manager.EditAccountDetailsAsync(request);
 				var projection = projector.Project<Account, AccountProjection>(account);
 				return Results.Ok(projection);
-			}).Authorize(UserPolicy.OwnerPrivilege);
+			}).Authorize(UserPolicy.OwnerPrivilege)
+			.ValidateBody<AccountChangeDetailsOwnerRequestModel>();
 
 		routes.MapDelete("{accountId:Guid}/delete", async (
 			[FromServices] AccountListManager manager,
