@@ -57,10 +57,8 @@ public class WebsiteHomeRemoteHostingEndpoints : IApiEndpoints {
 
 		routes.MapPut("file/rename", async ([FromRoute] Guid websiteId,
 			[FromServices] HomeRemoteHostingManager manager,
-			[FromQuery] string path, string newPath) => {
-				var request = new WebsiteRenameRequestModel {
-					WebsiteId = new WebsiteId(websiteId), Path = path, NewPath = newPath
-				};
+			[FromBody] WebsiteRenameRequestModel request) => {
+				request.WebsiteId = new WebsiteId(websiteId);
 				await manager.HomeRenameFileAsync(request);
 				return Results.Ok(new { Message = "Renamed" });
 			}).Authorize(UserPolicy.OwnerPrivilege)
