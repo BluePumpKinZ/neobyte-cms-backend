@@ -147,9 +147,9 @@ public class AccountsListTests : IntegrationTests {
 		Assert.False(account.Enabled);
 		Assert.Equal(editRequest.Roles.Length, account.Roles?.Length);
 		Assert.Equal(editRequest.Roles[0], account.Roles?[0]);
+		scope.Dispose();
 
 		// Verify that the changes are persisted
-		scope.Dispose();
 
 		scope = ServiceScope;
 		accountManager = scope.ServiceProvider.GetRequiredService<AccountManager>();
@@ -160,6 +160,7 @@ public class AccountsListTests : IntegrationTests {
 		Assert.False(updatedAccount.Enabled);
 		Assert.Equal(editRequest.Roles.Length, updatedAccount.Roles.Length);
 		Assert.Equal(editRequest.Roles[0], updatedAccount.Roles[0]);
+		scope.Dispose();
 	}
 
 }

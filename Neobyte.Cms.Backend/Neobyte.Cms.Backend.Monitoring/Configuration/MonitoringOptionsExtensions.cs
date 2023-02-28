@@ -14,12 +14,7 @@ public static class MonitoringOptionsExtensions {
 					ClusterId = options.Cluster,
 					Match = new RouteMatch {
 						Path = "/api/v1/monitoring/dashboard/{**catch-all}"
-					}/*,
-					Transforms = new List<IReadOnlyDictionary<string, string>> {
-						new Dictionary<string, string> {
-							{"PathPattern", "{**catch-all}"}
-						}
-					}*/
+					}
 				}
 			};
 	}
