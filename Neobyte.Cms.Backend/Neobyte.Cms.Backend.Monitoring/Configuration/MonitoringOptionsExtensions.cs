@@ -25,8 +25,8 @@ public static class MonitoringOptionsExtensions {
 			new ClusterConfig {
 				ClusterId = options.Cluster,
 				Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase) {
-					{ "dashboard-destination", new DestinationConfig {
-						Address = $"http://{options.Host}:{options.Port}/" }
+					{ "dashboard-destination", new DestinationConfig
+						{ Address = $"http://{options.Host}:{options.Port}/" }
 					}
 				}
 			}
