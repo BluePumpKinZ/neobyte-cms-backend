@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Neobyte.Cms.Backend.Core.Accounts.Managers;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Domain.Accounts;
@@ -24,7 +23,6 @@ public class AccountsListEndpoints : IApiEndpoints {
 					var httpContext = httpContextAccessor.HttpContext!;
 					string host = httpContext.Request.Headers.Host!;
 					string scheme = httpContext.Request.Scheme;
-					string port = httpContext.Request.Host.Port?.ToString() ?? "";
 					request.Host = host;
 					request.Scheme = scheme;
 					var result = await manager.CreateAccountAsync(request);

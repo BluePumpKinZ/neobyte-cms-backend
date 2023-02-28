@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Core.Identity;
@@ -36,8 +34,8 @@ public class AccountManager {
 			string.Equals(r.RoleName, request.Role, StringComparison.InvariantCultureIgnoreCase));
 		if (role.RoleName is null) // check rolename because role will never be null because it is a struct
 			return new AccountsCreateResponseModel(false)
-				{Errors = new string[] {$"Role {request.Role} does not exist"}};
-		var account = new Account(request.Email, request.Username, request.Bio, new string[] {role.RoleName});
+				{Errors = new [] {$"Role {request.Role} does not exist"}};
+		var account = new Account(request.Email, request.Username, request.Bio, new [] {role.RoleName});
 		var accountResponse =
 			await _identityAuthenticationProvider.CreateIdentityAccountAsync(account, request.Password);
 

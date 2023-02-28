@@ -2,8 +2,8 @@
 
 public readonly struct UserPolicy {
 
-	public static UserPolicy OwnerPrivilege { get; } = new UserPolicy("OwnerPrivilege", new Role[] { Role.Owner });
-	public static UserPolicy ClientPrivilege { get; } = new UserPolicy("ClientPrivilege", new Role[] { Role.Owner, Role.Client });
+	public static UserPolicy OwnerPrivilege { get; } = new UserPolicy("OwnerPrivilege", new [] { Role.Owner });
+	public static UserPolicy ClientPrivilege { get; } = new UserPolicy("ClientPrivilege", new [] { Role.Owner, Role.Client });
 	public static UserPolicy[] All { get; } = new UserPolicy[] { OwnerPrivilege, ClientPrivilege };
 
 	public string Name { get; }
