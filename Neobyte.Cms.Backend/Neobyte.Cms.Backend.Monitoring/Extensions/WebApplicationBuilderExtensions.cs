@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using Serilog.Events;
-using Serilog.Core;
-using System;
 using Microsoft.Extensions.Logging;
+using Neobyte.Cms.Backend.Core.Ports.Monitoring;
+using Neobyte.Cms.Backend.Monitoring.Adapters;
 using Neobyte.Cms.Backend.Monitoring.Configuration;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using System;
 using System.Diagnostics;
-using Neobyte.Cms.Backend.Monitoring.Adapters;
-using Neobyte.Cms.Backend.Core.Ports.Monitoring;
-using Yarp.ReverseProxy.Transforms;
 
 namespace Neobyte.Cms.Backend.Monitoring.Extensions;
 
