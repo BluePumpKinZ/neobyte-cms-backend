@@ -29,7 +29,7 @@ internal class SendGridMailingProvider : IMailingProvider {
 		if (response.IsSuccessStatusCode)
 			return;
 
-		_logger.LogWarning("Failed to send email to {to}. Response code {code}", to, response.StatusCode);
+		_logger.LogWarning("Failed to send email to {To}. Response code {Code}", to, response.StatusCode);
 	}
 
 }

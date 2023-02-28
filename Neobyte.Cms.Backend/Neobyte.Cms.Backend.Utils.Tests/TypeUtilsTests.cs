@@ -31,7 +31,7 @@ public class TypeUtilsTests {
 	public void GetDerivedTypes_ShouldReturnArrayContainingAllDerivedTypes () {
 		var derivedTypes = _typeUtils.GetDerivedTypes(typeof(Fruit));
 
-		Assert.Equal(new Type[] { typeof(Apple), typeof(Orange), typeof(Banana) }, derivedTypes);
+		Assert.Equal(new [] { typeof(Apple), typeof(Orange), typeof(Banana) }, derivedTypes);
 	}
 
 	[Fact]
@@ -47,7 +47,7 @@ public class TypeUtilsTests {
 	public void GetDerivedTypes_ShouldHandleAbstractBaseClassesCorrectly () {
 		var derivedTypes = _typeUtils.GetDerivedTypes(typeof(Vehicle));
 
-		Assert.Equal(new Type[] { typeof(Car), typeof(Truck), typeof(Motorcycle) }, derivedTypes);
+		Assert.Equal(new [] { typeof(Car), typeof(Truck), typeof(Motorcycle) }, derivedTypes);
 	}
 
 

@@ -25,7 +25,7 @@ public partial class HtmlTransformer {
 
 	private void LoadCssStyles () {
 		if (!File.Exists(_options.CmsStylesPath)) {
-			_logger.LogWarning("Cms styles file not found.");
+			_logger.LogWarning("Cms styles file not found");
 			return;
 		}
 

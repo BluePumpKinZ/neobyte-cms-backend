@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Core.Identity;
@@ -36,8 +34,8 @@ public class AccountManager {
 			string.Equals(r.RoleName, request.Role, StringComparison.InvariantCultureIgnoreCase));
 		if (role.RoleName is null) // check rolename because role will never be null because it is a struct
 			return new AccountsCreateResponseModel(false)
-				{Errors = new string[] {$"Role {request.Role} does not exist"}};
-		var account = new Account(request.Email, request.Username, request.Bio, new string[] {role.RoleName});
+				{Errors = new [] {$"Role {request.Role} does not exist"}};
+		var account = new Account(request.Email, request.Username, request.Bio, new [] {role.RoleName});
 		var accountResponse =
 			await _identityAuthenticationProvider.CreateIdentityAccountAsync(account, request.Password);
 
@@ -65,7 +63,7 @@ public class AccountManager {
 
 		await _mailingProvider.SendMailAsync(request.Email, "Neobyte CMS - Account created",
 			$"Someone has created an account for you on the Neobyte CMS platform.\n" +
-			$"Click <a href='{HtmlEncoder.Default.Encode(callBackUrl)}'>here</a> to create a password for your account.\n");
+			$"Click <a clicktracking=\"off\" href='{HtmlEncoder.Default.Encode(callBackUrl)}'>here</a> to create a password for your account.\n");
 		
 		return accountResponse;
 	}
@@ -94,8 +92,11 @@ public class AccountManager {
 	}
 
 	public async Task<AccountResetPasswordResponseModel> ResetPasswordAsync (AccountResetPasswordRequestModel request) {
+		var decodedTokenBytes = WebEncoders.Base64UrlDecode(request.Token);
+		string decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+		
 		var (valid, errors) =
-			await _identityAuthenticationProvider.ResetPasswordAsync(request.Email, request.Token, request.Password);
+			await _identityAuthenticationProvider.ResetPasswordAsync(request.Email, decodedToken, request.Password);
 		return new AccountResetPasswordResponseModel(valid, errors);
 	}
 
