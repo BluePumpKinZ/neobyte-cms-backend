@@ -1,1 +1,1 @@
-docker run --name neobyte_cms_jaeger -v neobyte_jaeger:/badger -e SPAN_STORAGE_TYPE=badger -e BADGER_EPHEMERAL=false -p 16686:16686 -p 4317:4317 jaegertracing/opentelemetry-all-in-one
+docker run --name neobyte_cms_jaeger -v neobyte_jaeger:/badger -e SPAN_STORAGE_TYPE=badger -e BADGER_EPHEMERAL=false -e QUERY_BASE_PATH=/api/v1/monitoring/dashboard -p 16686:16686 -p 4317:4317 jaegertracing/opentelemetry-all-in-one
