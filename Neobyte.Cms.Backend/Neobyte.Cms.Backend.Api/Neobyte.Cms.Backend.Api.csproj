@@ -18,6 +18,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Endpoints\Accounts\" />
+	  <Folder Include="Endpoints\Monitoring\" />
 	  <Folder Include="Endpoints\Websites\" />
 	  <Folder Include="Exceptions\" />
 	</ItemGroup>
