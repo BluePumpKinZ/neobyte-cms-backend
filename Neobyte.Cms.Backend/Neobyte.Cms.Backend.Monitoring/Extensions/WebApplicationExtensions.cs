@@ -15,7 +15,7 @@ public static class WebApplicationExtensions {
 
 		app.UseRouting();
 
-		app.Map("/api/v1/monitoring/dashboard", context => {
+		app.Map("/", context => {
 			context.RequestServices.GetRequiredService<InMemoryConfigProvider>()
 			.Update(options.Dashboard.GetRoutes(), options.Dashboard.GetClusters());
 			return Task.CompletedTask;

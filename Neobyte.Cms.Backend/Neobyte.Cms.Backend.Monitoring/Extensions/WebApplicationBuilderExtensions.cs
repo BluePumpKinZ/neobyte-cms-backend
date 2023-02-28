@@ -2,8 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Neobyte.Cms.Backend.Core.Ports.Monitoring;
-using Neobyte.Cms.Backend.Monitoring.Adapters;
 using Neobyte.Cms.Backend.Monitoring.Configuration;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -36,9 +34,6 @@ public static class WebApplicationBuilderExtensions {
 		builder.Logging.AddSerilog(logger);
 
 		// Add monitoring
-		builder.Services.AddScoped<IDashboardRelay, DashboardRelay>();
-
-
 		builder.Services.Configure<MonitoringOptions>(builder.Configuration.GetSection(MonitoringOptions.SectionName));
 		var monitoringOptions = new MonitoringOptions();
 		builder.Configuration.GetSection(MonitoringOptions.SectionName).Bind(monitoringOptions);
