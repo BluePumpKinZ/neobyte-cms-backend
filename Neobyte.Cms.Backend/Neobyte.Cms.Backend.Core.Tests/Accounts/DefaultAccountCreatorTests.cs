@@ -9,6 +9,7 @@ using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using System.Threading.Tasks;
+using Neobyte.Cms.Backend.Core.Ports.Mailing;
 
 namespace Neobyte.Cms.Backend.Core.Tests.Accounts;
 
@@ -19,11 +20,12 @@ public class DefaultAccountCreatorTests {
 	private readonly Mock<IReadOnlyAccountRepository> _readOnlyAccountRepository = new();
 	private readonly Mock<IWriteOnlyAccountRepository> _writeOnlyAccountRepository = new();
 	private readonly Mock<IIdentityAuthenticationProvider> _identityAuthenticationProvider = new();
+	private readonly Mock<IMailingProvider> _mailingProvider = new();
 
 	public DefaultAccountCreatorTests () {
 		var mockOptions = new Mock<IOptions<CoreOptions>>();
 		var accountManager = new AccountManager(_readOnlyAccountRepository.Object,
-			_writeOnlyAccountRepository.Object, _identityAuthenticationProvider.Object);
+			_writeOnlyAccountRepository.Object, _identityAuthenticationProvider.Object, _mailingProvider.Object);
 		var logger = new Mock<ILogger<DefaultAccountCreator>>();
 		_defaultAccountOptions = new DefaultAccountOptions {
 			AddOnAccountsEmpty = true,

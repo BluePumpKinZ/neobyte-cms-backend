@@ -28,7 +28,7 @@ internal class DefaultAccountCreator {
 		if (await _accountManager.GetOwnerAccountExistsAsync())
 			return;
 
-		var request = new AccountsCreateRequestModel {
+		var request = new AccountsWithPasswordCreateRequestModel() {
 			Username = _options.Username,
 			Bio = _options.Bio,
 			Email = _options.Email,
@@ -36,7 +36,7 @@ internal class DefaultAccountCreator {
 			Role = Role.Owner.RoleName
 		};
 
-		var response = await _accountManager.CreateAccountAsync(request);
+		var response = await _accountManager.CreateAccountWithPasswordAsync(request);
 		if (response.Success) {
 			_logger.LogInformation("Default owner account created");
 			return;

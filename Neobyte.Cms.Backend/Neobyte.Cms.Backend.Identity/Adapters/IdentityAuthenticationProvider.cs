@@ -8,6 +8,7 @@ using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Identity.Configuration;
 using Neobyte.Cms.Backend.Identity.Repositories;
 using Neobyte.Cms.Backend.Persistence.Entities.Accounts;
+using Neobyte.Cms.Backend.Utils;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -104,5 +105,31 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 		
 		return (true, result.Errors.Select(e => e.Description).ToArray());
 	}
+	
+	public async Task<(bool valid, string[]? errors)> ResetPasswordAsync (string email, string token, string newPassword) {
+		var identityAccount = await _identityAccountRepository.ReadIdentityAccountByEmailAsync(email);
+		if (identityAccount is null)
+			return (false, new string[] { "Invalid Email" });
+		var result = await _userManager.ResetPasswordAsync(identityAccount, token, newPassword);
+		if (!result.Succeeded)
+			return (false, result.Errors.Select(e => e.Description).ToArray());
+		
+		return (true, result.Errors.Select(e => e.Description).ToArray());
+	}
 
+	public async Task<AccountsGeneratePasswordResetTokenResponseModel> GeneratePasswordResetTokenAsync (AccountId accountId) {
+		var identityAccount = await _identityAccountRepository.ReadIdentityAccountByAccountIdAsync(accountId);
+		var token = await _userManager.GeneratePasswordResetTokenAsync(identityAccount);
+		return new AccountsGeneratePasswordResetTokenResponseModel(true) { Token = token };
+	}
+
+	public string GenerateRandomPassword () {
+		Random r = new Random();
+		string lower = "abcdefghijklmnopqrstuvwxyz".Shuffle()[..4];
+		string upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".Shuffle()[..4];
+		string numbers = "0123456789".Shuffle()[..4];
+		string special = "!@#$%^&*()_+".Shuffle()[..4];
+		string password = lower + upper + numbers + special;
+		return password.Shuffle();
+	}
 }

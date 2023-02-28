@@ -14,7 +14,7 @@ public class IdentityAuthenticationTests : IntegrationTests {
 		// Arrange
 		using var scope = ServiceScope;
 		var accountManager = scope.ServiceProvider.GetRequiredService<AccountManager>();
-		await accountManager.CreateAccountAsync(new AccountsCreateRequestModel {
+		await accountManager.CreateAccountWithPasswordAsync(new AccountsWithPasswordCreateRequestModel() {
 			Username = "Test User",
 			Bio = "I am a test user!",
 			Email = "test@user.com",
@@ -48,7 +48,7 @@ public class IdentityAuthenticationTests : IntegrationTests {
 		// Arrange
 		using var scope = ServiceScope;
 		var accountManager = scope.ServiceProvider.GetRequiredService<AccountManager>();
-		await accountManager.CreateAccountAsync(new AccountsCreateRequestModel {
+		await accountManager.CreateAccountWithPasswordAsync(new AccountsWithPasswordCreateRequestModel() {
 			Username = "Test User",
 			Bio = "I am a test user!",
 			Email = "test@user.com",

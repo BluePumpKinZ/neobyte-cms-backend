@@ -17,7 +17,7 @@ public class AccountsListTests : IntegrationTests {
 		using var scope = ServiceScope;
 		var accountManager = scope.ServiceProvider.GetRequiredService<AccountManager>();
 		var accountDetails = Fakers.Accounts.Generate();
-		var accountId = (await accountManager.CreateAccountAsync(accountDetails)).AccountId!.Value;
+		var accountId = (await accountManager.CreateAccountWithPasswordAsync(accountDetails)).AccountId!.Value;
 
 		// Act
 		var response = await Client.Authorize(await OwnerJwtToken())
@@ -60,7 +60,7 @@ public class AccountsListTests : IntegrationTests {
 	}
 
 	[Fact]
-	public async Task Create_ShouldCreateAccount() {
+	public async Task CreateAccountWithPassword_ShouldCreateAccount() {
 
 		// Arrange
 		using var scope = ServiceScope;
@@ -69,7 +69,7 @@ public class AccountsListTests : IntegrationTests {
 
 		// Act
 		var response = await Client.Authorize(await OwnerJwtToken())
-			.PostAsJsonAsync("/api/v1/accounts/list/create", accountDetails);
+			.PostAsJsonAsync("/api/v1/accounts/list/create/with-password", accountDetails);
 
 		// Assert
 		response.EnsureSuccessStatusCode();
@@ -95,7 +95,7 @@ public class AccountsListTests : IntegrationTests {
 		using var scope = ServiceScope;
 		var accountManager = scope.ServiceProvider.GetRequiredService<AccountManager>();
 		var accountDetails = Fakers.Accounts.Generate();
-		var createdAccountId = (await accountManager.CreateAccountAsync(accountDetails)).AccountId!.Value;
+		var createdAccountId = (await accountManager.CreateAccountWithPasswordAsync(accountDetails)).AccountId!.Value;
 		var createdAccount = await accountManager.GetAccountDetailsAsync(createdAccountId);
 
 		// Act
@@ -122,7 +122,7 @@ public class AccountsListTests : IntegrationTests {
 		var accountManager = scope.ServiceProvider.GetRequiredService<AccountManager>();
 		var accountDetails = Fakers.Accounts.Generate();
 		accountDetails.Role = Role.Owner.RoleName;
-		var createdAccount = await accountManager.CreateAccountAsync(accountDetails);
+		var createdAccount = await accountManager.CreateAccountWithPasswordAsync(accountDetails);
 
 		var newAccountDetails = Fakers.Accounts.Generate();
 		var editRequest = new AccountChangeDetailsOwnerRequestModel {

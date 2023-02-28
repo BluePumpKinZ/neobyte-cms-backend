@@ -41,7 +41,7 @@ public abstract class IntegrationTests {
 		var accountManager = scopedServices.GetRequiredService<AccountManager>();
 		var account = Fakers.Accounts.Generate();
 		account.Role = role.RoleName;
-		var accountId = (await accountManager.CreateAccountAsync(account)).AccountId;
+		var accountId = (await accountManager.CreateAccountWithPasswordAsync(account)).AccountId;
 		var identityProvider = scopedServices.GetRequiredService<IIdentityAuthenticationProvider>();
 		return (await identityProvider.GenerateJwtTokenAsync(accountId!.Value, true)).token;
 	}
