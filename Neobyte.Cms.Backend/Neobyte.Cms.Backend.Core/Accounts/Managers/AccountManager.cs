@@ -65,7 +65,7 @@ public class AccountManager {
 
 		await _mailingProvider.SendMailAsync(request.Email, "Neobyte CMS - Account created",
 			$"Someone has created an account for you on the Neobyte CMS platform.\n" +
-			$"Click <a href='{HtmlEncoder.Default.Encode(callBackUrl)}'>here</a> to create a password for your account.\n");
+			$"Click <a clicktracking=\"off\" href='{HtmlEncoder.Default.Encode(callBackUrl)}'>here</a> to create a password for your account.\n");
 		
 		return accountResponse;
 	}
