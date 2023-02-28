@@ -2,6 +2,7 @@
 
 public class MonitoringDashboardOptions {
 
+	public string Cluster { get; set; } = string.Empty;
 	public string Host { get; set; } = string.Empty;
 	public int Port { get; set; } = 0;
 

@@ -27,6 +27,7 @@ app.UseApi();
 app.UsePersistence();
 app.UseIdentity();
 app.UseCore();
+app.UseMonitoring();
 app.UseRemoteHosting();
 
 app.Run();

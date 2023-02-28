@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Neobyte.Cms.Backend.Core.Ports.Monitoring;
+using System;
+using System.Net.Http;
 
 namespace Neobyte.Cms.Backend.Core.Monitoring; 
 
@@ -12,7 +14,9 @@ public class MonitoringManager {
 	}
 
 	public async Task<HttpResponse> RelayDashboardRequest (HttpRequest request) {
-		return await _dashboardRelay.ForwardHttpRequest(request);
+		/*new HttpRequestMessage(request.Method)
+		return await _dashboardRelay.ForwardHttpRequest(request);*/
+		throw new NotImplementedException();
 	}
 
 }

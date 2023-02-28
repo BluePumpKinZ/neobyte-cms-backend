@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Net.Http;
 
-namespace Neobyte.Cms.Backend.Core.Ports.Monitoring; 
+namespace Neobyte.Cms.Backend.Core.Ports.Monitoring;
 
 public interface IDashboardRelay {
 
-	public Task<HttpResponse> ForwardHttpRequest (HttpRequest request);
+	public Task<HttpResponseMessage> ForwardHttpRequest (HttpRequestMessage request);
 
 }

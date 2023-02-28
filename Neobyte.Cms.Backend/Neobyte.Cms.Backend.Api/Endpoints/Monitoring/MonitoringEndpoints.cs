@@ -11,7 +11,7 @@ public class MonitoringEndpoints : IApiEndpoints {
 
 	public void RegisterApis (RouteGroupBuilder routes) {
 
-		routes.Map("{*path}", async (
+		/*routes.Map("{*path}", async (
 			[FromServices] MonitoringManager manager,
 			[FromServices] IHttpContextAccessor httpContextAccessor) => {
 				var httpContext = httpContextAccessor.HttpContext!;
@@ -32,7 +32,7 @@ public class MonitoringEndpoints : IApiEndpoints {
 				// copy body
 				await response.Body.CopyToAsync(httpContext.Response.Body);
 
-		});
+		});*/
 
 	}
 

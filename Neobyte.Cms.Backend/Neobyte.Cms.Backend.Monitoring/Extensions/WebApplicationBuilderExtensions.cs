@@ -10,6 +10,9 @@ using Neobyte.Cms.Backend.Monitoring.Configuration;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
+using Neobyte.Cms.Backend.Monitoring.Adapters;
+using Neobyte.Cms.Backend.Core.Ports.Monitoring;
+using Yarp.ReverseProxy.Transforms;
 
 namespace Neobyte.Cms.Backend.Monitoring.Extensions;
 
@@ -33,14 +36,21 @@ public static class WebApplicationBuilderExtensions {
 		builder.Logging.ClearProviders();
 		builder.Logging.AddSerilog(logger);
 
+		// Add monitoring
+		builder.Services.AddScoped<IDashboardRelay, DashboardRelay>();
+
+
 		builder.Services.Configure<MonitoringOptions>(builder.Configuration.GetSection(MonitoringOptions.SectionName));
 		var monitoringOptions = new MonitoringOptions();
 		builder.Configuration.GetSection(MonitoringOptions.SectionName).Bind(monitoringOptions);
-		var serviceName = monitoringOptions.ServiceName;
+
+		builder.Services.AddRouting();
+		builder.Services.AddReverseProxy()
+			.LoadFromMemory(monitoringOptions.Dashboard.GetRoutes(), monitoringOptions.Dashboard.GetClusters());
 
 		builder.Services.AddOpenTelemetry()
 			.WithTracing(config => config
-				.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName))
+				.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(monitoringOptions.ServiceName))
 				.AddSqlClientInstrumentation(opt => {
 					opt.SetDbStatementForText = true;
 					opt.RecordException = true;
@@ -57,7 +67,7 @@ public static class WebApplicationBuilderExtensions {
 				})
 			);
 
-		builder.Services.AddSingleton(new ActivitySource(serviceName));
+		builder.Services.AddSingleton(new ActivitySource(monitoringOptions.ServiceName));
 
 		return builder;
 	}
