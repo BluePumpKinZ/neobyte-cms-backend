@@ -117,6 +117,12 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 		return (true, result.Errors.Select(e => e.Description).ToArray());
 	}
 
+	public async Task<AccountsGeneratePasswordResetTokenResponseModel> GeneratePasswordResetTokenAsync (AccountId accountId) {
+		var identityAccount = await _identityAccountRepository.ReadIdentityAccountByAccountIdAsync(accountId);
+		var token = await _userManager.GeneratePasswordResetTokenAsync(identityAccount);
+		return new AccountsGeneratePasswordResetTokenResponseModel(true) { Token = token };
+	}
+
 	public string GenerateRandomPassword () {
 		Random r = new Random();
 		string lower = "abcdefghijklmnopqrstuvwxyz".Shuffle()[..4];

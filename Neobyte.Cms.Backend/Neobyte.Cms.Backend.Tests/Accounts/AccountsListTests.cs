@@ -60,7 +60,7 @@ public class AccountsListTests : IntegrationTests {
 	}
 
 	[Fact]
-	public async Task Create_ShouldCreateAccount() {
+	public async Task CreateAccountWithPassword_ShouldCreateAccount() {
 
 		// Arrange
 		using var scope = ServiceScope;
@@ -69,7 +69,7 @@ public class AccountsListTests : IntegrationTests {
 
 		// Act
 		var response = await Client.Authorize(await OwnerJwtToken())
-			.PostAsJsonAsync("/api/v1/accounts/list/create", accountDetails);
+			.PostAsJsonAsync("/api/v1/accounts/list/create/with-password", accountDetails);
 
 		// Assert
 		response.EnsureSuccessStatusCode();

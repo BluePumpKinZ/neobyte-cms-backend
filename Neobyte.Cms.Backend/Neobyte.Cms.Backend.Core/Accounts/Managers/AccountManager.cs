@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.WebUtilities;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Core.Identity;
@@ -8,6 +10,8 @@ using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using System;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace Neobyte.Cms.Backend.Core.Accounts.Managers;
 
@@ -46,7 +50,24 @@ public class AccountManager {
 			Email = request.Email, Bio = request.Bio, Username = request.Username, Role = request.Role,
 			Password = password
 		};
-		return await CreateAccountWithPasswordAsync(model);
+		var accountResponse = await CreateAccountWithPasswordAsync(model);
+		
+		if (!accountResponse.Success)
+			return accountResponse;
+
+		var tokenResponse = await _identityAuthenticationProvider.GeneratePasswordResetTokenAsync(accountResponse.AccountId!.Value);
+		
+		if (!tokenResponse.Success)
+			return new AccountsCreateResponseModel(false) {Errors = tokenResponse.Errors};
+
+		var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(tokenResponse.Token!));
+		var callBackUrl = $"{request.Scheme}://{request.Host}/account/reset-password?email={request.Email}&code={code}";
+
+		await _mailingProvider.SendMailAsync(request.Email, "Neobyte CMS - Account created",
+			$"Someone has created an account for you on the Neobyte CMS platform.\n" +
+			$"Click <a href='{HtmlEncoder.Default.Encode(callBackUrl)}'>here</a> to create a password for your account.\n");
+		
+		return accountResponse;
 	}
 
 	public async Task<Account> GetAccountDetailsAsync (AccountId accountId) {

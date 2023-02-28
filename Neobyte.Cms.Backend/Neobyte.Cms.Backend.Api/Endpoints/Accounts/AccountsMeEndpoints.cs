@@ -40,6 +40,17 @@ public class AccountsMeEndpoints : IApiEndpoints {
 					: Results.BadRequest(new { response.Errors });
 			}).Authorize(UserPolicy.ClientPrivilege)
 			.ValidateBody<AccountChangePasswordRequestModel>();
+		
+		routes.MapPut("reset-password", async (
+			[FromServices] AccountManager manager,
+			[FromServices] Principal principal,
+			[FromBody] AccountResetPasswordRequestModel request) => {
+				var response = await manager.ResetPasswordAsync(request);
+				return response.Success
+					? Results.Ok(new { Message = "Password reset" })
+					: Results.BadRequest(new { response.Errors });
+			}).Authorize(UserPolicy.ClientPrivilege)
+			.ValidateBody<AccountResetPasswordRequestModel>();
 
 	}
 

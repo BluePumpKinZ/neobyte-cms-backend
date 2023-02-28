@@ -17,6 +17,8 @@ public interface IIdentityAuthenticationProvider {
 	
 	public Task<(bool valid, string[]? errors)> ResetPasswordAsync (string email, string token, string newPassword);
 	
+	public Task<AccountsGeneratePasswordResetTokenResponseModel> GeneratePasswordResetTokenAsync (AccountId accountId);
+	
 	public string GenerateRandomPassword ();
 	
 }
