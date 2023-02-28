@@ -92,12 +92,19 @@ public class AccountManager {
 	}
 
 	public async Task<AccountResetPasswordResponseModel> ResetPasswordAsync (AccountResetPasswordRequestModel request) {
-		var decodedTokenBytes = WebEncoders.Base64UrlDecode(request.Token);
-		string decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
-		
+		string decodedToken;
+		try {
+			var decodedTokenBytes = WebEncoders.Base64UrlDecode(request.Token);
+			decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+		} catch (FormatException) {
+			return new AccountResetPasswordResponseModel(false){Errors = new[] {"Invalid token"}};
+		} catch (ArgumentException) {
+			return new AccountResetPasswordResponseModel(false){Errors = new[] {"Invalid token"}};
+		}
+
 		var (valid, errors) =
 			await _identityAuthenticationProvider.ResetPasswordAsync(request.Email, decodedToken, request.Password);
-		return new AccountResetPasswordResponseModel(valid, errors);
+		return new AccountResetPasswordResponseModel(valid){Errors = errors};
 	}
 
 	public async Task ChangeDetailsAsync (AccountChangeDetailsRequestModel request, AccountId accountId) {
