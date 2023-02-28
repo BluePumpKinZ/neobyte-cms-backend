@@ -25,6 +25,7 @@ var app = builder.Build();
 
 app.UseApi();
 app.UsePersistence();
+app.UseMonitoring();
 app.UseIdentity();
 app.UseCore();
 app.UseRemoteHosting();

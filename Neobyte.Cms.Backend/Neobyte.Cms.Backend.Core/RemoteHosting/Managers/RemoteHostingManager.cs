@@ -73,6 +73,8 @@ public class RemoteHostingManager {
 		var entryInfo = await connector.GetFilesystemEntryInfo(path);
 		if (!entryInfo.IsDirectory)
 			throw new InvalidPathException("The specified path is not a directory");
+		if (await connector.FolderExistsAsync(newPath))
+			throw new FolderAlreadyExistsException("A file or folder with the specified name already exists");
 		await connector.RenameFolderAsync(path, newPath);
 	}
 
@@ -96,6 +98,8 @@ public class RemoteHostingManager {
 		var entryInfo = await connector.GetFilesystemEntryInfo(path);
 		if (entryInfo.IsDirectory)
 			throw new InvalidPathException("The specified path is not a file");
+		if (await connector.FileExistsAsync(newPath))
+			throw new FileAlreadyExistsException("A file or folder with the specified name already exists");
 		await connector.RenameFileAsync(path, newPath);
 	}
 
