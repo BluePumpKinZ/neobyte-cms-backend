@@ -6,10 +6,10 @@ namespace Neobyte.Cms.Backend.Tests;
 
 public class Fakers {
 
-	public Faker<AccountsCreateRequestModel> Accounts { get; }
+	public Faker<AccountsWithPasswordCreateRequestModel> Accounts { get; }
 
 	public Fakers() {
-		Accounts = new Faker<AccountsCreateRequestModel>()
+		Accounts = new Faker<AccountsWithPasswordCreateRequestModel>()
 			.RuleFor(x => x.Email, f => f.Person.Email)
 			.RuleFor(x => x.Username, f => f.Person.UserName)
 			.RuleFor(x => x.Bio, f => f.Lorem.Sentence())

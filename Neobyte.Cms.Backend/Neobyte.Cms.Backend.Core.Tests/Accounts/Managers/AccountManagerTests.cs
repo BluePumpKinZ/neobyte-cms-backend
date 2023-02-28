@@ -8,6 +8,7 @@ using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using System.Threading.Tasks;
+using Neobyte.Cms.Backend.Core.Ports.Mailing;
 
 namespace Neobyte.Cms.Backend.Core.Tests.Accounts.Managers;
 
@@ -16,19 +17,21 @@ public class AccountManagerTests {
 	private readonly Mock<IReadOnlyAccountRepository> _readOnlyAccountRepository = new();
 	private readonly Mock<IWriteOnlyAccountRepository> _writeOnlyAccountRepository = new();
 	private readonly Mock<IIdentityAuthenticationProvider> _identityAuthenticationProvider = new();
+	private readonly Mock<IMailingProvider> _mailingProvider = new();
 	private readonly AccountManager _accountManager;
 
 	public AccountManagerTests () {
 		_accountManager = new AccountManager(
 			_readOnlyAccountRepository.Object,
 			_writeOnlyAccountRepository.Object,
-			_identityAuthenticationProvider.Object);
+			_identityAuthenticationProvider.Object,
+			_mailingProvider.Object);
 	}
 
 	[Fact]
-	public async Task CreateAccountAsync_ShouldCreateNewAccount () {
+	public async Task CreateAccountWithPasswordAsync_ShouldCreateNewAccount () {
 		// Arrange
-		var request = new AccountsCreateRequestModel {
+		var request = new AccountsWithPasswordCreateRequestModel() {
 			Email = "test@example.com",
 			Username = "testuser",
 			Bio = "test bio",
@@ -40,16 +43,16 @@ public class AccountManagerTests {
 		_identityAuthenticationProvider.Setup(x => x.CreateIdentityAccountAsync(It.IsAny<Account>(), It.IsAny<string>())).ReturnsAsync(new AccountsCreateResponseModel(true));
 
 		// Act
-		var result = await _accountManager.CreateAccountAsync(request);
+		var result = await _accountManager.CreateAccountWithPasswordAsync(request);
 
 		// Assert
 		Assert.True(result.Success);
 	}
 
 	[Fact]
-	public async Task CreateAccountAsync_ShouldReturnErrorForInvalidRole () {
+	public async Task CreateAccountWithPasswordAsync_ShouldReturnErrorForInvalidRole () {
 		// Arrange
-		var request = new AccountsCreateRequestModel {
+		var request = new AccountsWithPasswordCreateRequestModel() {
 			Email = "test@example.com",
 			Username = "testuser",
 			Bio = "test bio",
@@ -60,7 +63,7 @@ public class AccountManagerTests {
 		_identityAuthenticationProvider.Setup(x => x.CreateIdentityAccountAsync(It.IsAny<Account>(), It.IsAny<string>())).ReturnsAsync(new AccountsCreateResponseModel(true));
 
 		// Act
-		var result = await _accountManager.CreateAccountAsync(request);
+		var result = await _accountManager.CreateAccountWithPasswordAsync(request);
 
 		// Assert
 		Assert.False(result.Success);
