@@ -1,4 +1,5 @@
-﻿using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
+﻿using Neobyte.Cms.Backend.Core.Identity;
+using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Persistence.EF;
 
@@ -13,7 +14,7 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 	}
 
 	public async Task<bool> ReadOwnerAccountExistsAsync () {
-		Guid ownerRoleId = (await _ctx.Roles.SingleAsync(r => r.Name == "Owner")).Id;
+		Guid ownerRoleId = (await _ctx.Roles.SingleAsync(r => r.Name == Role.Owner.RoleName)).Id;
 		return await _ctx.Users
 			.Where(u => u.Account != null)
 			.AnyAsync(u => _ctx.UserRoles

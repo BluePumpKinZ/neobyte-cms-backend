@@ -79,7 +79,7 @@ public class RemoteHostingManager {
 	public async Task DeleteFolderAsync (HostingConnection connection, string relativePath, string path) {
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		path = _pathUtils.Combine(relativePath, path);
-		if (await connector.FolderExistsAsync(path))
+		if (!await connector.FolderExistsAsync(path))
 			throw new InvalidPathException("The specified folder does not exist");
 		var entryInfo = await connector.GetFilesystemEntryInfo(path);
 		if (!entryInfo.IsDirectory)
