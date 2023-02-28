@@ -94,8 +94,11 @@ public class AccountManager {
 	}
 
 	public async Task<AccountResetPasswordResponseModel> ResetPasswordAsync (AccountResetPasswordRequestModel request) {
+		var decodedTokenBytes = WebEncoders.Base64UrlDecode(request.Token);
+		string decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+		
 		var (valid, errors) =
-			await _identityAuthenticationProvider.ResetPasswordAsync(request.Email, request.Token, request.Password);
+			await _identityAuthenticationProvider.ResetPasswordAsync(request.Email, decodedToken, request.Password);
 		return new AccountResetPasswordResponseModel(valid, errors);
 	}
 

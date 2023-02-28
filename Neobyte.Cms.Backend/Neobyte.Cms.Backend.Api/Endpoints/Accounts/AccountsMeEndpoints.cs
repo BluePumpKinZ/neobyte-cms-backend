@@ -49,8 +49,7 @@ public class AccountsMeEndpoints : IApiEndpoints {
 				return response.Success
 					? Results.Ok(new { Message = "Password reset" })
 					: Results.BadRequest(new { response.Errors });
-			}).Authorize(UserPolicy.ClientPrivilege)
-			.ValidateBody<AccountResetPasswordRequestModel>();
+			}).ValidateBody<AccountResetPasswordRequestModel>();
 
 	}
 
