@@ -1,4 +1,6 @@
-﻿namespace Neobyte.Cms.Backend.Domain.Accounts;
+﻿using Neobyte.Cms.Backend.Domain.Websites;
+
+namespace Neobyte.Cms.Backend.Domain.Accounts;
 
 [StronglyTypedId(converters: StronglyTypedIdConverter.SystemTextJson)]
 public partial struct AccountId { }
@@ -12,6 +14,7 @@ public class Account {
 	public bool Enabled { get; set; }
 	public DateTime CreationDate { get; set; }
 	public string[] Roles { get; set; }
+	public ICollection<WebsiteAccount>? WebsiteAccounts { get; set; }
 
 	public Account (string email, string username, string bio, string[] roles)
 		: this(AccountId.New(), email, username, bio, true, DateTime.UtcNow, roles) { }
@@ -24,6 +27,37 @@ public class Account {
 		Enabled = enabled;
 		CreationDate = creationDate;
 		Roles = roles;
+	}
+
+	private bool Equals (Account other) {
+		return Id.Equals (other.Id)
+			&& Email == other.Email
+			&& Username == other.Username
+			&& Bio == other.Bio
+			&& Enabled == other.Enabled
+			&& CreationDate.Equals (other.CreationDate)
+			&& Roles.Equals (other.Roles);
+	}
+
+	public override bool Equals (object? obj) {
+		if (obj is null) {
+			return false;
+		}
+
+		if (ReferenceEquals (this, obj)) {
+			return true;
+		}
+
+		if (obj.GetType () != GetType ()) {
+			return false;
+		}
+
+		return Equals ((Account)obj);
+	}
+
+	public override int GetHashCode () {
+		// ReSharper disable NonReadonlyMemberInGetHashCode
+		return HashCode.Combine (Id, Email, Username, Bio, Enabled, CreationDate, Roles);
 	}
 
 }

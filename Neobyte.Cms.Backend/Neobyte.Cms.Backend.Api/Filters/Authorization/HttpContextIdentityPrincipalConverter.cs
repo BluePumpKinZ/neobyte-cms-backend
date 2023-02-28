@@ -18,9 +18,8 @@ internal class HttpContextIdentityPrincipalConverter {
 	}
 
 	public async Task<Principal> GetPrincipalAsync () {
-		var httpContext = _httpContextAccessor.HttpContext;
-		if (httpContext is null)
-			throw new AuthorizationException("HttpContext is could not be found");
+		var httpContext = _httpContextAccessor.HttpContext
+			?? throw new AuthorizationException("HttpContext is could not be found");
 
 		var headerGroup = httpContext.Request.Headers["Authorization"];
 		if (headerGroup.Count != 1)

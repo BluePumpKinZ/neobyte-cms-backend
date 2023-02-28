@@ -28,6 +28,9 @@ internal class WriteOnlyAccountRepository : IWriteOnlyAccountRepository {
 		identityAccountEntity.Email = account.Email;
 		identityAccountEntity.NormalizedEmail = account.Email.ToUpper();
 
+		_ctx.AccountEntities.Update(accountEntity);
+		_ctx.Users.Update(identityAccountEntity);
+
 		await _ctx.SaveChangesAsync();
 		return account;
 	}

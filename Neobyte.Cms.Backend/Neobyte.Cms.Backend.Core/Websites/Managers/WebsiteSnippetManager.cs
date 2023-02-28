@@ -22,18 +22,16 @@ public class WebsiteSnippetManager {
 	}
 
 	public async Task<Snippet> AddWebsiteSnippetAsync (WebsiteCreateSnippetRequestModel request) {
-		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(request.WebsiteId);
-		if (website is null)
-			throw new WebsiteNotFoundException($"Website {request.WebsiteId} not found");
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(request.WebsiteId)
+			?? throw new WebsiteNotFoundException($"Website {request.WebsiteId} not found");
 		var content = new HtmlContent(request.Content);
 		var snippet = new Snippet(request.Name, request.Description) { Website = website, Content = content };
 		return await _writeOnlySnippetRepository.CreateSnippetAsync(snippet);
 	}
 
 	public async Task<Snippet> GetWebsiteSnippetAsync (WebsiteId websiteId, SnippetId snippetId) {
-		var snippet = await _readOnlySnippetRepository.ReadSnippetWithWebsiteByIdAsync(snippetId);
-		if (snippet is null)
-			throw new SnippetNotFoundException($"Snippet {snippetId} not found");
+		var snippet = await _readOnlySnippetRepository.ReadSnippetWithWebsiteByIdAsync(snippetId)
+			?? throw new SnippetNotFoundException($"Snippet {snippetId} not found");
 
 		if (snippet.Website!.Id != websiteId)
 			throw new SnippetNotFoundException($"Snippet {snippetId} not found");
@@ -42,9 +40,8 @@ public class WebsiteSnippetManager {
 	}
 
 	public async Task DeleteSnippetAsync (WebsiteId websiteId, SnippetId snippetId) {
-		var snippet = await _readOnlySnippetRepository.ReadSnippetWithWebsiteByIdAsync(snippetId);
-		if (snippet is null)
-			throw new SnippetNotFoundException($"Snippet {snippetId} not found");
+		var snippet = await _readOnlySnippetRepository.ReadSnippetWithWebsiteByIdAsync(snippetId)
+			?? throw new SnippetNotFoundException($"Snippet {snippetId} not found");
 
 		if (snippet.Website!.Id != websiteId)
 			throw new SnippetNotFoundException($"Snippet {snippetId} not found");
@@ -53,9 +50,8 @@ public class WebsiteSnippetManager {
 	}
 
 	public async Task<Snippet> EditSnippetAsync (WebsiteSnippetEditRequestModel request) {
-		var snippet = await _readOnlySnippetRepository.ReadSnippetWithWebsiteByIdAsync(request.SnippetId);
-		if (snippet is null)
-			throw new SnippetNotFoundException($"Snippet {request.SnippetId} not found");
+		var snippet = await _readOnlySnippetRepository.ReadSnippetWithWebsiteByIdAsync(request.SnippetId)
+			?? throw new SnippetNotFoundException($"Snippet {request.SnippetId} not found");
 
 		if (snippet.Website!.Id != request.WebsiteId)
 			throw new SnippetNotFoundException($"Snippet {request.SnippetId} not found");

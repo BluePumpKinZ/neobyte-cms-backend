@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 
 namespace Neobyte.Cms.Backend.Utils;
 
@@ -10,11 +10,19 @@ public class TypeUtils {
 
 	public Type[] GetDerivedTypes (Type type) {
 		var output = new List<Type>();
-		Assembly assembly = Assembly.GetExecutingAssembly();
-		Type[] types = assembly.GetTypes();
-		for (int i = 0; i < types.Length; i++)
-			if (types[i].IsSubclassOf(type))
-				output.Add(types[i]);
+		Type[] types = AppDomain.CurrentDomain.GetAssemblies()
+			.SelectMany(a => a.GetTypes())
+			.ToArray();
+		for (int i = 0; i < types.Length; i++) {
+			var t = types[i];
+			if (type.IsInterface) {
+				if (t.GetInterfaces().Any(tImpl => tImpl == type))
+					output.Add(t);
+			} else {
+				if (t.IsSubclassOf(type))
+					output.Add(t);
+			}
+		}
 
 		return output.ToArray();
 	}

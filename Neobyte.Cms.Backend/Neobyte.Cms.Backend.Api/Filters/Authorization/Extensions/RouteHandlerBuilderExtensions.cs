@@ -3,7 +3,8 @@
 internal static class RouteHandlerBuilderExtensions {
 
 	public static RouteHandlerBuilder Authorize (this RouteHandlerBuilder builder, UserPolicy policy) {
-		return builder.RequireAuthorization(policy.Name);
+		return builder.RequireAuthorization(policy.Name)
+			.Produces(StatusCodes.Status401Unauthorized);
 	}
 
 }

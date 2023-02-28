@@ -16,7 +16,7 @@ public class AccountsMeEndpoints : IApiEndpoints {
 			[FromServices] AccountManager manager,
 			[FromServices] Projector projector,
 			[FromServices] Principal principal) => {
-				Account account = await manager.GetAccountDetails(principal.AccountId);
+				Account account = await manager.GetAccountDetailsAsync(principal.AccountId);
 				var projection = projector.Project<Account, AccountProjection>(account);
 				return Results.Ok(projection);
 			}).Authorize(UserPolicy.ClientPrivilege);
@@ -40,6 +40,17 @@ public class AccountsMeEndpoints : IApiEndpoints {
 					: Results.BadRequest(new { response.Errors });
 			}).Authorize(UserPolicy.ClientPrivilege)
 			.ValidateBody<AccountChangePasswordRequestModel>();
+		
+		routes.MapPut("reset-password", async (
+			[FromServices] AccountManager manager,
+			[FromServices] Principal principal,
+			[FromBody] AccountResetPasswordRequestModel request) => {
+				var response = await manager.ResetPasswordAsync(request);
+				return response.Success
+					? Results.Ok(new { Message = "Password reset" })
+					: Results.BadRequest(new { response.Errors });
+			}).Authorize(UserPolicy.ClientPrivilege)
+			.ValidateBody<AccountResetPasswordRequestModel>();
 
 	}
 

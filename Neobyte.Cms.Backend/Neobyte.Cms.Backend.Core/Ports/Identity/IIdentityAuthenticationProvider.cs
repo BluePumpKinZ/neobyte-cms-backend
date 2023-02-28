@@ -9,10 +9,16 @@ public interface IIdentityAuthenticationProvider {
 
 	public Task<bool> LoginAsync (string email, string password);
 
-	public Task<(string token, long expires)> GenerateJwtTokenAsync (Account account, bool rememberMe);
+	public Task<(string token, long expires)> GenerateJwtTokenAsync (AccountId accountId, bool rememberMe);
 
 	public string NormalizeEmail (string email);
 
 	public Task<(bool valid, string[]? errors)> ChangePasswordAsync (AccountId accountId, string oldPassword, string newPassword);
-
+	
+	public Task<(bool valid, string[]? errors)> ResetPasswordAsync (string email, string token, string newPassword);
+	
+	public Task<AccountsGeneratePasswordResetTokenResponseModel> GeneratePasswordResetTokenAsync (AccountId accountId);
+	
+	public string GenerateRandomPassword ();
+	
 }

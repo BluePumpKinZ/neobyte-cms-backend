@@ -1,4 +1,5 @@
-﻿using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
+﻿using Neobyte.Cms.Backend.Core.Identity;
+using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Persistence.EF;
 
@@ -13,7 +14,7 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 	}
 
 	public async Task<bool> ReadOwnerAccountExistsAsync () {
-		Guid ownerRoleId = (await _ctx.Roles.SingleAsync(r => r.Name == "Owner")).Id;
+		Guid ownerRoleId = (await _ctx.Roles.SingleAsync(r => r.Name == Role.Owner.RoleName)).Id;
 		return await _ctx.Users
 			.Where(u => u.Account != null)
 			.AnyAsync(u => _ctx.UserRoles
@@ -31,7 +32,7 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 		return await _ctx.Users
 			.Include(u => u.Account)
 			.Where(u => u.NormalizedEmail == normalizedEmail)
-			.Select(u => u.ToDomain(roles!)).SingleOrDefaultAsync();
+			.Select(u => u.ToDomain(roles)).SingleOrDefaultAsync();
 	}
 
 
@@ -48,7 +49,7 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 							  select new { Account = a, u.Email, IdentityAccountEntityId = u.Id }).ToListAsync();
 
 		return accounts.Select(a => {
-			string[] roles = (userRoles.SingleOrDefault(ur => ur.Id == a.IdentityAccountEntityId)?.Roles ?? Array.Empty<string>())!;
+			string[] roles = (userRoles.SingleOrDefault(ur => ur.Id == a.IdentityAccountEntityId)?.Roles ?? Array.Empty<string>());
 			return new Account(a.Account.Id, a.Email!, a.Account.Username, a.Account.Bio, a.Account.Enabled, a.Account.CreationDate, roles);
 		});
 	}
@@ -64,7 +65,7 @@ internal class ReadOnlyAccountRepository : IReadOnlyAccountRepository {
 		return await _ctx.Users
 			.Include(u => u.Account)
 			.Where(u => u.Account!.Id == accountId)
-			.Select(u => u.ToDomain(roles!))
+			.Select(u => u.ToDomain(roles))
 			.SingleOrDefaultAsync();
 	}
 }

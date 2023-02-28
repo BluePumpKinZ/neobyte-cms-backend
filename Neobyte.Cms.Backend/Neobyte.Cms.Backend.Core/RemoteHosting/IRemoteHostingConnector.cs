@@ -1,12 +1,17 @@
 ﻿using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
+using System;
 
 namespace Neobyte.Cms.Backend.Core.RemoteHosting;
 
 public interface IRemoteHostingConnector {
 
+	public DateTime LastConnectionTime { get; set; }
+
 	public bool CanConnect (HostingConnection connection);
 
 	public void Configure (HostingConnection connection);
+
+	public Task<bool> ValidateAsync ();
 
 	public Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path);
 
@@ -27,5 +32,9 @@ public interface IRemoteHostingConnector {
 	public Task<bool> FolderExistsAsync (string path);
 
 	public Task<bool> FileExistsAsync (string path);
+
+	public Task<FilesystemEntry> GetFilesystemEntryInfo (string path);
+
+	public void Disconnect ();
 
 }

@@ -4,7 +4,8 @@ public static class RouteHandlerBuilderExtensions {
 
 	public static RouteHandlerBuilder ValidateBody<T> (this RouteHandlerBuilder builder)
 		where T : class {
-		return builder.AddEndpointFilter<EndpointValidationFilter<T>>();
+		return builder.AddEndpointFilter<EndpointValidationFilter<T>>()
+			.Produces(StatusCodes.Status400BadRequest);
 	}
 
 }

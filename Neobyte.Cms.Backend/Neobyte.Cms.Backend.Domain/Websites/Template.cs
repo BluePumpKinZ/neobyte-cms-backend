@@ -8,7 +8,7 @@ public partial struct TemplateId { }
 public class Template : Website {
 
 	[Key]
-	public new TemplateId Id { get => new TemplateId(base.Id.Value); set => base.Id = new WebsiteId(value.Value); }
+	public new TemplateId Id { get => new (base.Id.Value); set => base.Id = new WebsiteId(value.Value); }
 	public string Title { get; set; }
 	public string Description { get; set; }
 
