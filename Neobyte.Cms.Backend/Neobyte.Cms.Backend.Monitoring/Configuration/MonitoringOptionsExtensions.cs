@@ -13,7 +13,7 @@ public static class MonitoringOptionsExtensions {
 					RouteId = "dashboard-routes",
 					ClusterId = options.Cluster,
 					Match = new RouteMatch {
-						Path = "{**catch-all}"
+						Path = "/api/v1/monitoring/dashboard/{**catch-all}"
 					}
 				}
 			};
