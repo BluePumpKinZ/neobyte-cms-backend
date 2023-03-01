@@ -11,7 +11,7 @@ public class PublicRemoteHostingEndpoints : IApiEndpoints {
 
 	public void RegisterApis (RouteGroupBuilder routes) {
 
-		routes.MapPut("verify", async (
+		routes.MapPost("verify", async (
 			[FromServices] PublicRemoteHostingManager manager,
 			[FromBody] RemoteHostingRequestModel request) => {
 				var valid = await manager.PublicCheckConnectionAsync(request);
