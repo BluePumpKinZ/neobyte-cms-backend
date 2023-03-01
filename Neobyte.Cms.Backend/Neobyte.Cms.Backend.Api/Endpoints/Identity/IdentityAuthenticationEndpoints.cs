@@ -17,7 +17,7 @@ public class IdentityAuthenticationEndpoints : IApiEndpoints {
 				if (response.Authenticated)
 					return Results.Ok(new { response.Token, response.Expires });
 
-				return Results.Unauthorized();
+				return Results.BadRequest(new { Message = "Invalid Credentials" });
 			}).ValidateBody<IdentityLoginRequestModel>()
 			.AllowAnonymous();
 

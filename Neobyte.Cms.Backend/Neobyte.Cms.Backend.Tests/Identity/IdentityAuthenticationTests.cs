@@ -64,7 +64,7 @@ public class IdentityAuthenticationTests : IntegrationTests {
 		});
 
 		// Assert
-		Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
 	}
 
@@ -79,7 +79,7 @@ public class IdentityAuthenticationTests : IntegrationTests {
 		});
 
 		// Assert
-		Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
 	}
 
