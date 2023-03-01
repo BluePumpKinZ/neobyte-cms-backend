@@ -42,7 +42,7 @@ internal class FluentFtpConnector : IRemoteHostingConnector {
 			await client.Disconnect();
 			client.Dispose();
 			return true;
-		} catch (FtpAuthenticationException) {
+		} catch (Exception ex) when (ex is FtpAuthenticationException or TimeoutException){
 			return false;
 		}
 	}
