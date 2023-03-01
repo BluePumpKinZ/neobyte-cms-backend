@@ -5,7 +5,7 @@ namespace Neobyte.Cms.Backend.Api.Endpoints.Accounts;
 
 public class PublicAccountsMeEndpoints : IApiEndpoints{
 	public string GroupName => "Account";
-	public string Path => "/api/v1/accounts/me";
+	public string Path => "/api/v1/accounts/me/public";
 	public bool Authorized => false;
 	
 	public void RegisterApis (RouteGroupBuilder routes) {

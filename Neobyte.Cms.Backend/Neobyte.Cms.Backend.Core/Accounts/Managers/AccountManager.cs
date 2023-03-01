@@ -68,6 +68,29 @@ public class AccountManager {
 		return accountResponse;
 	}
 
+	public async Task<AccountRequestResetPasswordResponseModel> RequestPasswordResetAsync (
+		AccountRequestResetPasswordRequestModel request, AccountId accountId) {
+		var accountResponse = await _readOnlyAccountRepository.ReadAccountByEmailAsync(request.Email);
+		
+		if (accountResponse is null)
+			return new AccountRequestResetPasswordResponseModel(false)
+				{Errors = new [] {"Invalid email address"}};
+		
+		if (accountResponse.Id != accountId)
+			throw new AccountNotFoundException($"Email address does not match your account");
+		
+		var tokenResponse = await _identityAuthenticationProvider.GeneratePasswordResetTokenAsync(accountResponse.Id);
+		
+		var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(tokenResponse.Token!));
+		var callBackUrl = $"{request.Scheme}://{request.Host}/account/reset-password?email={request.Email}&code={code}";
+		
+		await _mailingProvider.SendMailAsync(request.Email, "Neobyte CMS - Password reset",
+			$"You have requested a password reset for your account on the Neobyte CMS platform.\n" +
+			$"Click <a clicktracking=\"off\" href='{HtmlEncoder.Default.Encode(callBackUrl)}'>here</a> to reset your password.\n");
+		
+		return new AccountRequestResetPasswordResponseModel(true);
+	} 
+
 	public async Task<Account> GetAccountDetailsAsync (AccountId accountId) {
 		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId)
 		              ?? throw new AccountNotFoundException($"Account {accountId} not found");
