@@ -52,6 +52,10 @@ public static class WebApplicationBuilderExtensions {
 				.AddAspNetCoreInstrumentation(opt => {
 					opt.EnableGrpcAspNetCoreSupport = true;
 					opt.RecordException = true;
+					opt.Filter = httpContext => {
+						var path = httpContext.Request.Path.Value!;
+						return !path.StartsWith("/api/v1/tracing");
+					};
 				})
 				.AddHttpClientInstrumentation(opt => {
 					opt.RecordException = true;

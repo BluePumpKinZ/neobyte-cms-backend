@@ -19,10 +19,9 @@ public static class WebApplicationExtensions {
 		}
 
 		app.UseCors(opt => {
-			opt.SetIsOriginAllowed(_ => true);
+			opt.AllowAnyOrigin();
 			opt.AllowAnyMethod();
 			opt.AllowAnyHeader();
-			opt.AllowCredentials();
 		});
 
 		return app;

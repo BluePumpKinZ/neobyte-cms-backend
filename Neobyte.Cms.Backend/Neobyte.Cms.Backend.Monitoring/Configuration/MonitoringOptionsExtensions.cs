@@ -20,7 +20,7 @@ public static class MonitoringOptionsExtensions {
 					RouteId = "frontend-tracing-routes",
 					ClusterId = options.Frontend.Cluster,
 					Match = new RouteMatch {
-						Path = "/api/traces/{**catch-all}"
+						Path = "/api/v1/tracing/{**catch-all}"
 					}
 				}
 			};
@@ -43,7 +43,7 @@ public static class MonitoringOptionsExtensions {
 				Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase) {
 					{
 						"frontend-tracing-destination", new DestinationConfig
-						{ Address = $"http://{options.Frontend.Host}:{options.Frontend.Port}/" }
+						{ Address = $"http://{options.Frontend.Host}:{options.Frontend.Port}/api/traces" }
 					}
 				}
 			}
