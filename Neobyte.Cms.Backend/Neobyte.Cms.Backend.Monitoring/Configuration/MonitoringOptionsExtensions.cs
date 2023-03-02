@@ -15,6 +15,13 @@ public static class MonitoringOptionsExtensions {
 					Match = new RouteMatch {
 						Path = "/api/v1/monitoring/dashboard/{**catch-all}"
 					}
+				},
+				new RouteConfig {
+					RouteId = "zipkin-routes",
+					ClusterId = "zipkin-clusters",
+					Match = new RouteMatch {
+						Path = "/api/traces/{**catch-all}"
+					}
 				}
 			};
 	}
@@ -25,9 +32,19 @@ public static class MonitoringOptionsExtensions {
 			new ClusterConfig {
 				ClusterId = options.Cluster,
 				Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase) {
-					{ "dashboard-destination", new DestinationConfig
+					{
+						"dashboard-destination", new DestinationConfig
 						{ Address = $"http://{options.Host}:{options.Port}/" }
 					}
+				}
+			},
+			new ClusterConfig {
+				ClusterId = "zipkin-clusters",
+				Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase) {
+					{
+						"zipkin-destination", new DestinationConfig
+						{ Address = $"http://localhost:9411/" }
+					} 
 				}
 			}
 		};
