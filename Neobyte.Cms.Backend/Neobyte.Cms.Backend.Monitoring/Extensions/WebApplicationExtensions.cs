@@ -17,7 +17,7 @@ public static class WebApplicationExtensions {
 
 		app.Map("/", context => {
 			context.RequestServices.GetRequiredService<InMemoryConfigProvider>()
-			.Update(options.Dashboard.GetRoutes(), options.Dashboard.GetClusters());
+			.Update(options.GetRoutes(), options.GetClusters());
 			return Task.CompletedTask;
 		});
 

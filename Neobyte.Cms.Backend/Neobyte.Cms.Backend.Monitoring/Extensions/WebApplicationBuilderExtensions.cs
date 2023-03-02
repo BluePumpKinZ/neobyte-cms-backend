@@ -40,7 +40,7 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddRouting();
 		builder.Services.AddReverseProxy()
-			.LoadFromMemory(monitoringOptions.Dashboard.GetRoutes(), monitoringOptions.Dashboard.GetClusters());
+			.LoadFromMemory(monitoringOptions.GetRoutes(), monitoringOptions.GetClusters());
 
 		builder.Services.AddOpenTelemetry()
 			.WithTracing(config => config
@@ -52,6 +52,10 @@ public static class WebApplicationBuilderExtensions {
 				.AddAspNetCoreInstrumentation(opt => {
 					opt.EnableGrpcAspNetCoreSupport = true;
 					opt.RecordException = true;
+					opt.Filter = httpContext => {
+						var path = httpContext.Request.Path.Value!;
+						return !path.StartsWith("/api/v1/tracing");
+					};
 				})
 				.AddHttpClientInstrumentation(opt => {
 					opt.RecordException = true;
