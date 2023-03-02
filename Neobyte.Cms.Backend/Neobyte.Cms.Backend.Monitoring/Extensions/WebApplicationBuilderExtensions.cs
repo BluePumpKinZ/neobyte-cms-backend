@@ -40,7 +40,7 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddRouting();
 		builder.Services.AddReverseProxy()
-			.LoadFromMemory(monitoringOptions.Dashboard.GetRoutes(), monitoringOptions.Dashboard.GetClusters());
+			.LoadFromMemory(monitoringOptions.GetRoutes(), monitoringOptions.GetClusters());
 
 		builder.Services.AddOpenTelemetry()
 			.WithTracing(config => config

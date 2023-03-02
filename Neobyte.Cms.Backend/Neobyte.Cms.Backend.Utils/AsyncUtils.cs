@@ -6,7 +6,7 @@ namespace Neobyte.Cms.Backend.Utils;
 
 public class AsyncUtils {
 
-	private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+	private readonly SemaphoreSlim _semaphore = new (1, 1);
 
 	public async Task LockAsync (Func<Task> worker) {
 		await _semaphore.WaitAsync();

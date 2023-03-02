@@ -8,4 +8,5 @@ public class MonitoringOptions {
 	public int JaegerPort { get; set; } = 0;
 
 	public MonitoringDashboardOptions Dashboard { get; set; } = new();
+	public MonitoringFrontendTracingOptions Frontend { get; set; } = new();
 }
