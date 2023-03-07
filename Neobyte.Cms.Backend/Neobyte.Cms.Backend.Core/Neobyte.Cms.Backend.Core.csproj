@@ -21,6 +21,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.26.1" />
 		<PackageReference Include="MoreCSharp.Extensions.System.Collections.Generic" Version="1.2.0" />
+		<PackageReference Include="prometheus-net" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Neobyte.Cms.Backend.Monitoring.Configuration;
+using Prometheus;
 using System.Threading.Tasks;
 using Yarp.ReverseProxy.Configuration;
 
@@ -22,6 +23,15 @@ public static class WebApplicationExtensions {
 		});
 
 		app.MapReverseProxy();
+
+		if (app.Environment.EnvironmentName == "Testing")
+			return app;
+
+		app.UseHttpMetrics();
+
+		var metricsServer = new MetricServer(options.Metrics.Host, options.Metrics.Port, "api/v1/metrics/");
+		metricsServer.Start();
+
 		return app;
 	}
 
