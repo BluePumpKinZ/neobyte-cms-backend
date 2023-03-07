@@ -10,4 +10,5 @@ public class MonitoringOptions {
 	public MonitoringDashboardOptions Dashboard { get; set; } = new();
 	public MonitoringFrontendTracingOptions Frontend { get; set; } = new();
 	public MonitoringMetricsOptions Metrics { get; set; } = new();
+	public MonitoringGrafanaOptions Grafana { get; set; } = new();
 }

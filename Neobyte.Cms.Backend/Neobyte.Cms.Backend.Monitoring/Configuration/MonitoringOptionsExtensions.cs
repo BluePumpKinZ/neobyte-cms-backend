@@ -22,6 +22,13 @@ public static class MonitoringOptionsExtensions {
 					Match = new RouteMatch {
 						Path = "/api/v1/tracing/{**catch-all}"
 					}
+				},
+				new RouteConfig {
+					RouteId = "grafana-routes",
+					ClusterId = options.Grafana.Cluster,
+					Match = new RouteMatch {
+						Path = "/api/v1/grafana/{**catch-all}"
+					}
 				}
 			};
 	}
@@ -44,6 +51,15 @@ public static class MonitoringOptionsExtensions {
 					{
 						"frontend-tracing-destination", new DestinationConfig
 						{ Address = $"http://{options.Frontend.Host}:{options.Frontend.Port}/api/traces" }
+					}
+				}
+			},
+			new ClusterConfig {
+				ClusterId = options.Grafana.Cluster,
+				Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase) {
+					{
+						"grafana-destination", new DestinationConfig
+						{ Address = $"http://{options.Grafana.Host}:{options.Grafana.Port}/" }
 					}
 				}
 			}
