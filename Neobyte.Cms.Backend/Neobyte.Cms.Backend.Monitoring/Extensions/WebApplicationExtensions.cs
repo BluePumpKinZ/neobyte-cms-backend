@@ -24,9 +24,12 @@ public static class WebApplicationExtensions {
 
 		app.MapReverseProxy();
 
+		if (app.Environment.EnvironmentName == "Testing")
+			return app;
+
 		app.UseHttpMetrics();
 
-		var metricsServer = new MetricServer(6700, "api/v1/metrics/");
+		var metricsServer = new MetricServer(options.Metrics.Host, options.Metrics.Port, "api/v1/metrics/");
 		metricsServer.Start();
 
 		return app;
