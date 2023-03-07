@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Neobyte.Cms.Backend.Core.Ports.Monitoring;
+using Neobyte.Cms.Backend.Monitoring.Adapters;
 using Neobyte.Cms.Backend.Monitoring.Configuration;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -40,7 +42,7 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddRouting();
 		builder.Services.AddReverseProxy()
-			.LoadFromMemory(monitoringOptions.Dashboard.GetRoutes(), monitoringOptions.Dashboard.GetClusters());
+			.LoadFromMemory(monitoringOptions.GetRoutes(), monitoringOptions.GetClusters());
 
 		builder.Services.AddOpenTelemetry()
 			.WithTracing(config => config
@@ -52,6 +54,14 @@ public static class WebApplicationBuilderExtensions {
 				.AddAspNetCoreInstrumentation(opt => {
 					opt.EnableGrpcAspNetCoreSupport = true;
 					opt.RecordException = true;
+					opt.Filter = httpContext => {
+						var path = httpContext.Request.Path.Value!;
+						if (path.StartsWith("/api/v1/tracing"))
+							return false;
+						if (path.StartsWith("/api/v1/metrics"))
+							return false;
+						return true;
+					};
 				})
 				.AddHttpClientInstrumentation(opt => {
 					opt.RecordException = true;
@@ -62,6 +72,9 @@ public static class WebApplicationBuilderExtensions {
 			);
 
 		builder.Services.AddSingleton(new ActivitySource(monitoringOptions.ServiceName));
+
+		// Add metrics
+		builder.Services.AddSingleton<IMetricsStore, MetricsStore>();
 
 		return builder;
 	}

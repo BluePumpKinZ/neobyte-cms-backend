@@ -101,7 +101,7 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 		var result = await _userManager.ChangePasswordAsync(identityAccount, currentPassword, newPassword);
 		
 		if (!result.Succeeded)
-			return (false, new string[] { "Incorrect Password" });
+			return (false, new [] { "Incorrect Password" });
 		
 		return (true, result.Errors.Select(e => e.Description).ToArray());
 	}
@@ -109,7 +109,7 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 	public async Task<(bool valid, string[]? errors)> ResetPasswordAsync (string email, string token, string newPassword) {
 		var identityAccount = await _identityAccountRepository.ReadIdentityAccountByEmailAsync(email);
 		if (identityAccount is null)
-			return (false, new string[] { "Invalid Email" });
+			return (false, new [] { "Invalid Email" });
 		var result = await _userManager.ResetPasswordAsync(identityAccount, token, newPassword);
 		if (!result.Succeeded)
 			return (false, result.Errors.Select(e => e.Description).ToArray());
@@ -124,7 +124,6 @@ public class IdentityAuthenticationProvider : IIdentityAuthenticationProvider {
 	}
 
 	public string GenerateRandomPassword () {
-		Random r = new Random();
 		string lower = "abcdefghijklmnopqrstuvwxyz".Shuffle()[..4];
 		string upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".Shuffle()[..4];
 		string numbers = "0123456789".Shuffle()[..4];

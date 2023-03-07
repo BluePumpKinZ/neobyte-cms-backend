@@ -23,12 +23,12 @@ internal class RemoteHostingProvider : IRemoteHostingProvider {
 
 	public IRemoteHostingConnector GetConnector (HostingConnection connection) {
 		if (_cache.TryGetConnector(connection, out IRemoteHostingConnector? connector)) {
-			_logger.LogDebug("Using cached connector for connection {connectionId}", connection.Id);
+			_logger.LogDebug("Using cached connector for connection {ConnectionId}", connection.Id);
 			connector.LastConnectionTime = DateTime.UtcNow;
 			return connector;
 		}
 
-		_logger.LogInformation("Creating new connector for connection {connectionId}", connection.Id);
+		_logger.LogInformation("Creating new connector for connection {ConnectionId}", connection.Id);
 		connector = CreateConnector(connection);
 		_cache.AddConnector(connection, connector);
 		return connector;

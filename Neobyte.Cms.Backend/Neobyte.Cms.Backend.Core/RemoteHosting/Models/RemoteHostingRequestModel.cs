@@ -12,7 +12,7 @@ public class RemoteHostingRequestModel {
 	// ReSharper disable InconsistentNaming
 	public enum HostingProtocol {
 
-		FTP, SFTP, SSH, S3
+		FTP, SFTP, S3
 
 	}
 

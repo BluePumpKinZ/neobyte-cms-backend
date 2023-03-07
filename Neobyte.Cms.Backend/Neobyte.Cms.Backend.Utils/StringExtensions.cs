@@ -5,7 +5,7 @@ namespace Neobyte.Cms.Backend.Utils;
 public static class StringExtensions {
 	
 	public static string Shuffle(this string str) {
-		if (str == null || str.Length <= 1) {
+		if (str.Length <= 1) {
 			return str;
 		}
         

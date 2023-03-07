@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
 using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Core.Identity;
@@ -36,8 +34,8 @@ public class AccountManager {
 			string.Equals(r.RoleName, request.Role, StringComparison.InvariantCultureIgnoreCase));
 		if (role.RoleName is null) // check rolename because role will never be null because it is a struct
 			return new AccountsCreateResponseModel(false)
-				{Errors = new string[] {$"Role {request.Role} does not exist"}};
-		var account = new Account(request.Email, request.Username, request.Bio, new string[] {role.RoleName});
+				{Errors = new [] {$"Role {request.Role} does not exist"}};
+		var account = new Account(request.Email, request.Username, request.Bio, new [] {role.RoleName});
 		var accountResponse =
 			await _identityAuthenticationProvider.CreateIdentityAccountAsync(account, request.Password);
 
@@ -65,10 +63,33 @@ public class AccountManager {
 
 		await _mailingProvider.SendMailAsync(request.Email, "Neobyte CMS - Account created",
 			$"Someone has created an account for you on the Neobyte CMS platform.\n" +
-			$"Click <a href='{HtmlEncoder.Default.Encode(callBackUrl)}'>here</a> to create a password for your account.\n");
+			$"Click <a clicktracking=\"off\" href='{HtmlEncoder.Default.Encode(callBackUrl)}'>here</a> to create a password for your account.\n");
 		
 		return accountResponse;
 	}
+
+	public async Task<AccountRequestResetPasswordResponseModel> RequestPasswordResetAsync (
+		AccountRequestResetPasswordRequestModel request, AccountId accountId) {
+		var accountResponse = await _readOnlyAccountRepository.ReadAccountByEmailAsync(request.Email);
+		
+		if (accountResponse is null)
+			return new AccountRequestResetPasswordResponseModel(false)
+				{Errors = new [] {"Invalid email address"}};
+		
+		if (accountResponse.Id != accountId)
+			throw new AccountNotFoundException($"Email address does not match your account");
+		
+		var tokenResponse = await _identityAuthenticationProvider.GeneratePasswordResetTokenAsync(accountResponse.Id);
+		
+		var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(tokenResponse.Token!));
+		var callBackUrl = $"{request.Scheme}://{request.Host}/account/reset-password?email={request.Email}&code={code}";
+		
+		await _mailingProvider.SendMailAsync(request.Email, "Neobyte CMS - Password reset",
+			$"You have requested a password reset for your account on the Neobyte CMS platform.\n" +
+			$"Click <a clicktracking=\"off\" href='{HtmlEncoder.Default.Encode(callBackUrl)}'>here</a> to reset your password.\n");
+		
+		return new AccountRequestResetPasswordResponseModel(true);
+	} 
 
 	public async Task<Account> GetAccountDetailsAsync (AccountId accountId) {
 		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId)
@@ -94,9 +115,19 @@ public class AccountManager {
 	}
 
 	public async Task<AccountResetPasswordResponseModel> ResetPasswordAsync (AccountResetPasswordRequestModel request) {
+		string decodedToken;
+		try {
+			var decodedTokenBytes = WebEncoders.Base64UrlDecode(request.Token);
+			decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+		} catch (FormatException) {
+			return new AccountResetPasswordResponseModel(false){Errors = new[] {"Invalid token"}};
+		} catch (ArgumentException) {
+			return new AccountResetPasswordResponseModel(false){Errors = new[] {"Invalid token"}};
+		}
+
 		var (valid, errors) =
-			await _identityAuthenticationProvider.ResetPasswordAsync(request.Email, request.Token, request.Password);
-		return new AccountResetPasswordResponseModel(valid, errors);
+			await _identityAuthenticationProvider.ResetPasswordAsync(request.Email, decodedToken, request.Password);
+		return new AccountResetPasswordResponseModel(valid){Errors = errors};
 	}
 
 	public async Task ChangeDetailsAsync (AccountChangeDetailsRequestModel request, AccountId accountId) {

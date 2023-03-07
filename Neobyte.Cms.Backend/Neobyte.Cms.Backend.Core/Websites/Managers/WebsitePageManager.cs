@@ -31,15 +31,15 @@ public class WebsitePageManager {
 	public async Task<WebsiteCreatePageResponseModel> CreateExistingPageAsync (WebsiteCreatePageRequestModel request) {
 		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(request.Id);
 		if (website is null)
-			return new WebsiteCreatePageResponseModel(false, new string[] { "Website not found" });
+			return new WebsiteCreatePageResponseModel(false, new [] { "Website not found" });
 		var connection = website.Connection;
 		if (connection is null)
-			return new WebsiteCreatePageResponseModel(false, new string[] { "Website has no connection" });
+			return new WebsiteCreatePageResponseModel(false, new [] { "Website has no connection" });
 
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		var filePath = _pathUtils.Combine(website.HomeFolder, request.Path);
 		if (!await connector.FileExistsAsync(filePath))
-			return new WebsiteCreatePageResponseModel(false, new string[] { $"File {request.Path} does not exist." });
+			return new WebsiteCreatePageResponseModel(false, new [] { $"File {request.Path} does not exist." });
 
 		var page = new Page(request.Name, request.Path) { Website = website };
 		await _writeOnlyPageRepository.CreatePageAsync(page);

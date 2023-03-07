@@ -74,7 +74,7 @@ public class AccountManagerTests {
 	public async Task GetAccountDetails_ShouldReturnAccountIfExists () {
 		// Arrange
 		var accountId = new AccountId();
-		var account = new Account("test@example.com", "testuser", "test bio", new string[] { "Admin" });
+		var account = new Account("test@example.com", "testuser", "test bio", new [] { "Admin" });
 		_readOnlyAccountRepository.Setup(x => x.ReadAccountByIdAsync(accountId)).ReturnsAsync(account);
 
 		// Act
@@ -98,7 +98,7 @@ public class AccountManagerTests {
 	public async Task GetIdentityAccountWithAccountByEmail_ShouldReturnAccountIfExists () {
 		// Arrange
 		var email = "test@example.com";
-		var account = new Account(email, "testuser", "test bio", new string[] { "Admin" });
+		var account = new Account(email, "testuser", "test bio", new [] { "Admin" });
 		_readOnlyAccountRepository.Setup(x => x.ReadAccountByEmailAsync(email)).ReturnsAsync(account);
 
 		// Act

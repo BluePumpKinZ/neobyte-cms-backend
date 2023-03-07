@@ -28,14 +28,14 @@ public class AccountListManagerTests {
 		var account = new Account(
 			"john.doe@example.com",
 			"johndoe",
-			"Hello, world!", new string[] { "Client" });
+			"Hello, world!", new [] { "Client" });
 		var request = new AccountChangeDetailsOwnerRequestModel {
 			AccountId = account.Id,
 			Email = "jane.doe@example.com",
 			Username = "janedoe",
 			Bio = "Hi, there!",
 			Enabled = false,
-			Roles = new string[] { "Client", "Owner" }
+			Roles = new [] { "Client", "Owner" }
 		};
 		_readOnlyAccountRepository.Setup(x => x.ReadAccountByIdAsync(account.Id))
 			.ReturnsAsync(account);

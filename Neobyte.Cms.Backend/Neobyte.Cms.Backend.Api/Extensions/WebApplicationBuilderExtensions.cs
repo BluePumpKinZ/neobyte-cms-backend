@@ -16,6 +16,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton<ApiEndpointLoader>();
 		builder.Services.AddSingleton<IApiEndpoints, AccountsMeEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, AccountsListEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, PublicAccountsMeEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, PublicRemoteHostingEndpoints>();

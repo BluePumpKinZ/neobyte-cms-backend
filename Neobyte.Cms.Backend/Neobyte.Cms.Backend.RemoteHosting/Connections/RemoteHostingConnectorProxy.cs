@@ -1,5 +1,6 @@
 ﻿using Neobyte.Cms.Backend.Core.RemoteHosting;
 using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
+using Neobyte.Cms.Backend.Utils;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -9,10 +10,12 @@ public class RemoteHostingConnectorProxy : IRemoteHostingConnector {
 
 	private readonly ActivitySource _activitySource;
 	private readonly IRemoteHostingConnector _connector;
+	private readonly AsyncUtils _asyncUtils;
 
 	public RemoteHostingConnectorProxy (ActivitySource activitySource, IRemoteHostingConnector connector) {
 		_activitySource = activitySource;
 		_connector = connector;
+		_asyncUtils = new AsyncUtils();
 	}
 
 	private Activity? GetActivity ([CallerMemberName] string name = "") {
@@ -35,63 +38,63 @@ public class RemoteHostingConnectorProxy : IRemoteHostingConnector {
 
 	public async Task<bool> ValidateAsync () {
 		using var activity = GetActivity();
-		return await _connector.ValidateAsync();
+		return await _asyncUtils.LockAsync(_connector.ValidateAsync);
 	}
 
 	public async Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path) {
 		using var activity = GetActivity();
-		return await _connector.ListItemsAsync(path);
+		return await _asyncUtils.LockAsync(() => _connector.ListItemsAsync(path));
 	}
 
 	public async Task CreateFolderAsync (string path) {
 		using var activity = GetActivity();
-		await _connector.CreateFolderAsync(path);
+		await _asyncUtils.LockAsync(() => _connector.CreateFolderAsync(path));
 	}
 
 	public async Task RenameFolderAsync (string path, string newPath) {
 		using var activity = GetActivity();
-		await _connector.RenameFolderAsync(path, newPath);
+		await _asyncUtils.LockAsync(() => _connector.RenameFolderAsync(path, newPath));
 	}
 
 	public async Task DeleteFolderAsync (string path) {
 		using var activity = GetActivity();
-		await _connector.DeleteFolderAsync(path);
+		await _asyncUtils.LockAsync(() => _connector.DeleteFolderAsync(path));
 	}
 
 	public async Task CreateFileAsync (string path, byte[] content) {
 		using var activity = GetActivity();
-		await _connector.CreateFileAsync(path, content);
+		await _asyncUtils.LockAsync(() => _connector.CreateFileAsync(path, content));
 	}
 
 	public async Task RenameFileAsync (string path, string newPath) {
 		using var activity = GetActivity();
-		await _connector.RenameFileAsync(path, newPath);
+		await _asyncUtils.LockAsync(() => _connector.RenameFileAsync(path, newPath));
 	}
 
 	public async Task DeleteFileAsync (string path) {
 		using var activity = GetActivity();
-		await _connector.DeleteFileAsync(path);
+		await _asyncUtils.LockAsync(() => _connector.DeleteFileAsync(path));
 	}
 
 	public async Task<byte[]> GetFileContentAsync (string path) {
 		using var activity = GetActivity();
-		var result = await _connector.GetFileContentAsync(path);
+		var result = await _asyncUtils.LockAsync(() => _connector.GetFileContentAsync(path));
 		return result;
 	}
 
 	public async Task<bool> FolderExistsAsync (string path) {
 		using var activity = GetActivity();
-		return await _connector.FolderExistsAsync(path);
+		return await _asyncUtils.LockAsync(() => _connector.FolderExistsAsync(path));
 	}
 
 	public async Task<bool> FileExistsAsync (string path) {
 		using var activity = GetActivity();
-		return await _connector.FileExistsAsync(path);
+		return await _asyncUtils.LockAsync(() => _connector.FileExistsAsync(path));
 	}
 
 	public async Task<FilesystemEntry> GetFilesystemEntryInfo (string path) {
 		using var activity = GetActivity();
-		return await _connector.GetFilesystemEntryInfo(path);
+		return await _asyncUtils.LockAsync(() => _connector.GetFilesystemEntryInfo(path));
 	}
 
 	public void Disconnect () {

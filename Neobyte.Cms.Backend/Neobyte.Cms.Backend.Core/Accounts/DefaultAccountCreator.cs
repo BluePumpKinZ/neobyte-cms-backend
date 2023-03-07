@@ -42,7 +42,7 @@ internal class DefaultAccountCreator {
 			return;
 		}
 
-		response.Errors!.ForEach(e => _logger.LogError("Error creating default user: {error}", e));
+		response.Errors!.ForEach(e => _logger.LogError("Error creating default user: {Error}", e));
 	}
 
 }

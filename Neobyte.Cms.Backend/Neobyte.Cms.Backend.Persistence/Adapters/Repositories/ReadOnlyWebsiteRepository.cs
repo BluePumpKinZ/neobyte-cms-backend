@@ -47,7 +47,7 @@ internal class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 			return new SftpHostingConnection(new SftpHostingConnectionId(sftpHostingEntity.Id.Value),
 				sftpHostingEntity.Host, sftpHostingEntity.Username, sftpHostingEntity.Password, sftpHostingEntity.Port);
 		default:
-			_logger.LogWarning("Website connectionentity for website {websiteId} could no be found", websiteId);
+			_logger.LogWarning("Website connectionentity for website {WebsiteId} could no be found", websiteId);
 			return null;
 		}
 	}
