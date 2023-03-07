@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Neobyte.Cms.Backend.Core.Ports.Monitoring;
+using Neobyte.Cms.Backend.Monitoring.Adapters;
 using Neobyte.Cms.Backend.Monitoring.Configuration;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -54,7 +56,11 @@ public static class WebApplicationBuilderExtensions {
 					opt.RecordException = true;
 					opt.Filter = httpContext => {
 						var path = httpContext.Request.Path.Value!;
-						return !path.StartsWith("/api/v1/tracing");
+						if (path.StartsWith("/api/v1/tracing"))
+							return false;
+						if (path.StartsWith("/api/v1/metrics"))
+							return false;
+						return true;
 					};
 				})
 				.AddHttpClientInstrumentation(opt => {
@@ -66,6 +72,9 @@ public static class WebApplicationBuilderExtensions {
 			);
 
 		builder.Services.AddSingleton(new ActivitySource(monitoringOptions.ServiceName));
+
+		// Add metrics
+		builder.Services.AddSingleton<IMetricsStore, MetricsStore>();
 
 		return builder;
 	}

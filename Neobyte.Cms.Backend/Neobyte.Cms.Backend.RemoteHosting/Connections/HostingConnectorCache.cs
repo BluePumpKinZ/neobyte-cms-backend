@@ -1,4 +1,5 @@
 ﻿using MoreCSharp.Extensions.System.Collections.Generic;
+using Neobyte.Cms.Backend.Core.Ports.Monitoring;
 using Neobyte.Cms.Backend.Core.RemoteHosting;
 using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
 using System.Diagnostics.CodeAnalysis;
@@ -8,9 +9,17 @@ namespace Neobyte.Cms.Backend.RemoteHosting.Connections;
 internal class HostingConnectorCache : IDisposable {
 
 	private readonly HashSet<HostingConnectorCacheEntry> _cache = new();
+	private readonly IMetricsStore _metrics;
+
+	public HostingConnectorCache (IMetricsStore metrics) {
+		_metrics = metrics;
+	}
 
 	public bool AddConnector (HostingConnection connection, IRemoteHostingConnector connector) {
-		return _cache.Add(new HostingConnectorCacheEntry(connection, connector));
+		bool succes = _cache.Add(new HostingConnectorCacheEntry(connection, connector));
+		if (succes)
+			_metrics.ActiveRemoteHostingConnections.Inc();
+		return succes;
 	}
 
 	public bool TryGetConnector (HostingConnection connection, [MaybeNullWhen(false)] out IRemoteHostingConnector connector) {
@@ -32,6 +41,8 @@ internal class HostingConnectorCache : IDisposable {
 
 		bool success = _cache.Remove(new HostingConnectorCacheEntry(connection, null));
 		connector.Disconnect();
+		if (success)
+			_metrics.ActiveRemoteHostingConnections.Dec();
 		return success;
 	}
 
