@@ -46,6 +46,7 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddOpenTelemetry()
 			.WithTracing(config => config
+				.SetSampler(new TraceIdRatioBasedSampler(0.05))
 				.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(monitoringOptions.ServiceName))
 				.AddSqlClientInstrumentation(opt => {
 					opt.SetDbStatementForText = true;
