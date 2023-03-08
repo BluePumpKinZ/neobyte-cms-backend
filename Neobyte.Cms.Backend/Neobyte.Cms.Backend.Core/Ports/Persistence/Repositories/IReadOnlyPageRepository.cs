@@ -6,6 +6,8 @@ public interface IReadOnlyPageRepository {
 
 	public Task<Page?> ReadPageByIdAsync (PageId pageId);
 
+	public Task<Page?> ReadPageWithWebsiteByIdAsync (PageId pageId);
+
 	public Task<IEnumerable<Page>> ReadPagesByWebsiteIdAsync (WebsiteId websiteId);
 
 }

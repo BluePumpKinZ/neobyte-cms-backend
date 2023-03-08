@@ -23,10 +23,21 @@ internal class WriteOnlyPageRepository : IWriteOnlyPageRepository {
 		return page;
 	}
 
+	public async Task<Page> UpdatePageAsync (Page page) {
+		var pageEntity = await _ctx.PageEntities.SingleAsync(p => p.Id == page.Id);
+		pageEntity.Name = page.Name;
+		pageEntity.Path = page.Path;
+		pageEntity.Modified = page.Modified;
+		await _ctx.SaveChangesAsync();
+		return page;
+	}
+
 	public async Task DeletePageAsync (Page page) {
 		var pageEntity = await _ctx.PageEntities.SingleAsync(p => p.Id == page.Id);
 		_ctx.PageEntities.Remove(pageEntity);
 		await _ctx.SaveChangesAsync();
 	}
+
+	
 
 }
