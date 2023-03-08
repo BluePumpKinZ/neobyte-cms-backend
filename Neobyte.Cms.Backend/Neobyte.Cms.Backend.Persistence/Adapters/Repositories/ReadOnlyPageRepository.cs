@@ -17,6 +17,18 @@ internal class ReadOnlyPageRepository : IReadOnlyPageRepository {
 		return entity?.ToDomain();
 	}
 
+	public async Task<Page?> ReadPageWithWebsiteByIdAsync (PageId pageId) {
+		var entity = await _ctx.PageEntities
+			.Include(x => x.Website)
+			.SingleOrDefaultAsync(x => x.Id == pageId);
+		var page = entity?.ToDomain();
+		if (page is null)
+			return null;
+
+		page.Website = entity!.Website!.ToDomain();
+		return page;
+	}
+
 	public async Task<IEnumerable<Page>> ReadPagesByWebsiteIdAsync (WebsiteId websiteId) {
 		return await _ctx.PageEntities
 			.Where(p => p.Website!.Id == websiteId)
