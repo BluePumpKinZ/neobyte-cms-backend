@@ -18,11 +18,15 @@ public static class WebApplicationExtensions {
 			app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Neobyte Cms Backend API"));
 		}
 
+		// cors
 		app.UseCors(opt => {
 			opt.AllowAnyOrigin();
 			opt.AllowAnyMethod();
 			opt.AllowAnyHeader();
 		});
+
+		// ping endpoint
+		app.MapGet("/api/v1/status/ping", () => "pong");
 
 		return app;
 	}
