@@ -18,7 +18,7 @@ internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 	public async Task<Website> CreateWebsiteAsync (Website website) {
 
 		var hostingConnection = CreateHostingConnectionEntity(website);
-		var entity = new WebsiteEntity(website.Id, website.Name, website.Domain, website.HomeFolder, website.UploadFolder, website.CreatedDate) { Connection = hostingConnection };
+		var entity = new WebsiteEntity(website.Id, website.Name, website.Domain, website.HomeFolder, website.UploadFolder, website.Thumbnail, website.CreatedDate) { Connection = hostingConnection };
 		var addedEntity = await _ctx.WebsiteEntities.AddAsync(entity);
 		await _ctx.SaveChangesAsync();
 		website.Id = addedEntity.Entity.Id;
