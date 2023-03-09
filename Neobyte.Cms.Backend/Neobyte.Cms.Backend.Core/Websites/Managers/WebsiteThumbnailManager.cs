@@ -28,10 +28,6 @@ public class WebsiteThumbnailManager {
 	}
 
 	private async Task<string> GeneratePageThumbnailAsync (Website website, Page page) {
-		/*var connector = _remoteHostingProvider.GetConnector(website.Connection!);
-		var filePath = _pathUtils.Combine(website.HomeFolder, page.Path);
-		var sourceBytes = await connector.GetFileContentAsync(filePath);
-		var source = Encoding.UTF8.GetString(sourceBytes);*/
 
 		var bytes = await _browserManager.ExecuteOnBrowserAsync(async b => {
 
@@ -43,7 +39,6 @@ public class WebsiteThumbnailManager {
 			});
 			await browserPage.GoToAsync($"http://localhost:5110/api/v1/websites/{website.Id}/pages/{page.Id}/display");
 			await navigationtask;
-			// await Task.Delay(5000);
 			var screenshot = await browserPage.ScreenshotDataAsync();
 
 			return screenshot;

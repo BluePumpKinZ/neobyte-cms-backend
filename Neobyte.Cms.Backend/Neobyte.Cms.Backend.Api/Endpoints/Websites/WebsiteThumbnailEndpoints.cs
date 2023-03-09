@@ -16,7 +16,7 @@ public class WebsiteThumbnailEndpoints : IApiEndpoints {
 			[FromRoute] Guid websiteId,
 			[FromServices] WebsitePageManager manager,
 			[FromRoute] Guid pageId) => {
-				string response = await manager.GetPageSourceAsync(new WebsiteId(websiteId), new PageId(pageId));
+				string response = await manager.DisplayPageAsync(new WebsiteId(websiteId), new PageId(pageId));
 				return Results.Extensions.Html(response);
 			});
 
