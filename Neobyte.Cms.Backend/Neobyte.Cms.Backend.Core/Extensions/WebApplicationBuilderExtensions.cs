@@ -29,11 +29,14 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddScoped<UploadRemoteHostingManager>();
 
 		builder.Services.AddSingleton<HtmlTransformer>();
+		builder.Services.AddScoped<WebsiteAccountManager>();
+		builder.Services.AddScoped<WebsiteFileManager>();
 		builder.Services.AddScoped<WebsiteManager>();
 		builder.Services.AddScoped<WebsitePageManager>();
 		builder.Services.AddScoped<WebsiteSnippetManager>();
-		builder.Services.AddScoped<WebsiteFileManager>();
-		builder.Services.AddScoped<WebsiteAccountManager>();
+		builder.Services.AddScoped<WebsiteThumbnailManager>();
+
+		builder.Services.AddSingleton<BrowserManager>();
 
 		return builder;
 	}

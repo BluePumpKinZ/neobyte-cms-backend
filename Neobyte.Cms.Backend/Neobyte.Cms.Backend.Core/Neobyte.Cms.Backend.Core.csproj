@@ -19,9 +19,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.26.1" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.27.0" />
 		<PackageReference Include="MoreCSharp.Extensions.System.Collections.Generic" Version="1.2.0" />
 		<PackageReference Include="prometheus-net" Version="8.0.0" />
+		<PackageReference Include="PuppeteerSharp" Version="9.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
