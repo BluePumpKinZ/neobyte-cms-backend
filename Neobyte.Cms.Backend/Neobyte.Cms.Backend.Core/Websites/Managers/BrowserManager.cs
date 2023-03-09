@@ -1,4 +1,5 @@
-﻿using Neobyte.Cms.Backend.Utils;
+﻿using Microsoft.Extensions.Logging;
+using Neobyte.Cms.Backend.Utils;
 using PuppeteerSharp;
 using System;
 
@@ -8,8 +9,14 @@ public class BrowserManager {
 
 	private readonly AsyncUtils _asyncUtils = new();
 	private IBrowser? _browser;
+	private readonly ILogger<BrowserManager> _logger;
+
+	public BrowserManager (ILogger<BrowserManager> logger) {
+		_logger = logger;
+	}
 
 	private async Task<IBrowser> GetBrowserInstanceAsync () {
+		_logger.LogInformation("Getting browser instance");
 		using var fetcher = new BrowserFetcher();
 		_ = await fetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
 		_browser ??= await CreateBrowserAsync();
@@ -18,7 +25,7 @@ public class BrowserManager {
 
 	private static async Task<IBrowser> CreateBrowserAsync () {
 		return await Puppeteer.LaunchAsync(new LaunchOptions {
-			// Headless = true,
+			Headless = true,
 			DefaultViewport = new ViewPortOptions {
 				Width = 1920, Height = 1080,
 			}
@@ -34,6 +41,7 @@ public class BrowserManager {
 	}
 
 	public async Task ExecuteOnBrowserAsync (Func<IBrowser, Task> function) {
+
 		await _asyncUtils.LockAsync(async () => {
 			var browser = await GetBrowserInstanceAsync();
 			await function.Invoke(browser);
