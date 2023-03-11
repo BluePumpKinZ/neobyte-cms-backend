@@ -4,5 +4,6 @@ public class CoreOptions {
 
 	public const string Section = "Core";
 	public DefaultAccountOptions DefaultAccount { get; set; } = new DefaultAccountOptions();
+	public PuppeteerOptions Puppeteer { get; set; } = new PuppeteerOptions();
 
 }

@@ -1,4 +1,6 @@
-﻿using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
+﻿using Microsoft.Extensions.Options;
+using Neobyte.Cms.Backend.Core.Configuration;
+using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Core.Ports.RemoteHosting;
 using Neobyte.Cms.Backend.Domain.Websites;
@@ -17,14 +19,16 @@ public class WebsiteThumbnailManager {
 	private readonly PathUtils _pathUtils;
 	private readonly BrowserManager _browserManager;
 	private readonly IWriteOnlyWebsiteRepository _writeOnlyWebsiteRepository;
+	private readonly PuppeteerOptions _puppeteerOptions;
 
-	public WebsiteThumbnailManager (IReadOnlyWebsiteRepository readOnlyWebsiteRepository, IReadOnlyPageRepository readOnlyPageRepository, IRemoteHostingProvider remoteHostingProvider, PathUtils pathUtils, BrowserManager browserManager, IWriteOnlyWebsiteRepository writeOnlyWebsiteRepository) {
+	public WebsiteThumbnailManager (IReadOnlyWebsiteRepository readOnlyWebsiteRepository, IReadOnlyPageRepository readOnlyPageRepository, IRemoteHostingProvider remoteHostingProvider, PathUtils pathUtils, BrowserManager browserManager, IWriteOnlyWebsiteRepository writeOnlyWebsiteRepository, IOptions<CoreOptions> options) {
 		_readOnlyWebsiteRepository = readOnlyWebsiteRepository;
 		_readOnlyPageRepository = readOnlyPageRepository;
 		_remoteHostingProvider = remoteHostingProvider;
 		_pathUtils = pathUtils;
 		_browserManager = browserManager;
 		_writeOnlyWebsiteRepository = writeOnlyWebsiteRepository;
+		_puppeteerOptions = options.Value.Puppeteer;
 	}
 
 	private async Task<string> GeneratePageThumbnailAsync (Website website, Page page) {
@@ -33,11 +37,9 @@ public class WebsiteThumbnailManager {
 
 			await using var browserPage = await b.NewPageAsync();
 			var navigationtask = browserPage.WaitForNavigationAsync(new NavigationOptions {
-				WaitUntil = new WaitUntilNavigation[] {
-					WaitUntilNavigation.Networkidle2
-				},
+				WaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.Networkidle0 }
 			});
-			await browserPage.GoToAsync($"http://localhost:5110/api/v1/websites/{website.Id}/pages/{page.Id}/display");
+			await browserPage.GoToAsync($"{_puppeteerOptions.GetApiHost()}api/v1/websites/{website.Id}/pages/{page.Id}/display");
 			await navigationtask;
 			var screenshot = await browserPage.ScreenshotDataAsync();
 
