@@ -18,7 +18,7 @@ internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 	public async Task<Website> CreateWebsiteAsync (Website website) {
 
 		var hostingConnection = CreateHostingConnectionEntity(website);
-		var entity = new WebsiteEntity(website.Id, website.Name, website.Domain, website.HomeFolder, website.UploadFolder, website.CreatedDate) { Connection = hostingConnection };
+		var entity = new WebsiteEntity(website.Id, website.Name, website.Domain, website.HomeFolder, website.UploadFolder, website.Thumbnail, website.CreatedDate) { Connection = hostingConnection };
 		var addedEntity = await _ctx.WebsiteEntities.AddAsync(entity);
 		await _ctx.SaveChangesAsync();
 		website.Id = addedEntity.Entity.Id;
@@ -31,8 +31,8 @@ internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 		case var value when value == typeof(FtpHostingConnection):
 			var ftpHostingConnection = website.Connection as FtpHostingConnection;
 			hostingConnection = new FtpHostingConnectionEntity(
-				new HostingConnectionId(ftpHostingConnection!.Id.Value),
-				ftpHostingConnection.Host,
+				HostingConnectionId.New(),
+				ftpHostingConnection!.Host,
 				ftpHostingConnection.Username,
 				ftpHostingConnection.Password,
 				ftpHostingConnection.Port);
@@ -40,8 +40,8 @@ internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 		case var value when value == typeof(SftpHostingConnection):
 			var sftpHostingConnection = website.Connection as SftpHostingConnection;
 			hostingConnection = new SftpHostingConnectionEntity(
-				new HostingConnectionId(sftpHostingConnection!.Id.Value),
-				sftpHostingConnection.Host,
+				HostingConnectionId.New(),
+				sftpHostingConnection!.Host,
 				sftpHostingConnection.Username,
 				sftpHostingConnection.Password,
 				sftpHostingConnection.Port);
@@ -59,12 +59,15 @@ internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 		if (existingConnection is not null)
 			_ctx.HostingConnectionEntities.Remove(existingConnection);
 
-		HostingConnectionEntity? hostingConnectionEntity = CreateHostingConnectionEntity(website);
+		var hostingConnectionEntity = CreateHostingConnectionEntity(website);
+		if (hostingConnectionEntity is not null)
+			hostingConnectionEntity = (await _ctx.HostingConnectionEntities.AddAsync(hostingConnectionEntity)).Entity;
 		var entity = await _ctx.WebsiteEntities.SingleAsync(w => w.Id == website.Id);
 		entity.Name = website.Name;
 		entity.Domain = website.Domain;
 		entity.HomeFolder = website.HomeFolder;
 		entity.UploadFolder = website.UploadFolder;
+		entity.Thumbnail = website.Thumbnail;
 		entity.Connection = hostingConnectionEntity;
 		_ctx.WebsiteEntities.Update(entity);
 		await _ctx.SaveChangesAsync();

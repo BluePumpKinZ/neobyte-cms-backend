@@ -104,10 +104,16 @@ public class WebsitePageManager {
 		await _writeOnlyPageRepository.DeletePageAsync(page);
 	}
 
+	public async Task<string> DisplayPageAsync (WebsiteId websiteId, PageId pageId) {
+		var htmlContent = await GetPageSourceAsync(websiteId, pageId);
+		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
+		return _transformer.ConstructRenderedWebpage(website!, htmlContent, TransformMode.Display);
+	}
+
 	public async Task<string> RenderPageAsync (WebsiteId websiteId, PageId pageId) {
 		var htmlContent = await GetPageSourceAsync(websiteId, pageId);
 		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
-		return _transformer.ConstructRenderedWebpage(website!.Domain, htmlContent);
+		return _transformer.ConstructRenderedWebpage(website!, htmlContent, TransformMode.Render);
 	}
 
 	public async Task<string> GetPageSourceAsync (WebsiteId websiteId, PageId pageId) {
@@ -144,7 +150,7 @@ public class WebsitePageManager {
 		var connection = website!.Connection
 			?? throw new WebsiteConnectionNotFoundException($"Website {request.WebsiteId} has no connection");
 
-		var htmlContent = _transformer.DeconstructRenderedWebPage(request.Source);
+		var htmlContent = _transformer.DeconstructRenderedWebPage(request.Source, TransformMode.Render);
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		var filePath = _pathUtils.Combine(website.HomeFolder, page.Path);
 		await connector.CreateFileAsync(filePath, Encoding.UTF8.GetBytes(htmlContent));

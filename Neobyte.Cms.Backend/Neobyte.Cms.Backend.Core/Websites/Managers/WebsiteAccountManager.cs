@@ -63,9 +63,8 @@ public class WebsiteAccountManager {
 	}
 
 	public async Task<IEnumerable<Account>> GetUnassignedAccountsByWebsiteIdAsync (WebsiteId websiteId) {
-		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId);
-		if (website is null)
-			throw new WebsiteNotFoundException($"Website {websiteId} not found");
+		_ = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(websiteId)
+			?? throw new WebsiteNotFoundException($"Website {websiteId} not found");
 		
 		return await _readOnlyWebsiteAccountRepository.ReadUnassignedAccountsByWebsiteIdAsync(websiteId);
 	}
