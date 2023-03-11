@@ -24,7 +24,9 @@ internal class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 		if (entity is null) return null;
 
 		HostingConnection? connection = await ReadWebsiteConnectionByWebsiteIdAsync(websiteId);
-		return new Website(entity.Id, entity.Name, entity.Domain, entity.HomeFolder, entity.UploadFolder, entity.CreatedDate) { Connection = connection };
+		var website = entity.ToDomain();
+		website.Connection = connection;
+		return website;
 	}
 
 	public async Task<IEnumerable<Website>> ReadAllWebsitesAsync () {
@@ -34,8 +36,8 @@ internal class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 	}
 
 	private async Task<HostingConnection?> ReadWebsiteConnectionByWebsiteIdAsync (WebsiteId websiteId) {
-		var entity = await _ctx.WebsiteEntities.Where(w => w.Id == websiteId)
-			.Include(w => w.Connection)
+		var entity = await _ctx.WebsiteEntities
+			.Where(w => w.Id == websiteId)
 			.Select(w => w.Connection).SingleOrDefaultAsync();
 		
 		switch (entity) {

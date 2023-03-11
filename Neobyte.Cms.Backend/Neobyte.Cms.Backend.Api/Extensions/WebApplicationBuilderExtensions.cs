@@ -20,11 +20,12 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton<IApiEndpoints, IdentityAuthenticationEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, PublicRemoteHostingEndpoints>();
-		builder.Services.AddSingleton<IApiEndpoints, WebsitePageEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteHomeRemoteHostingEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsitePageEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteUploadRemoteHostingEndpoints>();
-		builder.Services.AddSingleton<IApiEndpoints, WebsiteSnippetEndpoints>();
 		builder.Services.AddSingleton<IApiEndpoints, WebsiteUserEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsiteThumbnailEndpoints>();
+		builder.Services.AddSingleton<IApiEndpoints, WebsiteSnippetEndpoints>();
 
 		// projections
 		builder.Services.AddSingleton<ProjectionMapperFactory>();

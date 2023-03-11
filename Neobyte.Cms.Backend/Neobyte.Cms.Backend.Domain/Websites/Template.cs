@@ -15,7 +15,7 @@ public class Template : Website {
 	public Template (string name, string title, string description, string domain, string homeFolder, string uploadFolder)
 		: this(TemplateId.New(), name, title, description, domain, homeFolder, uploadFolder, DateTime.UtcNow) { }
 
-	public Template (TemplateId id, string name, string title, string description, string domain, string homeFolder, string uploadFolder, DateTime createdDate) : base(new WebsiteId(id.Value), name, domain, homeFolder, uploadFolder, createdDate) {
+	public Template (TemplateId id, string name, string title, string description, string domain, string homeFolder, string uploadFolder, DateTime createdDate) : base(new WebsiteId(id.Value), name, domain, homeFolder, uploadFolder, null, createdDate) {
 		Title = title;
 		Description = description;
 	}
