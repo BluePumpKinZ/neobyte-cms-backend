@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Neobyte.Cms.Backend.Monitoring.Configuration;
 using Prometheus;
+using Serilog;
 using System.Threading.Tasks;
 using Yarp.ReverseProxy.Configuration;
 
@@ -14,6 +15,10 @@ public static class WebApplicationExtensions {
 
 		var options = app.Services.GetRequiredService<IOptions<MonitoringOptions>>().Value;
 
+		// Logging
+		app.UseSerilogRequestLogging();
+
+		// Tracing
 		app.UseRouting();
 
 		app.Map("/", context => {
@@ -24,6 +29,7 @@ public static class WebApplicationExtensions {
 
 		app.MapReverseProxy();
 
+		// Metrics
 		if (app.Environment.EnvironmentName == "Testing")
 			return app;
 
