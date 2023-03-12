@@ -17,14 +17,20 @@ namespace Neobyte.Cms.Backend.Monitoring.Extensions;
 
 public static class WebApplicationBuilderExtensions {
 	public static WebApplicationBuilder AddMonitoring (this WebApplicationBuilder builder) {
+
+		builder.Services.Configure<MonitoringOptions>(builder.Configuration.GetSection(MonitoringOptions.SectionName));
+		var options = new MonitoringOptions();
+		builder.Configuration.GetSection(MonitoringOptions.SectionName).Bind(options);
+
 		// Add logging
 		var logLevel = builder.Configuration.GetValue<LogEventLevel>("Logging:LogLevel:Default");
 		var logLevels = builder.Configuration.GetSection("Logging:LogLevel").GetChildren();
 
 		var loggerConfiguration = new LoggerConfiguration()
 			.Enrich.FromLogContext()
+			.Enrich.WithCorrelationId()
 			.MinimumLevel.ControlledBy(new LoggingLevelSwitch(logLevel))
-			.WriteTo.Console();
+			.WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {CorrelationId} {Level:u3}] {Message:lj}{NewLine}{Exception}");
 
 		foreach (var level in logLevels) {
 			loggerConfiguration.MinimumLevel.Override(level.Key, Enum.Parse<LogEventLevel>(level.Value!));
@@ -33,21 +39,17 @@ public static class WebApplicationBuilderExtensions {
 		var logger = loggerConfiguration.CreateLogger();
 
 		builder.Logging.ClearProviders();
-		builder.Logging.AddSerilog(logger);
+		builder.Host.UseSerilog(logger);
 
-		// Add monitoring
-		builder.Services.Configure<MonitoringOptions>(builder.Configuration.GetSection(MonitoringOptions.SectionName));
-		var monitoringOptions = new MonitoringOptions();
-		builder.Configuration.GetSection(MonitoringOptions.SectionName).Bind(monitoringOptions);
-
+		// Add Tracing
 		builder.Services.AddRouting();
 		builder.Services.AddReverseProxy()
-			.LoadFromMemory(monitoringOptions.GetRoutes(), monitoringOptions.GetClusters());
+			.LoadFromMemory(options.GetRoutes(), options.GetClusters());
 
 		builder.Services.AddOpenTelemetry()
 			.WithTracing(config => config
-				.SetSampler(new TraceIdRatioBasedSampler(monitoringOptions.Propability))
-				.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(monitoringOptions.ServiceName))
+				.SetSampler(new TraceIdRatioBasedSampler(options.Propability))
+				.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(options.ServiceName))
 				.AddSqlClientInstrumentation(opt => {
 					opt.SetDbStatementForText = true;
 					opt.RecordException = true;
@@ -68,11 +70,11 @@ public static class WebApplicationBuilderExtensions {
 					opt.RecordException = true;
 				})
 				.AddOtlpExporter(otlpOptions => {
-					otlpOptions.Endpoint = new Uri($"http://{monitoringOptions.JaegerHost}:{monitoringOptions.JaegerPort}");
+					otlpOptions.Endpoint = new Uri($"http://{options.JaegerHost}:{options.JaegerPort}");
 				})
 			);
 
-		builder.Services.AddSingleton(new ActivitySource(monitoringOptions.ServiceName));
+		builder.Services.AddSingleton(new ActivitySource(options.ServiceName));
 
 		// Add metrics
 		builder.Services.AddSingleton<IMetricsStore, MetricsStore>();
