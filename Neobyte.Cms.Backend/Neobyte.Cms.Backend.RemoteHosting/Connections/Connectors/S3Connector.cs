@@ -1,14 +1,14 @@
 ﻿using Amazon.S3;
+using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Amazon.S3.Util;
 using Neobyte.Cms.Backend.Core.RemoteHosting;
 using Neobyte.Cms.Backend.Domain.Websites.HostingConnections;
 using Neobyte.Cms.Backend.Utils;
 
-namespace Neobyte.Cms.Backend.RemoteHosting.Connections.Connectors; 
+namespace Neobyte.Cms.Backend.RemoteHosting.Connections.Connectors;
 
 public class S3Connector : IRemoteHostingConnector {
-	
 	private AmazonS3Client? _client;
 	private TransferUtility? _transferUtility;
 	private readonly S3ConnectorOptions _options = new();
@@ -19,31 +19,32 @@ public class S3Connector : IRemoteHostingConnector {
 	public S3Connector (PathUtils pathUtils) {
 		_pathUtils = pathUtils;
 	}
-	
+
 	private AmazonS3Client Client {
 		get {
 			_client ??= GetClient().Result;
 			return _client;
 		}
 	}
-	
+
 	private TransferUtility TransferUtility {
 		get {
 			_transferUtility ??= GetTransferUtility().Result;
 			return _transferUtility;
 		}
 	}
-	
+
 	private Task<AmazonS3Client> GetClient () {
-		var client = new AmazonS3Client(_options.AccessKey, _options.SecretKey, Amazon.RegionEndpoint.GetBySystemName(_options.Region));
+		var client = new AmazonS3Client(_options.AccessKey, _options.SecretKey,
+			Amazon.RegionEndpoint.GetBySystemName(_options.Region));
 		return Task.FromResult(client);
 	}
-	
+
 	private Task<TransferUtility> GetTransferUtility () {
 		var transferUtility = new TransferUtility(Client);
 		return Task.FromResult(transferUtility);
 	}
-	
+
 	public bool CanConnect (HostingConnection connection) {
 		return connection is S3HostingConnection;
 	}
@@ -65,51 +66,109 @@ public class S3Connector : IRemoteHostingConnector {
 		}
 	}
 
-	public Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path) {
-		throw new NotImplementedException();
+	public async Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path) {
+		var items = await Client.ListObjectsAsync(new ListObjectsRequest {
+			BucketName = _options.BucketName,
+			Prefix = path
+		});
+		return items.S3Objects.Select(i => {
+			var meta = Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
+				BucketName = _options.BucketName,
+				Key = i.Key
+			}).Result;
+			return new FilesystemEntry(i.Key, meta.Headers.ContentLength, i.LastModified);
+		});
+		
 	}
 
-	public Task CreateFolderAsync (string path) {
-		throw new NotImplementedException();
+	public async Task CreateFolderAsync (string path) {
+		await Client.PutObjectAsync(new PutObjectRequest {
+			BucketName = _options.BucketName,
+			Key = path,
+			ContentBody = string.Empty
+		});
 	}
 
-	public Task RenameFolderAsync (string path, string newPath) {
-		throw new NotImplementedException();
+	public async Task RenameFolderAsync (string path, string newPath) {
+		await Client.CopyObjectAsync(new CopyObjectRequest {
+			SourceBucket = _options.BucketName,
+			SourceKey = path,
+			DestinationBucket = _options.BucketName,
+			DestinationKey = newPath
+		});
+		await Client.DeleteObjectAsync(new DeleteObjectRequest {
+			BucketName = _options.BucketName,
+			Key = path
+		});
 	}
 
-	public Task DeleteFolderAsync (string path) {
-		throw new NotImplementedException();
+	public async Task DeleteFolderAsync (string path) {
+		await Client.DeleteObjectAsync(new DeleteObjectRequest {
+			BucketName = _options.BucketName,
+			Key = path
+		});
 	}
 
-	public Task CreateFileAsync (string path, byte[] content) {
-		throw new NotImplementedException();
+	public async Task CreateFileAsync (string path, byte[] content) {
+		await TransferUtility.UploadAsync(new MemoryStream(content), _options.BucketName, path);
 	}
 
-	public Task RenameFileAsync (string path, string newPath) {
-		throw new NotImplementedException();
+	public async Task RenameFileAsync (string path, string newPath) {
+		await Client.CopyObjectAsync(new CopyObjectRequest {
+			SourceBucket = _options.BucketName,
+			SourceKey = path,
+			DestinationBucket = _options.BucketName,
+			DestinationKey = newPath
+		});
+		await Client.DeleteObjectAsync(new DeleteObjectRequest {
+			BucketName = _options.BucketName,
+			Key = path
+		});
 	}
 
-	public Task DeleteFileAsync (string path) {
-		throw new NotImplementedException();
+	public async Task DeleteFileAsync (string path) {
+		await Client.DeleteObjectAsync(new DeleteObjectRequest {
+			BucketName = _options.BucketName,
+			Key = path
+		});
 	}
 
-	public Task<byte[]> GetFileContentAsync (string path) {
-		throw new NotImplementedException();
+	public async Task<byte[]> GetFileContentAsync (string path) {
+		var response = await Client.GetObjectAsync(new GetObjectRequest {
+			BucketName = _options.BucketName,
+			Key = path
+		});
+		using var responseStream = response.ResponseStream;
+		using var memoryStream = new MemoryStream();
+		await responseStream.CopyToAsync(memoryStream);
+		return memoryStream.ToArray();
 	}
 
-	public Task<bool> FolderExistsAsync (string path) {
-		throw new NotImplementedException();
+	public async Task<bool> FolderExistsAsync (string path) {
+		var response = await Client.ListObjectsAsync(new ListObjectsRequest {
+			BucketName = _options.BucketName,
+			Prefix = path
+		});
+		return response.S3Objects.Any();
 	}
 
-	public Task<bool> FileExistsAsync (string path) {
-		throw new NotImplementedException();
+	public async Task<bool> FileExistsAsync (string path) {
+		return await FolderExistsAsync(path);
 	}
 
-	public Task<FilesystemEntry> GetFilesystemEntryInfo (string path) {
-		throw new NotImplementedException();
+	public async Task<FilesystemEntry> GetFilesystemEntryInfo (string path) {
+		var meta = await Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
+			BucketName = _options.BucketName,
+			Key = path
+		});
+		var info = await Client.GetObjectAsync(new GetObjectRequest {
+			BucketName = _options.BucketName,
+			Key = path
+		});
+		return new FilesystemEntry(info.Key, meta.Headers.ContentLength, info.LastModified);
 	}
 
 	public void Disconnect () {
-		throw new NotImplementedException();
+		_client?.Dispose();
 	}
 }

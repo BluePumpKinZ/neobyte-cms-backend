@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Neobyte.Cms.Backend.Core.RemoteHosting;
 
@@ -15,6 +16,14 @@ public class FilesystemEntry {
 		Path = path;
 		IsDirectory = isDirectory;
 		Size = size;
+		LastModified = lastModified;
+	}
+	
+	public FilesystemEntry (string s3Key, long? size, DateTime lastModified) {
+		IsDirectory = s3Key.EndsWith('/');
+		Name = s3Key.Split('/').Last();
+		Path = s3Key;
+		Size = IsDirectory ? -1 : size;
 		LastModified = lastModified;
 	}
 
