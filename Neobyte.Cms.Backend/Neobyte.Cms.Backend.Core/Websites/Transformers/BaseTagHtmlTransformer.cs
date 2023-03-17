@@ -6,7 +6,7 @@ namespace Neobyte.Cms.Backend.Core.Websites.Transformers;
 public partial class BaseTagHtmlTransformer : IHtmlTransformer {
 
 	private static readonly Regex HTMLHeadRegex = GetHtmlHeadRegex();
-	[GeneratedRegex("(.*<head>)()([\\S\\s]*<\\/head>.*)", RegexOptions.Compiled)]
+	[GeneratedRegex("(.*<head>)([\\S\\s]*<\\/head>.*)", RegexOptions.Compiled)]
 	private static partial Regex GetHtmlHeadRegex ();
 
 	private static readonly Regex HTMLBaseHrefRegex = GetHtmlBaseHrefRegex();
@@ -19,7 +19,7 @@ public partial class BaseTagHtmlTransformer : IHtmlTransformer {
 
 	public string Up (Website website, string content) {
 		var domain = website.Domain;
-		return HTMLHeadRegex.Replace(content, m => m.Groups[1] + GenerateBaseHrefTag(domain) + m.Groups[3]);
+		return HTMLHeadRegex.Replace(content, m => m.Groups[1] + GenerateBaseHrefTag(domain) + m.Groups[2]);
 	}
 
 	public string Down (string content) {
