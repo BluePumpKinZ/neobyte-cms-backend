@@ -18,13 +18,13 @@ public class FilesystemEntry {
 		Size = size;
 		LastModified = lastModified;
 	}
-	
-	public FilesystemEntry (string s3Key, long? size, DateTime lastModified) {
-		IsDirectory = s3Key.EndsWith('/');
-		Name = s3Key.Split('/').Last();
-		Path = s3Key;
-		Size = IsDirectory ? -1 : size;
-		LastModified = lastModified;
+
+	public override bool Equals (object? obj) {
+		return this.Name == ((FilesystemEntry)obj!).Name;
 	}
 
+	public override int GetHashCode () {
+		// ReSharper disable once NonReadonlyMemberInGetHashCode
+		return Name.GetHashCode();
+	}
 }

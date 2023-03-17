@@ -14,7 +14,7 @@ public class S3Connector : IRemoteHostingConnector {
 	private readonly S3ConnectorOptions _options = new();
 	private readonly PathUtils _pathUtils;
 
-	public DateTime LastConnectionTime { get; set; }
+	public DateTime LastConnectionTime { get; set; } = DateTime.UtcNow;
 
 	public S3Connector (PathUtils pathUtils) {
 		_pathUtils = pathUtils;
@@ -67,21 +67,17 @@ public class S3Connector : IRemoteHostingConnector {
 	}
 
 	public async Task<IEnumerable<FilesystemEntry>> ListItemsAsync (string path) {
+		path = _pathUtils.GetS3Path(path);
 		var items = await Client.ListObjectsAsync(new ListObjectsRequest {
 			BucketName = _options.BucketName,
 			Prefix = path
 		});
-		return items.S3Objects.Select(i => {
-			var meta = Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
-				BucketName = _options.BucketName,
-				Key = i.Key
-			}).Result;
-			return new FilesystemEntry(i.Key, meta.Headers.ContentLength, i.LastModified);
-		});
+		return await GetFilesystemEntriesByS3Objects(items.S3Objects);
 		
 	}
 
 	public async Task CreateFolderAsync (string path) {
+		path = _pathUtils.GetS3Path(path);
 		await Client.PutObjectAsync(new PutObjectRequest {
 			BucketName = _options.BucketName,
 			Key = path,
@@ -90,26 +86,39 @@ public class S3Connector : IRemoteHostingConnector {
 	}
 
 	public async Task RenameFolderAsync (string path, string newPath) {
-		await Client.CopyObjectAsync(new CopyObjectRequest {
-			SourceBucket = _options.BucketName,
-			SourceKey = path,
-			DestinationBucket = _options.BucketName,
-			DestinationKey = newPath
-		});
-		await Client.DeleteObjectAsync(new DeleteObjectRequest {
+		path = _pathUtils.GetS3Path(path);
+		newPath = _pathUtils.GetS3Path(newPath);
+		var objects = await Client.ListObjectsAsync(new ListObjectsRequest() {
 			BucketName = _options.BucketName,
-			Key = path
+			Prefix = path
 		});
+		var copyRequests = objects.S3Objects.Select(x => new CopyObjectRequest {
+			SourceBucket = _options.BucketName,
+			SourceKey = x.Key,
+			DestinationBucket = _options.BucketName,
+			DestinationKey = x.Key.Replace(path, newPath)
+		}).ToList();
+		var copyTasks = copyRequests.Select(x => Client.CopyObjectAsync(x)).ToList();
+		await Task.WhenAll(copyTasks);
+		await DeleteFolderAsync(path);
 	}
 
 	public async Task DeleteFolderAsync (string path) {
-		await Client.DeleteObjectAsync(new DeleteObjectRequest {
+		path = _pathUtils.GetS3Path(path);
+		var objects = await Client.ListObjectsAsync(new ListObjectsRequest() {
 			BucketName = _options.BucketName,
-			Key = path
+			Prefix = path
 		});
+		await Client.DeleteObjectsAsync(new DeleteObjectsRequest() {
+			Objects = objects.S3Objects.Select(x => new KeyVersion() {
+				Key = x.Key
+			}).ToList(),
+		});
+		
 	}
 
 	public async Task CreateFileAsync (string path, byte[] content) {
+		path = _pathUtils.GetS3Path(path);
 		await TransferUtility.UploadAsync(new MemoryStream(content), _options.BucketName, path);
 	}
 
@@ -127,6 +136,7 @@ public class S3Connector : IRemoteHostingConnector {
 	}
 
 	public async Task DeleteFileAsync (string path) {
+		path = _pathUtils.GetS3Path(path);
 		await Client.DeleteObjectAsync(new DeleteObjectRequest {
 			BucketName = _options.BucketName,
 			Key = path
@@ -134,6 +144,7 @@ public class S3Connector : IRemoteHostingConnector {
 	}
 
 	public async Task<byte[]> GetFileContentAsync (string path) {
+		path = _pathUtils.GetS3Path(path);
 		var response = await Client.GetObjectAsync(new GetObjectRequest {
 			BucketName = _options.BucketName,
 			Key = path
@@ -145,6 +156,7 @@ public class S3Connector : IRemoteHostingConnector {
 	}
 
 	public async Task<bool> FolderExistsAsync (string path) {
+		path = _pathUtils.GetS3Path(path);
 		var response = await Client.ListObjectsAsync(new ListObjectsRequest {
 			BucketName = _options.BucketName,
 			Prefix = path
@@ -153,19 +165,38 @@ public class S3Connector : IRemoteHostingConnector {
 	}
 
 	public async Task<bool> FileExistsAsync (string path) {
+		path = _pathUtils.GetS3Path(path);
 		return await FolderExistsAsync(path);
 	}
 
 	public async Task<FilesystemEntry> GetFilesystemEntryInfo (string path) {
-		var meta = await Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
+		path = _pathUtils.GetS3Path(path);
+		var response = await Client.ListObjectsAsync(new ListObjectsRequest {
 			BucketName = _options.BucketName,
-			Key = path
+			Prefix = path
 		});
-		var info = await Client.GetObjectAsync(new GetObjectRequest {
-			BucketName = _options.BucketName,
-			Key = path
-		});
-		return new FilesystemEntry(info.Key, meta.Headers.ContentLength, info.LastModified);
+		var entry = await GetFilesystemEntriesByS3Objects(response.S3Objects);
+		return entry.FirstOrDefault()!;
+	}
+
+	private async Task<IEnumerable<FilesystemEntry>> GetFilesystemEntriesByS3Objects (IEnumerable<S3Object> objects) {
+		HashSet<FilesystemEntry> folders = new ();
+		HashSet<FilesystemEntry> files = new ();
+		foreach (var s3Object in objects) {
+			if (s3Object.Key.Contains('/')) {
+				//is folder
+				string folderName = _pathUtils.GetS3DirectoryFromPath(s3Object.Key);
+				folders.Add(new FilesystemEntry(folderName.Trim('/'), _pathUtils.GetPathAbove(folderName), true, -1, s3Object.LastModified.ToUniversalTime()));
+			} else {
+				//is file
+				var meta = await Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
+					BucketName = _options.BucketName,
+					Key = s3Object.Key
+				});
+				files.Add(new FilesystemEntry(s3Object.Key.Trim('/'), _pathUtils.GetPathAbove(s3Object.Key), false, meta.Headers.ContentLength, s3Object.LastModified.ToUniversalTime()));
+			}
+		}
+		return folders.Concat(files);
 	}
 
 	public void Disconnect () {

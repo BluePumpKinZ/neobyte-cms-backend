@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.Contracts;
+using System.IO;
 using System.Linq;
 
 namespace Neobyte.Cms.Backend.Utils;
@@ -20,6 +21,9 @@ public class PathUtils {
 		path = CollapseSlashes(path);
 		path = path.Trim().Trim('/');
 		var parts = path.Split('/');
+		if (parts.Length == 1) {
+			return "/";
+		}
 		return Combine(parts.Take(parts.Length - 1).ToArray());
 	}
 
@@ -29,4 +33,19 @@ public class PathUtils {
 		return path.Replace("//", "/");
 	}
 
+	[Pure]
+	public string GetS3Path (string path) {
+		path = CollapseSlashes(path);
+		if (path.StartsWith("/")) {
+			return path[1..];
+		}
+		return path;
+	}
+
+	[Pure]
+	public string GetS3DirectoryFromPath (string path) {
+		path = GetS3Path(path);
+		return path.Split('/')[0] + '/';
+		//TODO FIX THIS TO NOT ONLY GET FIRST DIRECTORY
+	}
 }
