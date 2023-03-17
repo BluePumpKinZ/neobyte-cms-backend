@@ -9,10 +9,10 @@ namespace Neobyte.Cms.Backend.Core.Websites.Transformers;
 public partial class StylesHtmlTransformer : IHtmlTransformer {
 
 	private static readonly Regex HTMLHeadRegex = GetHtmlHeadRegex();
-	[GeneratedRegex("(.*<head>[\\S\\s]*)()(<\\/head>.*)", RegexOptions.Compiled)]
+	[GeneratedRegex("(.*<head>[\\S\\s]*?)(<\\/head>.*)", RegexOptions.Compiled)]
 	private static partial Regex GetHtmlHeadRegex ();
 	private static readonly Regex CssStylingRegex = GetCssStylingRegex();
-	[GeneratedRegex("<style id=\"cms_style_k4U\".*>[\\S\\s]*?<\\/style>", RegexOptions.Compiled)]
+	[GeneratedRegex("<style id=\"cms_style_k4U\".*?>[\\S\\s]*?<\\/style>", RegexOptions.Compiled)]
 	private static partial Regex GetCssStylingRegex ();
 
 	private readonly HtmlTransformerOptions _options;
@@ -39,7 +39,7 @@ public partial class StylesHtmlTransformer : IHtmlTransformer {
 	}
 
 	public string Up (Website website, string content) {
-		return HTMLHeadRegex.Replace(content, m => m.Groups[1] + _cssStyles + m.Groups[3]);
+		return HTMLHeadRegex.Replace(content, m => m.Groups[1] + _cssStyles + m.Groups[2]);
 	}
 
 	public string Down (string content) {
