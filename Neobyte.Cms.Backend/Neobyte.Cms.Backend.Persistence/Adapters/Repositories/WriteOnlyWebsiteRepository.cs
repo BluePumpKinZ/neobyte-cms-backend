@@ -46,6 +46,15 @@ internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 				sftpHostingConnection.Password,
 				sftpHostingConnection.Port);
 			break;
+		case var value when value == typeof(S3HostingConnection):
+			var s3HostingConnection = website.Connection as S3HostingConnection;
+			hostingConnection = new S3HostingConnectionEntity(
+				HostingConnectionId.New(),
+				s3HostingConnection!.AccessKey,
+				s3HostingConnection.SecretKey,
+				s3HostingConnection.BucketName,
+				s3HostingConnection.Region);
+			break;
 		case null:
 			hostingConnection = null;
 			break;
