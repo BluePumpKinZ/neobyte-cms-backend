@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 
@@ -21,9 +22,6 @@ public class PathUtils {
 		path = CollapseSlashes(path);
 		path = path.Trim().Trim('/');
 		var parts = path.Split('/');
-		if (parts.Length == 1) {
-			return "/";
-		}
 		return Combine(parts.Take(parts.Length - 1).ToArray());
 	}
 
@@ -43,9 +41,15 @@ public class PathUtils {
 	}
 
 	[Pure]
-	public string GetS3DirectoryFromPath (string path) {
+	public string GetS3DirectoryFromPath (string key, string path) {
+		key = GetS3Path(key);
 		path = GetS3Path(path);
-		return path.Split('/')[0] + '/';
-		//TODO FIX THIS TO NOT ONLY GET FIRST DIRECTORY
+		string[] keyParts = key.Split('/');
+		int directoryIndex = Array.IndexOf(keyParts, path);
+		if (directoryIndex >= 0 && directoryIndex < keyParts.Length - 1) {
+			return keyParts[directoryIndex + 1];
+		}
+
+		return key.Split("/")[0] + "/";
 	}
 }

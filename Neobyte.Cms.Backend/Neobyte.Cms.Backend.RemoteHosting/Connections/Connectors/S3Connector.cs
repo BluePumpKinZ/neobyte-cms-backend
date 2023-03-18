@@ -72,7 +72,7 @@ public class S3Connector : IRemoteHostingConnector {
 			BucketName = _options.BucketName,
 			Prefix = path
 		});
-		return await GetFilesystemEntriesByS3Objects(items.S3Objects);
+		return await GetFilesystemEntriesByS3Objects(items.S3Objects, path);
 		
 	}
 
@@ -175,25 +175,25 @@ public class S3Connector : IRemoteHostingConnector {
 			BucketName = _options.BucketName,
 			Prefix = path
 		});
-		var entry = await GetFilesystemEntriesByS3Objects(response.S3Objects);
+		var entry = await GetFilesystemEntriesByS3Objects(response.S3Objects, path);
 		return entry.FirstOrDefault()!;
 	}
 
-	private async Task<IEnumerable<FilesystemEntry>> GetFilesystemEntriesByS3Objects (IEnumerable<S3Object> objects) {
+	private async Task<IEnumerable<FilesystemEntry>> GetFilesystemEntriesByS3Objects (IEnumerable<S3Object> objects, string path) {
 		HashSet<FilesystemEntry> folders = new ();
 		HashSet<FilesystemEntry> files = new ();
 		foreach (var s3Object in objects) {
 			if (s3Object.Key.Contains('/')) {
 				//is folder
-				string folderName = _pathUtils.GetS3DirectoryFromPath(s3Object.Key);
-				folders.Add(new FilesystemEntry(folderName.Trim('/'), _pathUtils.GetPathAbove(folderName), true, -1, s3Object.LastModified.ToUniversalTime()));
+				string folderName = _pathUtils.GetS3DirectoryFromPath(s3Object.Key, path);
+				folders.Add(new FilesystemEntry(folderName.Trim('/'), '/' + path, true, -1, s3Object.LastModified.ToUniversalTime()));
 			} else {
 				//is file
 				var meta = await Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
 					BucketName = _options.BucketName,
 					Key = s3Object.Key
 				});
-				files.Add(new FilesystemEntry(s3Object.Key.Trim('/'), _pathUtils.GetPathAbove(s3Object.Key), false, meta.Headers.ContentLength, s3Object.LastModified.ToUniversalTime()));
+				files.Add(new FilesystemEntry(s3Object.Key.Trim('/'), '/' + path, false, meta.Headers.ContentLength, s3Object.LastModified.ToUniversalTime()));
 			}
 		}
 		return folders.Concat(files);
