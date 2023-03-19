@@ -55,9 +55,10 @@ internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 
 	public async Task<Website> UpdateWebsiteAsync (Website website) {
 
-		var existingConnection = await _ctx.HostingConnectionEntities.SingleOrDefaultAsync(x => x.Id == website.Connection!.Id);
-		if (existingConnection is not null)
+		if (website.Connection is not null) {
+			var existingConnection = await _ctx.HostingConnectionEntities.SingleAsync(x => x.Id == website.Connection!.Id);
 			_ctx.HostingConnectionEntities.Remove(existingConnection);
+		}
 
 		var hostingConnectionEntity = CreateHostingConnectionEntity(website);
 		if (hostingConnectionEntity is not null)
@@ -73,4 +74,17 @@ internal class WriteOnlyWebsiteRepository : IWriteOnlyWebsiteRepository {
 		await _ctx.SaveChangesAsync();
 		return website;
 	}
+
+	public async Task DeleteWebsiteAsync (Website website) {
+
+		if (website.Connection is not null) {
+			var existingConnection = await _ctx.HostingConnectionEntities.SingleAsync(x => x.Id == website.Connection!.Id);
+			_ctx.HostingConnectionEntities.Remove(existingConnection);
+		}
+
+		var entity = await _ctx.WebsiteEntities.SingleAsync(w => w.Id == website.Id);
+		_ctx.WebsiteEntities.Remove(entity);
+		await _ctx.SaveChangesAsync();
+	}
+
 }

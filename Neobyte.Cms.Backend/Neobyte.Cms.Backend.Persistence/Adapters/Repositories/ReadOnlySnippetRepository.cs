@@ -12,7 +12,7 @@ internal class ReadOnlySnippetRepository : IReadOnlySnippetRepository {
 		_ctx = ctx;
 	}
 
-	public async Task<IEnumerable<Snippet>> ReadAllSnippetsByWebsiteId (WebsiteId websiteId) {
+	public async Task<IEnumerable<Snippet>> ReadAllSnippetsByWebsiteIdAsync (WebsiteId websiteId) {
 		return await _ctx.SnippetEntities
 			.Where(s => s.Website != null && s.Website.Id == websiteId)
 			.Select(s => new Snippet(s.Id, s.Name, s.Description))
