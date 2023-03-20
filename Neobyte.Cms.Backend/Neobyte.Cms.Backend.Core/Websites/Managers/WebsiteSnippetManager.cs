@@ -18,7 +18,7 @@ public class WebsiteSnippetManager {
 	}
 
 	public async Task<IEnumerable<Snippet>> GetWebsiteSnippetsAsync (WebsiteId websiteId) {
-		return await _readOnlySnippetRepository.ReadAllSnippetsByWebsiteId(websiteId);
+		return await _readOnlySnippetRepository.ReadAllSnippetsByWebsiteIdAsync(websiteId);
 	}
 
 	public async Task<Snippet> AddWebsiteSnippetAsync (WebsiteCreateSnippetRequestModel request) {

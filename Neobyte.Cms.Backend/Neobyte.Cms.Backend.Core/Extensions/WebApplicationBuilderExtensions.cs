@@ -32,6 +32,7 @@ public static class WebApplicationBuilderExtensions {
 		builder.Services.AddSingleton<IHtmlTransformer, BaseTagHtmlTransformer>();
 		builder.Services.AddSingleton<IHtmlTransformer, CmsEditableHtmlTransformer>();
 		builder.Services.AddSingleton<IHtmlTransformer, StylesHtmlTransformer>();
+		builder.Services.AddSingleton<IHtmlTransformer, TinyMCEHtmlTransformer>();
 
 		builder.Services.AddScoped<WebsiteAccountManager>();
 		builder.Services.AddScoped<WebsiteFileManager>();
