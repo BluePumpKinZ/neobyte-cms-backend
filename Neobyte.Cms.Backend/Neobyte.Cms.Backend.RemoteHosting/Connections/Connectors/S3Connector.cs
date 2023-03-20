@@ -73,14 +73,14 @@ public class S3Connector : IRemoteHostingConnector {
 			Prefix = path
 		});
 		return await GetFilesystemEntriesByS3Objects(items.S3Objects, path);
-		
+
 	}
 
 	public async Task CreateFolderAsync (string path) {
 		path = _pathUtils.GetS3Path(path);
 		await Client.PutObjectAsync(new PutObjectRequest {
 			BucketName = _options.BucketName,
-			Key = path,
+			Key = path + "/",
 			ContentBody = string.Empty
 		});
 	}
@@ -110,6 +110,7 @@ public class S3Connector : IRemoteHostingConnector {
 			Prefix = path
 		});
 		await Client.DeleteObjectsAsync(new DeleteObjectsRequest() {
+			BucketName = _options.BucketName,
 			Objects = objects.S3Objects.Select(x => new KeyVersion() {
 				Key = x.Key
 			}).ToList(),
