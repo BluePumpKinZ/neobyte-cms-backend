@@ -184,7 +184,7 @@ public class S3Connector : IRemoteHostingConnector {
 		HashSet<FilesystemEntry> folders = new ();
 		HashSet<FilesystemEntry> files = new ();
 		foreach (var s3Object in objects) {
-			if (s3Object.Key.Contains('/')) {
+			if (s3Object.Key.EndsWith('/')) {
 				//is folder
 				string folderName = _pathUtils.GetS3DirectoryFromPath(s3Object.Key, path);
 				folders.Add(new FilesystemEntry(folderName.Trim('/'), '/' + path, true, -1, s3Object.LastModified.ToUniversalTime()));
