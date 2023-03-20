@@ -59,7 +59,7 @@ public class S3Connector : IRemoteHostingConnector {
 
 	public async Task<bool> ValidateAsync () {
 		try {
-			var bucketExists = await AmazonS3Util.DoesS3BucketExistV2Async(Client, _options.BucketName);
+			await AmazonS3Util.DoesS3BucketExistV2Async(Client, _options.BucketName);
 			return true;
 		} catch (Exception ex) when (ex is AmazonS3Exception or TimeoutException) {
 			return false;
