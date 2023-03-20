@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Neobyte.Cms.Backend.Core.RemoteHosting;
 
@@ -18,4 +19,12 @@ public class FilesystemEntry {
 		LastModified = lastModified;
 	}
 
+	public override bool Equals (object? obj) {
+		return this.Name == ((FilesystemEntry)obj!).Name;
+	}
+
+	public override int GetHashCode () {
+		// ReSharper disable once NonReadonlyMemberInGetHashCode
+		return Name.GetHashCode();
+	}
 }

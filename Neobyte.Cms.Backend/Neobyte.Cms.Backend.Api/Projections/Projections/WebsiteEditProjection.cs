@@ -16,6 +16,10 @@ internal class WebsiteEditProjection : IProjection {
 	public string Username { get; set; } = string.Empty;
 	public string Password { get; set; } = string.Empty;
 	public int Port { get; set; }
+	public string Region { get; set; } = string.Empty;
+	public string BucketName { get; set; } = string.Empty;
+	public string AccessKey { get; set; } = string.Empty;
+	public string SecretKey { get; set; } = string.Empty;
 
 	public void RegisterMap (IMapperConfigurationExpression configuration) {
 		configuration.CreateMap<Website, WebsiteEditProjection>().ConvertUsing<WebsiteEditProjectionConverter>();
@@ -47,6 +51,14 @@ internal class WebsiteEditProjection : IProjection {
 				destination.Password = sftpConnection.Password;
 				destination.Port = sftpConnection.Port;
 				destination.Protocol = "SFTP";
+				break;
+			case var value when value == typeof(S3HostingConnection):
+				var s3Connection = (S3HostingConnection)source.Connection!;
+				destination.Region = s3Connection.Region;
+				destination.BucketName = s3Connection.BucketName;
+				destination.AccessKey = s3Connection.AccessKey;
+				destination.SecretKey = s3Connection.SecretKey;
+				destination.Protocol = "S3";
 				break;
 			}
 			return destination;
