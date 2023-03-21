@@ -78,4 +78,12 @@ public class ReadOnlyWebsiteAccountRepository : IReadOnlyWebsiteAccountRepositor
 			.Select(w => w.ToDomain())
 			.ToListAsync();
 	}
+
+	public async Task<IEnumerable<WebsiteAccount>> ReadAllWebsiteAccountsAsync (WebsiteId websiteId) {
+		return await _ctx.WebsiteAccountEntities
+			.Where(wa => wa.Website!.Id == websiteId)
+			.Select(wa => wa.ToDomain())
+			.ToListAsync();
+	}
+
 }

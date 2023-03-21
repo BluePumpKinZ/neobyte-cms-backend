@@ -48,6 +48,9 @@ internal class ReadOnlyWebsiteRepository : IReadOnlyWebsiteRepository {
 		case SftpHostingConnectionEntity sftpHostingEntity:
 			return new SftpHostingConnection(new SftpHostingConnectionId(sftpHostingEntity.Id.Value),
 				sftpHostingEntity.Host, sftpHostingEntity.Username, sftpHostingEntity.Password, sftpHostingEntity.Port);
+		case S3HostingConnectionEntity s3HostingEntity:
+			return new S3HostingConnection(new S3HostingConnectionId(s3HostingEntity.Id.Value),
+				s3HostingEntity.Region, s3HostingEntity.BucketName, s3HostingEntity.AccessKey, s3HostingEntity.SecretKey);
 		default:
 			_logger.LogWarning("Website connectionentity for website {WebsiteId} could no be found", websiteId);
 			return null;
