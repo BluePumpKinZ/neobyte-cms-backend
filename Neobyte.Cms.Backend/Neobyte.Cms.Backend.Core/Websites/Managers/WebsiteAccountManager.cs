@@ -29,6 +29,9 @@ public class WebsiteAccountManager {
 		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId)
 			?? throw new AccountNotFoundException($"Account {accountId} not found");
 
+		if (account.Roles.Contains(Role.Owner.RoleName))
+			throw new AccountIsAdministratorException($"Account {accountId} is an administrator and is already assigned to all websites");
+
 		var wa = await _readOnlyWebsiteAccountRepository.ReadWebsiteAccountByWebsiteIdAndAccountIdAsync(
 			websiteId, accountId);
 		if (wa != null)
