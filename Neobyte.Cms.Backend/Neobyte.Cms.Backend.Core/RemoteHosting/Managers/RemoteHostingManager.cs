@@ -12,27 +12,38 @@ using System;
 namespace Neobyte.Cms.Backend.Core.RemoteHosting.Managers;
 
 public class RemoteHostingManager {
-
 	private readonly IRemoteHostingProvider _remoteHostingProvider;
 	private readonly PathUtils _pathUtils;
 	private readonly IReadOnlyWebsiteRepository _readOnlyWebsiteRepository;
 
-	public RemoteHostingManager (IRemoteHostingProvider remoteHostingProvider, PathUtils pathUtils, IReadOnlyWebsiteRepository readOnlyWebsiteRepository) {
+	public RemoteHostingManager (IRemoteHostingProvider remoteHostingProvider, PathUtils pathUtils,
+		IReadOnlyWebsiteRepository readOnlyWebsiteRepository) {
 		_remoteHostingProvider = remoteHostingProvider;
 		_pathUtils = pathUtils;
 		_readOnlyWebsiteRepository = readOnlyWebsiteRepository;
 	}
 
-	public HostingConnection FromRequestModel (RemoteHostingRequestModel request, HostingConnection? existingConnection = null) {
-		HostingConnection hostingConnection = Enum.Parse<RemoteHostingRequestModel.HostingProtocol>(request.Protocol) switch {
-			RemoteHostingRequestModel.HostingProtocol.FTP => new FtpHostingConnection(
-				existingConnection is not null ? new FtpHostingConnectionId(existingConnection.Id.Value) : FtpHostingConnectionId.New(),
-				request.Host, request.Username, request.Password, request.Port),
-			RemoteHostingRequestModel.HostingProtocol.SFTP => new SftpHostingConnection(
-				existingConnection is not null ? new SftpHostingConnectionId(existingConnection.Id.Value) : SftpHostingConnectionId.New(),
-				request.Host, request.Username, request.Password, request.Port),
-			_ => throw new InvalidProtocolException("Unsupported protocol specified")
-		};
+	public HostingConnection FromRequestModel (RemoteHostingRequestModel request,
+		HostingConnection? existingConnection = null) {
+		HostingConnection hostingConnection =
+			Enum.Parse<RemoteHostingRequestModel.HostingProtocol>(request.Protocol) switch {
+				RemoteHostingRequestModel.HostingProtocol.FTP => new FtpHostingConnection(
+					existingConnection is not null
+						? new FtpHostingConnectionId(existingConnection.Id.Value)
+						: FtpHostingConnectionId.New(),
+					request.Host, request.Username, request.Password, request.Port),
+				RemoteHostingRequestModel.HostingProtocol.SFTP => new SftpHostingConnection(
+					existingConnection is not null
+						? new SftpHostingConnectionId(existingConnection.Id.Value)
+						: SftpHostingConnectionId.New(),
+					request.Host, request.Username, request.Password, request.Port),
+				RemoteHostingRequestModel.HostingProtocol.S3 => new S3HostingConnection(
+					existingConnection is not null
+						? new S3HostingConnectionId(existingConnection.Id.Value)
+						: S3HostingConnectionId.New(),
+					request.Region, request.BucketName, request.AccessKey, request.SecretKey),
+				_ => throw new InvalidProtocolException("Unsupported protocol specified"),
+			};
 
 		return hostingConnection;
 	}
@@ -44,7 +55,7 @@ public class RemoteHostingManager {
 
 	public async Task<Website> GetAndValidateWebsiteByIdAsync (WebsiteId id) {
 		var website = await _readOnlyWebsiteRepository.ReadWebsiteByIdAsync(id)
-			?? throw new WebsiteNotFoundException($"Website {id} not found.");
+		              ?? throw new WebsiteNotFoundException($"Website {id} not found.");
 		if (website.Connection is null)
 			throw new WebsiteConnectionNotFoundException($"Website {id} has no connection");
 		return website;
@@ -58,13 +69,15 @@ public class RemoteHostingManager {
 		await connector.CreateFolderAsync(path);
 	}
 
-	public async Task<IEnumerable<FilesystemEntry>> ListEntriesAsync (HostingConnection connection, string relativePath, string path) {
+	public async Task<IEnumerable<FilesystemEntry>> ListEntriesAsync (HostingConnection connection, string relativePath,
+		string path) {
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		string fsPath = _pathUtils.Combine(relativePath, path);
 		return await connector.ListItemsAsync(fsPath);
 	}
 
-	public async Task RenameFolderAsync (HostingConnection connection, string relativePath, string path, string newPath) {
+	public async Task RenameFolderAsync (HostingConnection connection, string relativePath, string path,
+		string newPath) {
 		var connector = _remoteHostingProvider.GetConnector(connection);
 		path = _pathUtils.Combine(relativePath, path);
 		newPath = _pathUtils.Combine(relativePath, newPath);
@@ -113,5 +126,4 @@ public class RemoteHostingManager {
 			throw new InvalidPathException("The specified path is not a file");
 		await connector.DeleteFileAsync(path);
 	}
-
 }

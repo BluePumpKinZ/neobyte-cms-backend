@@ -21,6 +21,7 @@ public static class WebApplicationBuilderExtensions {
 
 		builder.Services.AddScoped<IRemoteHostingConnector, FluentFtpConnector>();
 		builder.Services.AddScoped<IRemoteHostingConnector, SshNetConnector>();
+		builder.Services.AddScoped<IRemoteHostingConnector, S3Connector>();
 
 		return builder;
 	}

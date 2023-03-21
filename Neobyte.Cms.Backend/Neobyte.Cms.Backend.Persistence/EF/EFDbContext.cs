@@ -16,6 +16,7 @@ public class EFDbContext : IdentityDbContext<IdentityAccountEntity, IdentityRole
 	public DbSet<HtmlContentEntity> HtmlContentEntities { get; set; } = null!;
 	public DbSet<HostingConnectionEntity> HostingConnectionEntities { get; set; } = null!;
 	public DbSet<PageEntity> PageEntities { get; set; } = null!;
+	public DbSet<S3HostingConnectionEntity> S3HostingConnectionEntities { get; set; } = null!;
 	public DbSet<SftpHostingConnectionEntity> SftpHostingConnectionEntities { get; set; } = null!;
 	public DbSet<SnippetEntity> SnippetEntities { get; set; } = null!;
 	public DbSet<TemplateEntity> TemplateEntities { get; set; } = null!;
