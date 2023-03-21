@@ -9,4 +9,5 @@ public interface IReadOnlyWebsiteAccountRepository {
 	public Task<IEnumerable<Website>> ReadWebsitesByAccountIdAsync (AccountId accountId);
 	public Task<WebsiteAccount?> ReadWebsiteAccountByWebsiteIdAndAccountIdAsync (WebsiteId websiteId, AccountId accountId);
 	public Task<IEnumerable<Account>> ReadUnassignedAccountsByWebsiteIdAsync (WebsiteId websiteId);
+	public Task<IEnumerable<Website>> ReadUnassignedWebsitesByAccountIdAsync (AccountId accountId);
 }

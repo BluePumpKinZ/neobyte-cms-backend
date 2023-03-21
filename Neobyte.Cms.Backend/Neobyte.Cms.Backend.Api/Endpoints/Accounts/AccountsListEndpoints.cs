@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Neobyte.Cms.Backend.Core.Accounts.Managers;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
+using Neobyte.Cms.Backend.Core.Websites.Managers;
 using Neobyte.Cms.Backend.Domain.Accounts;
 
 namespace Neobyte.Cms.Backend.Api.Endpoints.Accounts;
@@ -79,6 +80,13 @@ public class AccountsListEndpoints : IApiEndpoints {
 
 			await manager.DeleteAccountAsync(new AccountId(accountId));
 			return Results.Ok(new {Message = "Account deleted"});
+		}).Authorize(UserPolicy.OwnerPrivilege);
+
+		routes.MapGet("{accountId:Guid}/unassigned-websites", async (
+			[FromServices] WebsiteAccountManager manager,
+			[FromRoute] Guid accountId) => {
+			var websites = await manager.GetUnassignedWebsitesAsync(new AccountId(accountId));
+			return Results.Ok(websites);
 		}).Authorize(UserPolicy.OwnerPrivilege);
 	}
 }

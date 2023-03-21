@@ -71,4 +71,11 @@ public class ReadOnlyWebsiteAccountRepository : IReadOnlyWebsiteAccountRepositor
 			return new Account(a.Account.Id, a.Email!, a.Account.Username, a.Account.Bio, a.Account.Enabled, a.Account.CreationDate, roles);
 		}).Where(a => a.Roles.Any());
 	}
+
+	public async Task<IEnumerable<Website>> ReadUnassignedWebsitesByAccountIdAsync (AccountId accountId) {
+		return await _ctx.WebsiteEntities
+			.Where(w => !_ctx.WebsiteAccountEntities.Any(wa => wa.Website!.Id == w.Id && wa.Account!.Id == accountId))
+			.Select(w => w.ToDomain())
+			.ToListAsync();
+	}
 }

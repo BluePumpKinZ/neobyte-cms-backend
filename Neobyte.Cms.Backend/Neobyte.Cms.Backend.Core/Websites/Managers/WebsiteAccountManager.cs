@@ -1,8 +1,10 @@
 ﻿using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
+using Neobyte.Cms.Backend.Core.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using Neobyte.Cms.Backend.Domain.Websites;
 using System;
+using System.Linq;
 
 namespace Neobyte.Cms.Backend.Core.Websites.Managers;
 
@@ -67,5 +69,15 @@ public class WebsiteAccountManager {
 			?? throw new WebsiteNotFoundException($"Website {websiteId} not found");
 		
 		return await _readOnlyWebsiteAccountRepository.ReadUnassignedAccountsByWebsiteIdAsync(websiteId);
+	}
+
+	public async Task<IEnumerable<Website>> GetUnassignedWebsitesAsync (AccountId accountId) {
+		var account = await _readOnlyAccountRepository.ReadAccountByIdAsync(accountId)
+			?? throw new AccountNotFoundException($"Account {accountId} not found");
+		
+		if (account.Roles.Select(r => r).Contains(Role.Owner.RoleName))
+			return Enumerable.Empty<Website>();
+		
+		return await _readOnlyWebsiteAccountRepository.ReadUnassignedWebsitesByAccountIdAsync(accountId);
 	}
 }
