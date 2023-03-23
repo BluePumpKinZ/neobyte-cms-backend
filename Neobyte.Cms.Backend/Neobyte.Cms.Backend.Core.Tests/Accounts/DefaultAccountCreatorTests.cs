@@ -25,7 +25,7 @@ public class DefaultAccountCreatorTests {
 	public DefaultAccountCreatorTests () {
 		var mockOptions = new Mock<IOptions<CoreOptions>>();
 		var accountManager = new AccountManager(_readOnlyAccountRepository.Object,
-			_writeOnlyAccountRepository.Object, _identityAuthenticationProvider.Object, _mailingProvider.Object);
+			_writeOnlyAccountRepository.Object, _identityAuthenticationProvider.Object, _mailingProvider.Object, mockOptions.Object);
 		var logger = new Mock<ILogger<DefaultAccountCreator>>();
 		_defaultAccountOptions = new DefaultAccountOptions {
 			AddOnAccountsEmpty = true,

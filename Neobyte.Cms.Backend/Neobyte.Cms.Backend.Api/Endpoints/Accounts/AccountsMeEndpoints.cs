@@ -42,13 +42,7 @@ public class AccountsMeEndpoints : IApiEndpoints {
 		routes.MapGet("request-password-reset", async (
 			[FromServices] AccountManager manager,
 			[FromServices] Principal principal,
-			[FromBody] AccountRequestResetPasswordRequestModel request,
-			[FromServices] IHttpContextAccessor httpContextAccessor) => {
-			var httpContext = httpContextAccessor.HttpContext!;
-			string host = httpContext.Request.Headers.Host!;
-			string scheme = httpContext.Request.Scheme;
-			request.Host = host;
-			request.Scheme = scheme;
+			[FromBody] AccountRequestResetPasswordRequestModel request) => {
 			var response = await manager.RequestPasswordResetAsync(request, principal.AccountId);
 			return response.Success
 				? Results.Ok(new {Message = "Password reset requested"})

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
 using Neobyte.Cms.Backend.Core.Accounts.Models;
+using Neobyte.Cms.Backend.Core.Configuration;
 using Neobyte.Cms.Backend.Core.Exceptions.Persistence;
 using Neobyte.Cms.Backend.Core.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Identity;
@@ -17,15 +19,19 @@ public class AccountManager {
 	private readonly IReadOnlyAccountRepository _readOnlyAccountRepository;
 	private readonly IWriteOnlyAccountRepository _writeOnlyAccountRepository;
 	private readonly IIdentityAuthenticationProvider _identityAuthenticationProvider;
+	private readonly FrontendOptions _frontendOptions;
 	private readonly IMailingProvider _mailingProvider;
 
 	public AccountManager (IReadOnlyAccountRepository readOnlyAccountRepository,
 		IWriteOnlyAccountRepository writeOnlyAccountRepository,
-		IIdentityAuthenticationProvider identityAuthenticationProvider, IMailingProvider mailingProvider) {
+		IIdentityAuthenticationProvider identityAuthenticationProvider,
+		IMailingProvider mailingProvider,
+		IOptions<CoreOptions> options) {
 		_readOnlyAccountRepository = readOnlyAccountRepository;
 		_writeOnlyAccountRepository = writeOnlyAccountRepository;
 		_identityAuthenticationProvider = identityAuthenticationProvider;
 		_mailingProvider = mailingProvider;
+		_frontendOptions = options.Value.Frontend;
 	}
 
 	public async Task<AccountsCreateResponseModel> CreateAccountWithPasswordAsync (
@@ -59,7 +65,8 @@ public class AccountManager {
 			return new AccountsCreateResponseModel(false) {Errors = tokenResponse.Errors};
 
 		var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(tokenResponse.Token!));
-		var callBackUrl = $"{request.Scheme}://{request.Host}/account/reset-password?email={request.Email}&code={code}";
+		var frontend = _frontendOptions.GetUrl();
+		var callBackUrl = $"{frontend}/account/set-password?email={request.Email}&code={code}";
 
 		await _mailingProvider.SendMailAsync(request.Email, "Neobyte CMS - Account created",
 			$"Someone has created an account for you on the Neobyte CMS platform.\n" +
@@ -82,7 +89,8 @@ public class AccountManager {
 		var tokenResponse = await _identityAuthenticationProvider.GeneratePasswordResetTokenAsync(accountResponse.Id);
 		
 		var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(tokenResponse.Token!));
-		var callBackUrl = $"{request.Scheme}://{request.Host}/account/reset-password?email={request.Email}&code={code}";
+		var frontend = _frontendOptions.GetUrl();
+		var callBackUrl = $"{frontend}/account/set-password?email={request.Email}&code={code}";
 		
 		await _mailingProvider.SendMailAsync(request.Email, "Neobyte CMS - Password reset",
 			$"You have requested a password reset for your account on the Neobyte CMS platform.\n" +
