@@ -20,16 +20,18 @@ public class AccountManagerTests {
 	private readonly Mock<IWriteOnlyAccountRepository> _writeOnlyAccountRepository = new();
 	private readonly Mock<IIdentityAuthenticationProvider> _identityAuthenticationProvider = new();
 	private readonly Mock<IMailingProvider> _mailingProvider = new();
-	private readonly Mock<IOptions<CoreOptions>> _options = new();
 	private readonly AccountManager _accountManager;
 
 	public AccountManagerTests () {
+		var mockOptions = new Mock<IOptions<CoreOptions>>();
+		mockOptions.Setup(x => x.Value).Returns(new CoreOptions());
+		
 		_accountManager = new AccountManager(
 			_readOnlyAccountRepository.Object,
 			_writeOnlyAccountRepository.Object,
 			_identityAuthenticationProvider.Object,
 			_mailingProvider.Object,
-			_options.Object);
+			mockOptions.Object);
 	}
 
 	[Fact]
