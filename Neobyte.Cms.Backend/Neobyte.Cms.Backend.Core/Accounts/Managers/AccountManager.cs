@@ -66,7 +66,7 @@ public class AccountManager {
 
 		var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(tokenResponse.Token!));
 		var frontend = _frontendOptions.GetUrl();
-		var callBackUrl = $"{frontend}/account/set-password?email={request.Email}&code={code}";
+		var callBackUrl = $"{frontend}/set-password?email={request.Email}&code={code}";
 
 		await _mailingProvider.SendMailAsync(request.Email, "Neobyte CMS - Account created",
 			$"Someone has created an account for you on the Neobyte CMS platform.\n" +
@@ -90,7 +90,7 @@ public class AccountManager {
 		
 		var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(tokenResponse.Token!));
 		var frontend = _frontendOptions.GetUrl();
-		var callBackUrl = $"{frontend}/account/set-password?email={request.Email}&code={code}";
+		var callBackUrl = $"{frontend}/set-password?email={request.Email}&code={code}";
 		
 		await _mailingProvider.SendMailAsync(request.Email, "Neobyte CMS - Password reset",
 			$"You have requested a password reset for your account on the Neobyte CMS platform.\n" +
