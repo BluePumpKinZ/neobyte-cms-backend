@@ -8,6 +8,8 @@ using Neobyte.Cms.Backend.Core.Ports.Identity;
 using Neobyte.Cms.Backend.Core.Ports.Persistence.Repositories;
 using Neobyte.Cms.Backend.Domain.Accounts;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Neobyte.Cms.Backend.Core.Configuration;
 using Neobyte.Cms.Backend.Core.Ports.Mailing;
 
 namespace Neobyte.Cms.Backend.Core.Tests.Accounts.Managers;
@@ -21,11 +23,15 @@ public class AccountManagerTests {
 	private readonly AccountManager _accountManager;
 
 	public AccountManagerTests () {
+		var mockOptions = new Mock<IOptions<CoreOptions>>();
+		mockOptions.Setup(x => x.Value).Returns(new CoreOptions());
+		
 		_accountManager = new AccountManager(
 			_readOnlyAccountRepository.Object,
 			_writeOnlyAccountRepository.Object,
 			_identityAuthenticationProvider.Object,
-			_mailingProvider.Object);
+			_mailingProvider.Object,
+			mockOptions.Object);
 	}
 
 	[Fact]

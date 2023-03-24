@@ -19,13 +19,7 @@ public class AccountsListEndpoints : IApiEndpoints {
 		}).Authorize(UserPolicy.OwnerPrivilege);
 
 		routes.MapPost("create",
-				async ([FromServices] AccountManager manager, [FromBody] AccountsCreateRequestModel request,
-				[FromServices] IHttpContextAccessor httpContextAccessor) => {
-					var httpContext = httpContextAccessor.HttpContext!;
-					string host = httpContext.Request.Headers.Host!;
-					string scheme = httpContext.Request.Scheme;
-					request.Host = host;
-					request.Scheme = scheme;
+				async ([FromServices] AccountManager manager, [FromBody] AccountsCreateRequestModel request) => {
 					var result = await manager.CreateAccountAsync(request);
 					if (!result.Success)
 						return Results.BadRequest(result.Errors);
