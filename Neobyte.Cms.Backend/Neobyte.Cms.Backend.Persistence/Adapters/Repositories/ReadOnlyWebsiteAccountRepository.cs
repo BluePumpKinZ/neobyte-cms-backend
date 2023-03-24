@@ -72,6 +72,13 @@ public class ReadOnlyWebsiteAccountRepository : IReadOnlyWebsiteAccountRepositor
 		}).Where(a => a.Roles.Any());
 	}
 
+	public async Task<IEnumerable<Website>> ReadUnassignedWebsitesByAccountIdAsync (AccountId accountId) {
+		return await _ctx.WebsiteEntities
+			.Where(w => !_ctx.WebsiteAccountEntities.Any(wa => wa.Website!.Id == w.Id && wa.Account!.Id == accountId))
+			.Select(w => w.ToDomain())
+			.ToListAsync();
+	}
+
 	public async Task<IEnumerable<WebsiteAccount>> ReadAllWebsiteAccountsAsync (WebsiteId websiteId) {
 		return await _ctx.WebsiteAccountEntities
 			.Where(wa => wa.Website!.Id == websiteId)
