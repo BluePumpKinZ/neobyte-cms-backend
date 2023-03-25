@@ -13,7 +13,6 @@ public class WebsiteTests : IntegrationTests {
 		var response = await Client.Authorize(await OwnerJwtToken())
 			.PostAsJsonAsync("/api/v1/websites/create", website);
 		Assert.NotNull(response);
-		var content = await response.Content.ReadAsStringAsync();
 
 		using var scope = ServiceScope;
 		var websiteRepository = scope.ServiceProvider.GetRequiredService<IReadOnlyWebsiteRepository>();

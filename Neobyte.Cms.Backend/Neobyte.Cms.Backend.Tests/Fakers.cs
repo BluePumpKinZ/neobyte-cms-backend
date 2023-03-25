@@ -20,7 +20,7 @@ public class Fakers {
 
 		Websites = new Faker<WebsiteCreateRequestModel>()
 			.RuleFor(x => x.Name, f => f.Company.CompanyName())
-			.RuleFor(x => x.Domain, f => "https://neobyte.net/thelab")
+			.RuleFor(x => x.Domain, "https://neobyte.net/thelab")
 			.RuleFor(x => x.HomeFolder, f => f.System.DirectoryPath())
 			.RuleFor(x => x.UploadFolder, f => f.System.DirectoryPath())
 			.RuleFor(x => x.Protocol, "FTP")
